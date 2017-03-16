@@ -1,5 +1,5 @@
 Documentatie
 ============
 
-Plaats documentatie (.docx) hier. 
+Plaats documentatie (.pdf) hier. 
 
