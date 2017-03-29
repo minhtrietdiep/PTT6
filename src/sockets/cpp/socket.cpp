@@ -1,141 +1,111 @@
-#include <memory.h>     /* for memset() */
-#include <arpa/inet.h>  /* for sockaddr_in and inet_ntoa() */
-#include <sys/socket.h> /* for send() and recv() */
-#include <stdio.h>		/* for perror() */
-#include <stdlib.h>		/* for exit() */
-#include <unistd.h> 	/* for close() */
-#include <iostream>
+#include <sys/socket.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <string.h>
-#include <signal.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
-using namespace std;
+#define PORT 4245
 
-#include "socket.h"
-
-#define MAXPENDING 5    /* Maximum outstanding connection requests */
-
-void DieWithError(const char * errorMessage)
+void error(const char *msg)
 {
-	perror(errorMessage);
-	exit(1);
+    printf("Error: %s\n", msg);
 }
 
-int createTCPServerSocket(unsigned short port)
-{
-	int                 sock;         /* socket to create */
-	struct sockaddr_in  echoServAddr; /* Local address */
+int createServerSocket() {
+	int serverSocket;
+	struct sockaddr_in server_address;
 
-									  /* Create socket for incoming connections */
-	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-	{
-		DieWithError("socket() failed");
-	}
+	// Create socket
+	serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if(serverSocket < 0) {
+    	error("socket() failed");
+    }
 
-	/* Construct local address structure */
-	memset(&echoServAddr, 0, sizeof(echoServAddr));  /* Zero out structure */
-	echoServAddr.sin_family = AF_INET;                /* Internet address family */
-	echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
-	echoServAddr.sin_port = htons(port);              /* Local port */
+    // Create server address
+    memset(&server_address, 0, sizeof(server_address));
+    server_address.sin_family		= AF_INET;
+    server_address.sin_addr.s_addr	= htonl(INADDR_ANY);
+    server_address.sin_port			= htons(PORT);
 
-													  /* Bind to the local address */
-	if (bind(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-	{
-		DieWithError("bind() failed");
-	}
+    // Bind to port
+    if(bind(serverSocket, (struct sockaddr *) &server_address, sizeof(server_address)) < 0) {
+    	error ("bind() failed");
+    }
 
-	/* Mark the socket so it will listen for incoming connections */
-	if (listen(sock, MAXPENDING) < 0)
-	{
-		DieWithError("listen() failed");
-	}
+    // Mark the socket so it will listen for incoming connections
+    if(listen(serverSocket, 5) < 0) {
+    	error ("listen() failed");
+    }
 
-	return (sock);
+    printf("Socket created, listening on %d\n", PORT);
+
+    return serverSocket;
 }
 
-int createTCPClientSocket(const char * servIP, unsigned short port)
-{
-	int                 sock;         /* Socket descriptor */
-	struct sockaddr_in  echoServAddr; /* Echo server address */
+int acceptTCPConnection(int serverSocket) {
+	int clientSocket;
+	struct sockaddr_in client_address;
+	unsigned int client_length;
 
-									  /* Create a reliable, stream socket using TCP */
-	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-	{
-		DieWithError("socket() failed");
+	// Get length of struct
+	client_length = sizeof(client_address);
+
+	// Accept client
+	clientSocket = accept(serverSocket, (struct sockaddr *) &client_address, &client_length);
+	if(clientSocket < 0) {
+		error("accept() failed");
 	}
 
-	/* Construct the server address structure */
-	memset(&echoServAddr, 0, sizeof(echoServAddr));     /* Zero out structure */
-	echoServAddr.sin_family = AF_INET;             /* Internet address family */
-	echoServAddr.sin_addr.s_addr = inet_addr(servIP);   /* Server IP address */
-	echoServAddr.sin_port = htons(port);         /* Server port */
+	printf("Accepted %s\n", inet_ntoa(client_address.sin_addr));
 
-												 /* Establish the connection to the echo server */
-	if (connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-	{
-		DieWithError("connect() failed");
-	}
-
-	return (sock);
+	return clientSocket;
 }
 
-int acceptTCPConnection(int servSock)
-{
-	// 'servSock' is obtained from CreateTCPServerSocket()
+int receiveMessage(int socket, char * message, int buffersize) {
+	int  recvMsgSize;
+    buffersize--;
+        
+    // Receive message
+    recvMsgSize = recv(socket, message, buffersize, 0);
+    message[recvMsgSize] = '\0';
+    if (recvMsgSize < 1)
+    {		
+        error("recv() failed");
+    }
 
-	int                 clntSock;     /* Socket descriptor for client */
-	struct sockaddr_in  echoClntAddr; /* Client address */
-	unsigned int        clntLen;      /* Length of client address data structure */
+    printf("Message received\n");
 
-									  /* Set the size of the in-out parameter */
-	clntLen = sizeof(echoClntAddr);
-
-	/* Wait for a client to connect */
-	clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr, &clntLen);
-	if (clntSock < 0)
-	{
-		DieWithError("accept() failed");
-	}
-	/* clntSock is connected to a client! */
-
-	return (clntSock);
+    return recvMsgSize;
 }
 
-int receiveMessage(int socket, char * message, int buffersize)
-{
-	// 'clntSocket' is obtained from AcceptTCPConnection()
+int main(int argc, char **argv) {
+    char buffer[256];
+	int socksrv, sockcl;
 
-	int  recvMsgSize;                   /* Size of received message */
-	buffersize--;
+	socksrv = createServerSocket();
 
-	// Preventing TCP sockets from sending a SIGPIPE signal when disconnected
-	signal(SIGPIPE, SIG_IGN);
+    while(true){
 
-	/* Receive message */
-	recvMsgSize = recv(socket, message, buffersize, 0);
-	message[recvMsgSize] = '\0';
-	if (recvMsgSize < 1)
-	{
-		perror("recv() failed");
-	}
-	return recvMsgSize;
+	    
+	    sockcl = acceptTCPConnection(socksrv);
+
+	    printf("\n");
+
+	    int sterf = 1;
+
+	    while(sterf > 0) {
+	    	sterf = receiveMessage(sockcl, buffer, 256);
+	    	printf("Here is the message: %s\n",buffer);
+	    }
+
+	    shutdown(sockcl, SHUT_RDWR);
+	    //shutdown(socksrv, SHUT_RDWR);
+
+	    //close(sockcl);
+    	//close(socksrv);
+
+	}  
+     
+    return 0; 
 }
-
-int sendMessage(int socket, const char * message)
-{
-	int sendMsgSize = strlen(message);	/* Size of message to send */
-
-										// Preventing TCP sockets from sending a SIGPIPE signal when disconnected
-	signal(SIGPIPE, SIG_IGN);
-
-	/* Send message */
-	if (send(socket, message, sendMsgSize, 0) != sendMsgSize)
-	{
-		perror("send() failed");
-		return -1;
-	}
-	else {
-		return 1;
-	}
-}
-
-
