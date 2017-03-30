@@ -9,7 +9,7 @@
 #include <string>
 
 enum Result {
-	Success
+    Success
 };
 
 class Logger {
@@ -17,18 +17,17 @@ public:
     Logger(const std::string &systemVersion);
     ~Logger();
     void Write(std::string moduleName, 
-	       std::string functionName,
-	       Result functionResult);
-	std::string GetFileName();
-	
+           std::string functionName,
+           Result functionResult);
+    std::string GetFileName();
+    
 private:
-	Result writeHeader();
-	std::string fileName;
-	std::string systemVersion;
-	
-	std::string getTime();
-	const std::string separator = ",";
-	
+    Result writeHeader();
+    std::string fileName;
+    std::string systemVersion;
+    
+    std::string getTime();
+    const std::string separator = ",";
 };
 
 

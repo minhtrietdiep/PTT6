@@ -1,9 +1,11 @@
 # test for logging
-CC	 	= g++
-CFLAGS 	= -I. -std=c++11
-DEPS 	= logger.h
-TARGET 	= test
-OBJ 	= test.o logger.o
+# REMEMBER TO USE THE TAB CHARACTER FOR MAKEFILES
+# Copy the next thing: "	"
+CC	    = g++
+CFLAGS  = -I. -std=c++11
+DEPS    = logger.h
+TARGET  = test
+OBJ     = test.o logger.o
 
 %.o: %.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
