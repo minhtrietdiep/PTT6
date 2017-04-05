@@ -5,4 +5,3 @@ INC = -I.
 all: ;
 
 clean: ;
-
