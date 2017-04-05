@@ -1,15 +1,20 @@
 #include <sys/socket.h>
 #include <stdio.h>
+#include <iostream>
 #include <unistd.h>
-#include <string.h>
+#include <string>
+#include <pthread.h>
+#include <stdlib.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <cstring>
+#include <errno.h>
 
-#define PORT 4245
+#define PORT 4244
 
 void error(const char *msg)
 {
-    printf("Error: %s\n", msg);
+    printf("Error: %s -> %s\n", msg, strerror(errno));
 }
 
 int createServerSocket() {
@@ -21,6 +26,9 @@ int createServerSocket() {
     if(serverSocket < 0) {
     	error("socket() failed");
     }
+
+	int value = 1;
+    setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value));
 
     // Create server address
     memset(&server_address, 0, sizeof(server_address));
@@ -62,21 +70,60 @@ int acceptTCPConnection(int serverSocket) {
 	return clientSocket;
 }
 
-int receiveMessage(int socket, char * message, int buffersize) {
+int receiveMessage(int socket, char *message, int buffersize) {
 	int  recvMsgSize;
     buffersize--;
         
     // Receive message
     recvMsgSize = recv(socket, message, buffersize, 0);
     message[recvMsgSize] = '\0';
-    if (recvMsgSize < 1)
-    {		
-        error("recv() failed");
-    }
-
-    printf("Message received\n");
 
     return recvMsgSize;
+}
+
+void *messageThread(void *args) {
+
+	char bf[256];
+	bool loop = true;
+	int msgSize = 0;
+	int *socketclnt = (int *) args;
+
+	std::cout << "started messagethread "<< socketclnt << "  " << pthread_self() << std::endl;
+
+	while(loop) {
+		bzero(bf, 256);
+		msgSize = receiveMessage(*socketclnt, bf, 256);
+		std::string str (bf);
+		printf("Thread nr %lu, message: ", pthread_self());
+
+		std::cout << str << std::endl;
+
+		if(str == "exit" || msgSize < 1) {
+			loop = false;
+		}
+	}
+
+	shutdown(*socketclnt, SHUT_RDWR);
+	close(*socketclnt);
+	delete socketclnt;
+	printf("Thread nr %lu, sockets closed\n", pthread_self());
+}
+
+void *listenerThread(void *args) {
+
+	int *socketsrv = (int *) args;
+	bool loop = true;
+
+	std::cout << "listening for incoming connections " << pthread_self() << std::endl;
+
+	while(loop) {
+		pthread_t subThread;
+		std::cout << "waiting for new client" << std::endl;
+		int * sockclntP = new int (acceptTCPConnection(*socketsrv));
+		std::cout << "new client accepted" << std::endl;
+		pthread_create(&subThread, NULL, messageThread, sockclntP); 
+		pthread_detach(subThread);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -85,27 +132,26 @@ int main(int argc, char **argv) {
 
 	socksrv = createServerSocket();
 
-    while(true){
+	pthread_t thread;
+	int threadCount = 0;
 
-	    
-	    sockcl = acceptTCPConnection(socksrv);
+	pthread_create(&thread, NULL, listenerThread, &socksrv);
+	pthread_detach(thread);
+	std::cout << "created thread" << std::endl; 
+	
+	while(true){
 
-	    printf("\n");
+		// TODO
+	}
 
-	    int sterf = 1;
+	std::cout << "Closing server sockets." << std::endl;
 
-	    while(sterf > 0) {
-	    	sterf = receiveMessage(sockcl, buffer, 256);
-	    	printf("Here is the message: %s\n",buffer);
-	    }
+	shutdown(socksrv, SHUT_RDWR);
+	close(socksrv);
 
-	    shutdown(sockcl, SHUT_RDWR);
-	    //shutdown(socksrv, SHUT_RDWR);
+	std::cout << "Main program exiting." << std::endl;
 
-	    //close(sockcl);
-    	//close(socksrv);
-
-	}  
+	pthread_exit(NULL);
      
     return 0; 
 }
