@@ -1,10 +1,9 @@
 stages:
   - build
-
 build:
   stage: build
   script:
-    #- make all
-    #- make
+    - cd ./src
+    - make
 after_script:
   #- make clean
