@@ -4,14 +4,14 @@
 #include <iostream>
 #include <vector>
 
-class Control {
+class Control 
+{
+	private:
 
-
-private:
-
-public:
-Void SendCommands();
-Void RecieveCOmmands();
+	public:
+		Control();
+		void SendCommands();
+		void RecieveCommands();
 
 };
 

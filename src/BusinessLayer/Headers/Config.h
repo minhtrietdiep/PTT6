@@ -8,9 +8,13 @@ class Config
 {
 	private:
 		std::vector<Plate> DriveList;
+		std::vector<Plate> CollimatorList;
 	
 	public:
 		Config();
+		int DownloadConfig();
+		int UploadConfig();
+		int SaveConfig();
 		
 };
 
