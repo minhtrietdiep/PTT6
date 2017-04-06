@@ -14,7 +14,7 @@ class Plate
 		double Thickness ;
 		
 	public:
-		Plate::Plate();
+		Plate();
 };
 
 #endif  //  PLATE_H_
