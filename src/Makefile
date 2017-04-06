@@ -1,7 +1,21 @@
-CXX = g++
-CFLAGS = 
-INC = -I.
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=
+SUBDIRS=BusinessLayer/ UI/ HAL/ API/
 
-all: ;
+BUILDDIRS = $(SUBDIRS:%=build-%)
+CLEANDIRS = $(SUBDIRS:%=clean-%)
 
-clean: ;
+all: $(BUILDDIRS)
+$(SUBDIRS): $(BUILDDIRS)
+$(BUILDDIRS):
+	$(MAKE) -C $(@:build-%=%)
+
+
+clean: $(CLEANDIRS)
+$(CLEANDIRS): 
+	$(MAKE) -C $(@:clean-%=%) clean
+
+.PHONY: subdirs $(BUILDDIRS)
+.PHONY: subdirs $(CLEANDIRS)
+.PHONY: all install clean test
