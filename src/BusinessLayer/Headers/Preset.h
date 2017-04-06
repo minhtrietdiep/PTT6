@@ -9,10 +9,10 @@ class Preset
 {
 	private:
         int m_ID;
-        std::vector<Plate::Plate> m_PlateList;
+        std::vector<Plate> m_PlateList;
 
 	public:
-		Preset(int id,std::vector<Plate::Plate> platelist);
+		Preset(int id,std::vector<Plate> platelist);
         int GetID();
         std::vector<Plate> GetPlatelist();
 };
