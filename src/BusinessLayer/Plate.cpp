@@ -1,30 +1,30 @@
 #include "Headers/Plate.h"
 
-Plate::Plate(int id, int drivePos, int colimatorPosition, int properties, double tickness)
+Plate::Plate(int id, int drivePos, int colimatorPosition, int properties, double thickness)
 {
 	m_ID = id;
 	m_DrivePosition = drivePos;
 	m_ColimatorPosition = colimatorPosition;
 	m_Properties = properties;
-	m_Thickness = tickness;
+	m_Thickness = thickness;
 }
-double GetThickness()
+double Plate::GetThickness()
 {
 	return m_Thickness;
 }
-int GetProperties()
+int Plate::GetProperties()
 {
 	return m_Properties;
 }
-int GetColimatorPosition()
+int Plate::GetColimatorPosition()
 {
 	return m_ColimatorPosition;
 }
-int GetDrivePosition()
+int Plate::GetDrivePosition()
 {
 	return m_DrivePosition;
 }
-int GetID()
+int Plate::GetID()
 {
 	return m_ID;
 }
