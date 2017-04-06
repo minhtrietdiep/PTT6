@@ -1,17 +1,17 @@
 //#include "socket.h"
-#include <stdio.h>
-#include <stdlib.h>
+
+
 #include <vector>
 #include <pthread.h>
 
-#include <iostream>
-#include <unistd.h>
-#include <string>
 
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <cstring>
-#include <errno.h>
+
+
+
+
+
+
+
 
 struct threadArgments
 {
