@@ -8,12 +8,12 @@
 class Move {
 
 private:
-	int Source  ;
-	int Destination ;
-	std::vector<Step> Steplist;
+	int m_Source;
+	int m_Destination;
+	std::vector<Step> m_Steplist;
 
 public:
-	Move();
+	Move(int Source,int Destination,std::vector<Step> Steplist);
 
 
 };
