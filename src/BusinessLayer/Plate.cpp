@@ -22,7 +22,7 @@ int GetColimatorPosition()
 }
 int GetDrivePosition()
 {
-	return m_DrivePosition
+	return m_DrivePosition;
 }
 int GetID()
 {
