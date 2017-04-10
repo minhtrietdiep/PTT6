@@ -5,8 +5,11 @@
 
 class CommunicationServer;
 
-class Thread {
+class Thread
+{
     public:
+        Thread();
+        ~Thread();
         static void * MessageThread(void *args);
         static void * ListenerThread(void *args);
         struct MessageThreadArgments { int *clientSocket; CommunicationServer *communication; } ;

@@ -9,7 +9,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include <string>
 #include <cstring>
 #include <iostream>
 
@@ -25,7 +24,8 @@ CommunicationServer::CommunicationServer(int port)
 
 CommunicationServer::~CommunicationServer()
 {
-   for(unsigned int i=0; i < this->m_mainThread->my_args.clientSockets.size(); i++) {
+   for(unsigned int i=0; i < this->m_mainThread->my_args.clientSockets.size(); i++)
+   {
         close(*this->m_mainThread->my_args.clientSockets[i]);
         pthread_cancel(this->m_mainThread->my_args.receiveThreads[i]);
     }
@@ -57,19 +57,23 @@ int CommunicationServer::m_CreateServerSocket(int port)
 
     int serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     
-    if(serverSocket < 0) {
+    if(serverSocket < 0)
+    {
         this->m_Error("socket() failed");
     }
 
-    if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value)) < 0) {
+    if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value)) < 0)
+    {
         this->m_Error("setsockopt() failed");
     }
 
-    if(bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
+    if(bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0)
+    {
         this->m_Error("bind() failed");
     }
 
-    if(listen(serverSocket, 5) < 0) {
+    if(listen(serverSocket, 5) < 0)
+    {
         this->m_Error("listen() failed");
     }
 
@@ -85,7 +89,8 @@ int CommunicationServer::AcceptTCPConnection(int serverSocket)
     socklen_t clientLength = sizeof(clientAddress);
     int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientLength);
 
-    if(clientSocket < 0) {
+    if(clientSocket < 0)
+    {
         this->m_Error("accept() failed");
     }
 
@@ -100,7 +105,8 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
         
     int receiveMessageSize = recv(socket, message, bufferSize, 0);
 
-    if(receiveMessageSize < 0) {
+    if(receiveMessageSize < 0)
+    {
         this->m_Error("recv() failed");
     }
 
@@ -113,9 +119,15 @@ int CommunicationServer::SendMessage(int socket, char *message, int bufferSize)
 {
     int sendMessageSize = send(socket, message, bufferSize, 0);
 
-    if(sendMessageSize < 0) {
+    if(sendMessageSize < 0)
+    {
         this->m_Error("send() failed");
     }
 
     return sendMessageSize;
+}
+
+void CommunicationServer::AddToMessageQueue(std::string message)
+{
+    std::cout << message << std::endl;
 }
