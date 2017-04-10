@@ -1,7 +1,7 @@
 CFLAGS=-O2 -Wall
 SOURCES=Thread.cpp CommunicationServer.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-LIBPATH=-L .
+LIBPATH=-L ../lib/
 LIBS= -lstdc++ -lpthread
 LIBSTARGET=-lcommunication
 LIBSHOST=-lcommunicationhost
@@ -9,12 +9,12 @@ OUTPUT=communication
 
 lib-target:
 	arm-linux-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
-	ar rvs lib${OUTPUT}.a ${OBJECTS} -c
+	ar rvs ../lib/lib${OUTPUT}.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 
 lib-host:
 	g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
-	ar rvs lib${OUTPUT}host.a ${OBJECTS} -c
+	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 
 target:
@@ -32,4 +32,5 @@ all:
 clean:
 	rm -f *.out
 	rm -f *.o
-	rm -f *.a
+	rm -f ../lib/lib${OUTPUT}.a
+	rm -f ../lib/lib${OUTPUT}host.a
