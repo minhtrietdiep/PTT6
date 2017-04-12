@@ -1,7 +1,17 @@
-CXX = g++
-CFLAGS = 
-INC = -I.
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=
+SOURCES=Control.cpp API.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=API.out
 
-all: ;
+all: $(SOURCES) $(EXECUTABLE)
 
-clean: ;
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	$(RM) $(OBJECTS) $(EXECUTABLE)
