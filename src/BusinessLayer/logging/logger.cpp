@@ -5,25 +5,32 @@
 #include <sstream>
 #include <iomanip>
 
-Logger::Logger(const std::string &systemVersion) :
-    systemVersion(systemVersion) {
+Logger::Logger(const std::string &systemVersion, Severity printLevel) :
+    systemVersion(systemVersion),
+    printLevel(printLevel) {
     fileName = getTime() + ".csv";
     writeHeader();
-    Write("Logger", "Initialize", Success);
+    //Write("Logger", "Initialize", Success);
 }
 
 Logger::~Logger() {}
 
-void Logger::Write(std::string moduleName, 
-           std::string functionName,
-           Result functionResult) 
-{
+void Logger::Write(Severity severity,
+            std::string moduleName, 
+            std::string functionName,
+            Result functionResult) {
+    std::stringstream logLine;
+    logLine << getTime()              << separator
+            << severityText(severity) << separator
+            << systemVersion          << separator
+            << moduleName             << separator
+            << functionName           << separator
+            << functionResult         << separator << "\n";
     std::ofstream logFile(fileName, std::ios_base::out | std::ios_base::app);
-    logFile << getTime() << separator
-            << systemVersion << separator
-            << moduleName << separator
-            << functionName << separator
-            << functionResult << separator << "\n";
+    logFile << logLine.str();
+    if (severity == Severity::DEBUG && printLevel == Severity::DEBUG) {
+        std::cout << logLine.str(); // might wanna reformat this thing? :(
+    }
     logFile.close();
 }
 
@@ -35,11 +42,12 @@ std::string Logger::GetFileName() {
 // "TIMESTAMP;SYSTEMVERSION;MODULENAME;FUNCTIONCALL;RETURNVALUE;\n"    
 Result Logger::writeHeader() {
     std::ofstream logFile(fileName, std::ios_base::out | std::ios_base::app);
-    logFile << "TIMESTAMP" << separator
-            << "SYSTEMVERSION"     << separator
-            << "MODULENAME"        << separator
-            << "FUNCTIONCALL"     << separator
-            << "RETURNVALUE"      << separator
+    logFile << "TIMESTAMP"     << separator
+            << "SEVERITY"      << separator
+            << "SYSTEMVERSION" << separator
+            << "MODULENAME"    << separator
+            << "FUNCTIONCALL"  << separator
+            << "RETURNVALUE"   << separator
             << "\n";
     logFile.close();
     return Success;
@@ -57,3 +65,12 @@ std::string Logger::getTime() {
         << std::setw(2) << std::setfill('0') <<  now->tm_sec;
     return timeTemp.str();
 }
+
+std::string Logger::severityText(Severity severity) {
+    if (severity == Severity::Size) {
+        return "INVALIDLVL";
+    }
+
+    return SeverityHelper[(int)severity];
+}
+

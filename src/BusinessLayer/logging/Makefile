@@ -14,7 +14,5 @@ test: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm *.o
-	rm test
-	rm *.out
-	
+	rm -f $(TARGET)	
+	rm -f $(OBJ)
