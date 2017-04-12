@@ -4,13 +4,13 @@
 #include <iostream>
 #include <vector>
 
-class IRemotelog
+class IRemoteLog
 {
     private:
 
 
     public:
-        virtual DownloadLog(int logfilenumber);
+        virtual void DownloadLog(int logfilenumber)=0;
 };
 
 #endif  //  IREMOTELOG_H_
