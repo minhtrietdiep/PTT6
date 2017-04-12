@@ -1,15 +1,29 @@
 #include <stdio.h>
 #include "logger.h"
+const std::string myVer = "0.0.0";
+Logger logger(myVer, Logger::Severity::DEBUG);
+
+void successFunction() {
+    logger.Write(Logger::Severity::INFO, "This should succeed!", __func__, Success);
+}
+
+void failingFunction() {
+    logger.Write(Logger::Severity::ERROR, "This should error", __func__, Success);
+}
+
+void asPointer(Logger *mylogger) {
+    mylogger->Write(Logger::Severity::INFO, "Yes pointers!", __func__, Success);
+}
 
 int main() {
     printf("Hello!\n");
+    logger.Write(Logger::Severity::DEBUG, "test", __func__, Success); 
 
-    Logger logger("JUSTTESTING", Logger::Severity::DEBUG);
+    successFunction();
+    failingFunction();
+    asPointer(&logger);
+
     std::string logFile = logger.GetFileName();
-
-    logger.Write(Logger::Severity::DEBUG, "test", "main", Success);
-    
-    logger.Write(Logger::Severity::ERROR, "WOAH THAT WAS BAD", "main", Success);
     printf("We're done, check %s\n", logFile.c_str());
     return 0;
 }

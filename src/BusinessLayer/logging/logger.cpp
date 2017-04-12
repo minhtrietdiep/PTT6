@@ -28,7 +28,7 @@ void Logger::Write(Severity severity,
             << functionResult         << separator << "\n";
     std::ofstream logFile(fileName, std::ios_base::out | std::ios_base::app);
     logFile << logLine.str();
-    if (severity == Severity::DEBUG && printLevel == Severity::DEBUG) {
+    if (printLevel == Severity::DEBUG) {
         std::cout << logLine.str(); // might wanna reformat this thing? :(
     }
     logFile.close();
