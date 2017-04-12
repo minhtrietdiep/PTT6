@@ -3,16 +3,23 @@
 
 #include <iostream>
 #include <vector>
+#include "../../API/Interfaces/IUIControl.h"
+#include "../../API/Interfaces/IRemoteLog.h"
 
-class Control 
+class Control : public IUIControl, public IRemoteLog
 {
 	private:
 
 	public:
-		Control();
-		void SendCommands();
-		void RecieveCommands();
-
+        void PlateToDrive(int plateid);
+        void PlateToCollimator(int plateid);
+        void CancelCurrentOperation();
+        void EmergencyStop();
+        void ContinueSystem();
+        void ResetSystem();
+        void UploadConfig();
+        void DownloadConfig();
+        void DownloadLog(int logfilenumber);
 };
 
 #endif  //  CONTROL_H_
