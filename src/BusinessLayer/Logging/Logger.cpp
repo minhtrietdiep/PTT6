@@ -37,7 +37,7 @@ void Logger::Write(Severity severity,
     if ((int)severity >= (int)printLevel) {
         std::stringstream trace;
         trace << "[" << getTime() << "] " <<
-            std::setw(8) << severityText(severity) << message << std::endl; 
+            severityText(severity) << ": " << message << std::endl; 
         std::cout << trace.str();
     }
     logFile.close();
