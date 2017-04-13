@@ -28,10 +28,10 @@ public:
 
 private:
     const std::array<std::string, (int)Severity::Size> SeverityHelper = {
-        { "DEBUG",
-          "INFO",
+        { "DEBUG  ",
+          "INFO   ",
           "WARNING",
-          "ERROR" }
+          "ERROR  " }
     };
     
 private:

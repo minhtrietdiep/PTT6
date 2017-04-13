@@ -9,7 +9,7 @@
 
 class BanaanTest {
 private:
-    Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
+    Logger *logger;//(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 
 public:
     BanaanTest();
