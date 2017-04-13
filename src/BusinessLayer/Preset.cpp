@@ -2,8 +2,8 @@
 
 Preset::Preset(int id,std::vector<Plate> platelist)
 {
-m_PlateList = platelist;
-m_ID = id;
+    m_PlateList = platelist;
+    m_ID = id;
 }
 int Preset::GetID()
 {

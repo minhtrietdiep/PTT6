@@ -10,6 +10,7 @@ class IRemoteLog
 
 
     public:
+        virtual ~IRemoteLog(){}
         virtual void DownloadLog(int logfilenumber)=0;
 };
 

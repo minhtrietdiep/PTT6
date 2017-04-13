@@ -3,23 +3,31 @@
 
 #include <iostream>
 #include <vector>
+#include "Preset.h"
 #include "../../API/Interfaces/IUIControl.h"
 #include "../../API/Interfaces/IRemoteLog.h"
 
 class Control : public IUIControl, public IRemoteLog
 {
 	private:
+        std::vector<Preset> m_Presets;
 
 	public:
-        void PlateToDrive(int plateid);
-        void PlateToCollimator(int plateid);
-        void CancelCurrentOperation();
-        void EmergencyStop();
-        void ContinueSystem();
-        void ResetSystem();
-        void UploadConfig();
-        void DownloadConfig();
-        void DownloadLog(int logfilenumber);
+        //IUIControl functions
+        Control(std::vector<Preset> presets);
+        virtual ~Control();
+        virtual void PlateToDrive(int plateid);
+        virtual void PlateToCollimator(int plateid);
+        virtual void CancelCurrentOperation();
+        virtual void SetPreset(int presetid);
+        virtual void EmergencyStop();
+        virtual void ContinueSystem();
+        virtual void ResetSystem();
+        virtual void UploadConfig();
+        virtual void DownloadConfig();
+
+        //IRemoteLog functions
+        virtual void DownloadLog(int logfilenumber);
 };
 
 #endif  //  CONTROL_H_
