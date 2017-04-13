@@ -1,5 +1,6 @@
-#include "../Const.h"
 #include "MessageQueue.h"
+
+#include <Const.h>
 
 #include <fcntl.h>
 #include <stdio.h>

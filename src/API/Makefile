@@ -1,7 +1,7 @@
 CFLAGS=-O2 -Wall -std=c++11
 SOURCES=Thread.cpp CommunicationServer.cpp MessageQueue.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-LIBPATH=-L ../lib
+LIBPATH=-L ../lib -I ../lib
 LIBS=-lstdc++ -lpthread -lrt
 LIBSTARGET=-lcommunication -llogger
 LIBSHOST=-lcommunicationhost -lloggerhost

@@ -1,4 +1,4 @@
-#include "../Const.h"
+#include "../lib/Const.h"
 #include "Thread.h"
 #include "CommunicationServer.h"
 #include "MessageQueue.h"

@@ -1,7 +1,8 @@
-#include "../Const.h"
 #include "Thread.h"
 #include "MessageQueue.h"
 #include "CommunicationServer.h"
+
+#include <Const.h>
 
 #include <stdio.h>
 #include <stdlib.h>

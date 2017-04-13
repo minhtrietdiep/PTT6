@@ -1,7 +1,8 @@
-#include "../Const.h"
 #include "MessageQueue.h"
 
 #include <iostream>
+
+#include <Const.h>
 
 #include <stdio.h>
 #include <stdlib.h>
