@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "logger.h"
+#include "Logger.h"
 const std::string myVer = "0.0.0";
-Logger logger(myVer, Logger::Severity::DEBUG);
+Logger logger(myVer, Logger::Severity::DEBUG, "./logjes/");
 
 void successFunction() {
     logger.Write(Logger::Severity::INFO, "This should succeed!", __func__, Success);
