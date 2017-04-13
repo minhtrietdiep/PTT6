@@ -15,9 +15,9 @@ lib-host:
 	ar rvs ../../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 target:
-	arm-linux-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBSTARGET} ${LIBS}
+	arm-linux-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out BanaanTest.cpp main.cpp ${LIBSTARGET} ${LIBS}
 host:
-	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBSHOST} ${LIBS}
+	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out BanaanTest.cpp main.cpp ${LIBSHOST} ${LIBS}
 all:
 	make lib-target
 	make lib-host

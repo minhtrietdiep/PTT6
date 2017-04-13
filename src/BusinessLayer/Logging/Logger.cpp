@@ -24,16 +24,14 @@ Logger::Logger(const std::string &systemVersion, Severity printLevel, std::strin
 Logger::~Logger() {}
 
 void Logger::Write(Severity severity,
-            std::string moduleName, 
-            std::string functionName,
-            Result functionResult) {
+            std::string functionName, 
+            std::string message) {
     std::stringstream logLine;
     logLine << getTime()              << separator
             << severityText(severity) << separator
             << systemVersion          << separator
-            << moduleName             << separator
             << functionName           << separator
-            << functionResult         << separator << "\n";
+            << message                << separator << "\n";
     std::ofstream logFile(fileName, std::ios_base::out | std::ios_base::app);
     logFile << logLine.str();
     if (printLevel == Severity::DEBUG) {
@@ -53,9 +51,8 @@ Result Logger::writeHeader() {
     logFile << "TIMESTAMP"     << separator
             << "SEVERITY"      << separator
             << "SYSTEMVERSION" << separator
-            << "MODULENAME"    << separator
-            << "FUNCTIONCALL"  << separator
-            << "RETURNVALUE"   << separator
+            << "FUNCTIONCALL"    << separator
+            << "MESSAGE"  << separator
             << "\n";
     logFile.close();
     return Success;
