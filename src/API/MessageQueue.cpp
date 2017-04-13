@@ -20,8 +20,9 @@ MessageQueue::~MessageQueue()
 
 void MessageQueue::m_Error(const char *message)
 {
-    char *string = sprintf("%s -> %s\n", message, strerror(errno));
-    logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, str(string));
+    char stringt[256];
+    sprintf(stringt, "%s -> %s\n", message, strerror(errno));
+    logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, std::string(stringt));
     exit(-1);
 }
 

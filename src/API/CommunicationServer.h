@@ -2,6 +2,7 @@
 
 #include <string>
 #include <pthread.h>
+#include <vector>
 #include "../BusinessLayer/Logging/Logger.h"
 
 class Thread;

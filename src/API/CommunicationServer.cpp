@@ -20,6 +20,7 @@ CommunicationServer::CommunicationServer(int port)
     this->m_mainThread = new Thread;
     this->m_mainThread->my_args.serverSocket = this->m_CreateServerSocket(port);
     this->m_mainThread->my_args.communication = this;
+    this->m_mainThread->my_args.logger = logger;
 
     pthread_create(&this->m_thread, NULL, this->m_mainThread->ListenerThread, &this->m_mainThread->my_args);
     pthread_detach(this->m_thread);
@@ -39,15 +40,16 @@ CommunicationServer::~CommunicationServer()
 
     delete this->m_mainThread;
 
-    delete logger;
-
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "killed threads and closed sockets");
+
+    delete logger;
 }
 
 void CommunicationServer::m_Error(const char *message)
 {
-    char *string = sprintf("%s -> %s\n", message, strerror(errno));
-    logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, str(string));
+    char stringt[256];
+    sprintf(stringt, "%s -> %s\n", message, strerror(errno));
+    logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, std::string(stringt));
     exit(-1);
 }
 
@@ -85,8 +87,9 @@ int CommunicationServer::m_CreateServerSocket(int port)
         this->m_Error("listen() failed");
     }
 
-    char *string = sprintf("listening on %d\n", port);
-    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, str(string));
+    char stringt[256];
+    sprintf(stringt, "listening on %d\n", port);
+    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
 
     return serverSocket;
 }
@@ -103,8 +106,9 @@ int CommunicationServer::AcceptTCPConnection(int serverSocket)
         this->m_Error("accept() failed");
     }
 
-    char *string = sprintf("accepted new connection from %s\n", inet_ntoa(clientAddress.sin_addr));
-    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, str(string));
+    char stringt[256];
+    sprintf(stringt, "accepted new connection from %s\n", inet_ntoa(clientAddress.sin_addr));
+    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
 
     return clientSocket;
 }

@@ -2,6 +2,7 @@
 #include "Thread.h"
 #include "CommunicationServer.h"
 #include "MessageQueue.h"
+#include "../BusinessLayer/Logging/Logger.h"
 
 #include <iostream>
 
@@ -9,7 +10,8 @@
 #include <stdlib.h>
 #include <string>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     MessageQueue mq;
     
     mq.Create(MQ_NAME_RECEIVED_MESSAGES);

@@ -27,9 +27,9 @@ mqread:
 	g++ ${CFLAGS} ${LIBPATH} -w -o mqread.out mqread.cpp ${LIBSHOST} ${LIBS}
 
 all:
-	make lib-target
+	#make lib-target
 	make lib-host
-	make target
+	#make target
 	make host
 	make mqread
 
