@@ -1,4 +1,4 @@
-CFLAGS=-O2 -Wall -std=c++11
+CFLAGS=-O2 -Wall -std=c++11 -I../../lib/
 SOURCES=Logger.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBPATH=-L ../../lib

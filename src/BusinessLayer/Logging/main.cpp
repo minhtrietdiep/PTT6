@@ -1,12 +1,9 @@
 #include <stdio.h>
 #include "Logger.h"
 #include "BanaanTest.h"
+#include "Const.h"
 
-#define SYSTEM_VERSION "1.2.3.4"
-
-const std::string LOG_PATH = "./loggies/";
-
-Logger logger(SYSTEM_VERSION, Logger::Severity::DEBUG, LOG_PATH);
+Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 
 void successFunction() {
     logger.Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, "Success! :)");
@@ -22,14 +19,16 @@ void asPointer(Logger *mylogger) {
 
 int main() {
     printf("Hello!\n");
-    
-    BanaanTest banaanTest(logger);
-    logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Hi main! :)");
+    logger.WriteHeader();
+    logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "main start");
+
+    BanaanTest banaanTest;
 
     successFunction();
     failingFunction();
     asPointer(&logger);
 
+    logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "we're done!");
     std::string logFile = logger.GetFileName();
     printf("We're done, check %s\n", logFile.c_str());
     return 0;

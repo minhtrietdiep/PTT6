@@ -1,17 +1,12 @@
 /*
  * Logger definition
  * Logging format:
- * TIME;VERSION;MODULENAME;FUNCTIONCALL;RETURNVALUE;\n
- * date/time;systemVersion;module_name;function_name;function_result;\n
+ * TIME;VERSION;FUNCTIONCALL;MESSAGE;\n
  */
 
 #pragma once
 #include <string>
 #include <array>
-
-enum Result {
-    Success
-};
 
 class Logger {
 public:
@@ -20,11 +15,12 @@ public:
         INFO,
         WARNING,
         ERROR,
-        Size //pls don't use as real arg!!11!!
+        Size // This is just a helper to make arrays.
     };
 
-    Logger(const std::string &systemVersion, Severity level, std::string logPath);
+    Logger(const std::string &systemVersion, Severity printLevel, std::string logFile);
     ~Logger();
+    void WriteHeader();
     void Write(Severity severity,
             std::string functionName,
             std::string message);
@@ -33,15 +29,14 @@ public:
 private:
     const std::array<std::string, (int)Severity::Size> SeverityHelper = {
         { "DEBUG",
-        "INFO",
-        "WARNING",
-        "ERROR" }
+          "INFO",
+          "WARNING",
+          "ERROR" }
     };
     
 private:
     const std::string separator = ",";
     const std::string logExt = ".csv";
-    Result writeHeader();
     std::string fileName;
     std::string systemVersion;
     std::string severityText(Severity severity); 
