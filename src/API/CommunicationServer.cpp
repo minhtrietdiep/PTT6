@@ -41,13 +41,13 @@ CommunicationServer::~CommunicationServer()
 
     delete logger;
 
-    logger->Write(Logger::Severity::DEBUG, "killed threads and closed sockets", __func__);
+    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "killed threads and closed sockets");
 }
 
 void CommunicationServer::m_Error(const char *message)
 {
     char *string = sprintf("%s -> %s\n", message, strerror(errno));
-    logger->Write(Logger::Severity::ERROR, str(string), __func__);
+    logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, str(string));
     exit(-1);
 }
 
@@ -63,7 +63,7 @@ int CommunicationServer::m_CreateServerSocket(int port)
 
     int serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-    logger->Write(Logger::Severity::DEBUG, "server socket created", __func__);
+    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "server socket created");
     
     if(serverSocket < 0)
     {
@@ -86,7 +86,7 @@ int CommunicationServer::m_CreateServerSocket(int port)
     }
 
     char *string = sprintf("listening on %d\n", port);
-    logger->Write(Logger::Severity::INFO, str(string), __func__);
+    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, str(string));
 
     return serverSocket;
 }
@@ -104,7 +104,7 @@ int CommunicationServer::AcceptTCPConnection(int serverSocket)
     }
 
     char *string = sprintf("accepted new connection from %s\n", inet_ntoa(clientAddress.sin_addr));
-    logger->Write(Logger::Severity::INFO, str(string), __func__);
+    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, str(string));
 
     return clientSocket;
 }
@@ -120,7 +120,7 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
         this->m_Error("recv() failed");
     }
 
-    logger->Write(Logger::Severity::DEBUG, "message received", __func__);
+    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message received");
 
     message[receiveMessageSize] = '\0';
 
@@ -136,7 +136,7 @@ int CommunicationServer::SendMessage(int socket, char *message, int bufferSize)
         this->m_Error("send() failed");
     }
 
-    logger->Write(Logger::Severity::DEBUG, "message sent", __func__);
+    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message sent");
 
     return sendMessageSize;
 }
