@@ -1,3 +1,0 @@
-2017-04-13-16-09-24,DEBUG,0.0.1,std::string MessageQueue::Read(const char*),opening messagequeue,
-2017-04-13-16-09-24,ERROR,0.0.1,void MessageQueue::m_Error(const char*),mq_open() failed -> No such file or directory
-,

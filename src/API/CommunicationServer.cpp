@@ -49,7 +49,7 @@ CommunicationServer::~CommunicationServer()
 void CommunicationServer::m_Error(const char *message)
 {
     char stringt[256];
-    sprintf(stringt, "%s -> %s\n", message, strerror(errno));
+    sprintf(stringt, "%s -> %s", message, strerror(errno));
     logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, std::string(stringt));
     exit(-1);
 }
@@ -89,7 +89,7 @@ int CommunicationServer::m_CreateServerSocket(int port)
     }
 
     char stringt[256];
-    sprintf(stringt, "listening on %d\n", port);
+    sprintf(stringt, "listening on %d", port);
     logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
 
     return serverSocket;
@@ -108,7 +108,7 @@ int CommunicationServer::AcceptTCPConnection(int serverSocket)
     }
 
     char stringt[256];
-    sprintf(stringt, "accepted new connection from %s\n", inet_ntoa(clientAddress.sin_addr));
+    sprintf(stringt, "accepted new connection from %s", inet_ntoa(clientAddress.sin_addr));
     logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
 
     return clientSocket;

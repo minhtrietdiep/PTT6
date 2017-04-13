@@ -55,7 +55,7 @@ void * Thread::MessageThread(void *args)
             mq.Write(MQ_NAME_RECEIVED_MESSAGES, str);
 
             char stringt[256];
-            sprintf(stringt, "thread nr %lu, message: %s\n", pthread_self(), receiveBuffer);
+            sprintf(stringt, "thread nr %lu, message: %s", pthread_self(), receiveBuffer);
 
             messageThreadArgs->logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
             
