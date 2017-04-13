@@ -26,9 +26,8 @@ public:
     Logger(const std::string &systemVersion, Severity level, std::string logPath);
     ~Logger();
     void Write(Severity severity,
-            std::string moduleName,
             std::string functionName,
-            Result functionResult);
+            std::string message);
     std::string GetFileName();
 
 private:
@@ -50,5 +49,4 @@ private:
     Severity printLevel;
     std::string logPath;
 };
-
 

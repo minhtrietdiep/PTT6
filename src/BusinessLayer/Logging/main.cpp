@@ -1,23 +1,30 @@
 #include <stdio.h>
 #include "Logger.h"
-const std::string myVer = "0.0.0";
-Logger logger(myVer, Logger::Severity::DEBUG, "./logjes/");
+#include "BanaanTest.h"
+
+#define SYSTEM_VERSION "1.2.3.4"
+
+const std::string LOG_PATH = "./loggies/";
+
+Logger logger(SYSTEM_VERSION, Logger::Severity::DEBUG, LOG_PATH);
 
 void successFunction() {
-    logger.Write(Logger::Severity::INFO, "This should succeed!", __func__, Success);
+    logger.Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, "Success! :)");
 }
 
 void failingFunction() {
-    logger.Write(Logger::Severity::ERROR, "This should error", __func__, Success);
+    logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Fail! :)");
 }
 
 void asPointer(Logger *mylogger) {
-    mylogger->Write(Logger::Severity::INFO, "Yes pointers!", __func__, Success);
+    mylogger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, "Pointers zijn koel");
 }
 
 int main() {
     printf("Hello!\n");
-    logger.Write(Logger::Severity::DEBUG, "test", __func__, Success); 
+    
+    BanaanTest banaanTest(logger);
+    logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Hi main! :)");
 
     successFunction();
     failingFunction();
