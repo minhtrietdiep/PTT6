@@ -7,7 +7,7 @@ LIBSTARGET=-llogger
 LIBSHOST=-lloggerhost
 OUTPUT=logger
 lib-target:
-	arm-linux-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../../lib/lib${OUTPUT}.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 lib-host:
@@ -15,7 +15,7 @@ lib-host:
 	ar rvs ../../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 target:
-	arm-linux-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out BanaanTest.cpp main.cpp ${LIBSTARGET} ${LIBS}
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out BanaanTest.cpp main.cpp ${LIBSTARGET} ${LIBS}
 host:
 	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out BanaanTest.cpp main.cpp ${LIBSHOST} ${LIBS}
 all:
