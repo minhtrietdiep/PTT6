@@ -1,0 +1,22 @@
+{
+  "function": 
+  {
+    "priority": 1,
+    "sender": "id",
+    "functionName": "myFunction1",
+    "returnType": "int",
+    "parameters": 
+    [
+      {
+        "name": "param_1",
+        "dataType": "int",
+        "value": "123"
+      },
+      {
+        "name": "param_2",
+        "dataType": "string",
+        "value":"Hello World"
+      }
+    ]
+  }
+}
