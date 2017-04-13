@@ -4,12 +4,13 @@
 #include <iostream>
 #include <vector>
 
-class Step {
+class Step 
+{
 
-private:
-
-public:
-int StepID ;
+    private:
+        int m_StepID;
+    public:
+        
 
 
 };

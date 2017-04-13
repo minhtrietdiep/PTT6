@@ -11,6 +11,11 @@ Control::~Control()
 
 }
 
+std::vector<Preset> Control::GetPresets()
+{
+    return m_Presets;
+}
+
 void Control::PlateToDrive(int plateid)
 {
 	

@@ -8,10 +8,11 @@
 class Order 
 {
 	private:
-		std::vector<Move> List;
+		std::vector<Move> m_Moves;
 
 	public:
-		Order();
+		Order(std::vector<Move> moves);
+        std::vector<Move> GetMoves();
 		void Start();
 		void Stop();
 		void Reset();

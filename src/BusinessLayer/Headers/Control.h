@@ -13,8 +13,10 @@ class Control : public IUIControl, public IRemoteLog
         std::vector<Preset> m_Presets;
 
 	public:
-        //IUIControl functions
         Control(std::vector<Preset> presets);
+        std::vector<Preset> GetPresets();
+
+        //IUIControl functions
         virtual ~Control();
         virtual void PlateToDrive(int plateid);
         virtual void PlateToCollimator(int plateid);
