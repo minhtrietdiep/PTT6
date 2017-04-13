@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "../BusinessLayer/Logging/Logger.h"
 
 class MessageQueue
 {
@@ -14,4 +15,5 @@ class MessageQueue
         long GetMessageCount(const char *mqName);
     private:
         void m_Error(const char *message);
+        Logger *logger;
 };

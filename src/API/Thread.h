@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <pthread.h>
+#include "../BusinessLayer/Logging/Logger.h"
 
 class CommunicationServer;
 
@@ -15,4 +16,6 @@ class Thread
         struct MessageThreadArgments { int *clientSocket; CommunicationServer *communication; } ;
         struct ListenerThreadArgments { int serverSocket; std::vector<int*> clientSockets; std::vector<pthread_t> receiveThreads; CommunicationServer *communication; } ;
         ListenerThreadArgments my_args;
+    private:
+        Logger *logger;
 };

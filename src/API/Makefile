@@ -1,10 +1,10 @@
-CFLAGS=-O2 -Wall
+CFLAGS=-O2 -Wall -std=gnu++11
 SOURCES=Thread.cpp CommunicationServer.cpp MessageQueue.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBPATH=-L ../lib
 LIBS=-lstdc++ -lpthread -lrt
-LIBSTARGET=-lcommunication
-LIBSHOST=-lcommunicationhost
+LIBSTARGET=-lcommunication -llogger
+LIBSHOST=-lcommunicationhost -lloggerhost
 OUTPUT=communication
 
 lib-target:

@@ -1,4 +1,4 @@
-#include "Const.h"
+#include "../Const.h"
 #include "Thread.h"
 #include "MessageQueue.h"
 #include "CommunicationServer.h"
@@ -17,12 +17,12 @@
 
 Thread::Thread()
 {
-    // Nothing to do here
+    logger = new Logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 }
 
 Thread::~Thread()
 {
-    // Nothing to do here
+    delete logger;
 }
 
 void * Thread::MessageThread(void *args)
@@ -36,6 +36,8 @@ void * Thread::MessageThread(void *args)
 
     while(loop)
     {
+        logger->Write(Logger::Severity::DEBUG, "waiting for tcp message", __func__);
+
         memset(receiveBuffer,'\0', sizeof(receiveBuffer) / sizeof(receiveBuffer[0]));
         messageSize = messageThreadArgs->communication->ReceiveMessage(*messageThreadArgs->clientSocket, receiveBuffer, sizeof(receiveBuffer) / sizeof(receiveBuffer[0]));
         
@@ -45,12 +47,15 @@ void * Thread::MessageThread(void *args)
         if(str == "exit" || messageSize < 1)
         {
             loop = false;
+            logger->Write(Logger::Severity::DEBUG, "exiting messagethread", __func__);
         }
         else
         {
             mq.Write(MQ_NAME_RECEIVED_MESSAGES, str);
-            messageThreadArgs->communication->AddToMessageQueue(str);
-            printf("Thread nr %lu, message: %s\n", pthread_self(), receiveBuffer);
+
+            char * string = sprintf("thread nr %lu, message: %s\n", pthread_self(), receiveBuffer);
+
+            logger->Write(Logger::Severity::INFO, str(string), __func__);
             
             //messageThreadArgs->communication->SendMessage(*messageThreadArgs->clientSocket, receiveBuffer, messageSize);
         }
@@ -59,6 +64,8 @@ void * Thread::MessageThread(void *args)
     shutdown(*messageThreadArgs->clientSocket, SHUT_RDWR);
     close(*messageThreadArgs->clientSocket);
     delete messageThreadArgs->clientSocket;
+
+    logger->Write(Logger::Severity::DEBUG, "closed client sockets", __func__);
 
     return NULL;
 }
@@ -69,6 +76,8 @@ void * Thread::ListenerThread(void *args)
 
     while(true)
     {
+        logger->Write(Logger::Severity::DEBUG, "waiting for new client", __func__);
+
         pthread_t subThread;
         Thread thread;
         MessageThreadArgments messageThreadArgments;
@@ -77,6 +86,8 @@ void * Thread::ListenerThread(void *args)
         
         pthread_create(&subThread, NULL, thread.MessageThread, &messageThreadArgments); 
         pthread_detach(subThread);
+
+        logger->Write(Logger::Severity::DEBUG, "new thread created", __func__);
 
         listenerThreadArgs->clientSockets.push_back(messageThreadArgments.clientSocket);
         listenerThreadArgs->receiveThreads.push_back(subThread);

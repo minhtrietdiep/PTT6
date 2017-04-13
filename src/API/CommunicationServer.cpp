@@ -1,3 +1,4 @@
+#include "../Const.h"
 #include "CommunicationServer.h"
 #include "Thread.h"
 
@@ -14,6 +15,8 @@
 
 CommunicationServer::CommunicationServer(int port)
 {
+    logger = new Logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
+
     this->m_mainThread = new Thread;
     this->m_mainThread->my_args.serverSocket = this->m_CreateServerSocket(port);
     this->m_mainThread->my_args.communication = this;
@@ -36,12 +39,15 @@ CommunicationServer::~CommunicationServer()
 
     delete this->m_mainThread;
 
-    printf("Killed threads and closed sockets\n");
+    delete logger;
+
+    logger->Write(Logger::Severity::DEBUG, "killed threads and closed sockets", __func__);
 }
 
 void CommunicationServer::m_Error(const char *message)
 {
-    printf("Error: %s -> %s\n", message, strerror(errno));
+    char *string = sprintf("%s -> %s\n", message, strerror(errno));
+    logger->Write(Logger::Severity::ERROR, str(string), __func__);
     exit(-1);
 }
 
@@ -56,6 +62,8 @@ int CommunicationServer::m_CreateServerSocket(int port)
     serverAddress.sin_port = htons(port);
 
     int serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+    logger->Write(Logger::Severity::DEBUG, "server socket created", __func__);
     
     if(serverSocket < 0)
     {
@@ -77,7 +85,8 @@ int CommunicationServer::m_CreateServerSocket(int port)
         this->m_Error("listen() failed");
     }
 
-    printf("Socket created, listening on %d\n", port);
+    char *string = sprintf("listening on %d\n", port);
+    logger->Write(Logger::Severity::INFO, str(string), __func__);
 
     return serverSocket;
 }
@@ -94,7 +103,8 @@ int CommunicationServer::AcceptTCPConnection(int serverSocket)
         this->m_Error("accept() failed");
     }
 
-    printf("Accepted new connection from %s\n", inet_ntoa(clientAddress.sin_addr));
+    char *string = sprintf("accepted new connection from %s\n", inet_ntoa(clientAddress.sin_addr));
+    logger->Write(Logger::Severity::INFO, str(string), __func__);
 
     return clientSocket;
 }
@@ -110,6 +120,8 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
         this->m_Error("recv() failed");
     }
 
+    logger->Write(Logger::Severity::DEBUG, "message received", __func__);
+
     message[receiveMessageSize] = '\0';
 
     return receiveMessageSize;
@@ -124,10 +136,7 @@ int CommunicationServer::SendMessage(int socket, char *message, int bufferSize)
         this->m_Error("send() failed");
     }
 
-    return sendMessageSize;
-}
+    logger->Write(Logger::Severity::DEBUG, "message sent", __func__);
 
-void CommunicationServer::AddToMessageQueue(std::string message)
-{
-    std::cout << message << std::endl;
+    return sendMessageSize;
 }
