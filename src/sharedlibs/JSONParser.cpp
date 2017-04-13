@@ -45,7 +45,7 @@ Error JSONParser::JsonToClientMessage(std::string src, ClientMessage* dest)
 }
 
 
-std::string ClientMessageToJson(ClientMessage task)
+std::string JSONParser::ClientMessageToJson(ClientMessage task)
 {
     rapidjson::Document jsonObject;
 	rapidjson::Value functionObj;
