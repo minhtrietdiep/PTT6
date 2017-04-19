@@ -10,6 +10,9 @@ target:
 host:
 	cd CommunicationServer; make host
 
+test: 
+	cd CommunicationServer; make test
+
 all:
 	cd CommunicationServer; make all
 
