@@ -14,7 +14,10 @@ test:
 	cd CommunicationServer; make test
 
 all:
-	cd CommunicationServer; make all
+	make lib-target
+	make lib-host
+	make target
+	make host
 
 clean:
 	cd CommunicationServer; make clean

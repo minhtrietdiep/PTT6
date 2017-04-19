@@ -25,13 +25,10 @@ host:
 test:
 
 all:
-	cd Logging; make all
 	make lib-target
 	make lib-host
 	make target
 	make host
-	make test
-	
 
 clean:
 	cd Logging; make clean

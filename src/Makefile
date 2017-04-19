@@ -31,12 +31,13 @@ test:
 	cd UI; make test
 
 all:
-	cd BusinessLayer; make all
-	cd API; make all
-	cd HAL; make all
-	cd UI; make all
+	make lib-target
+	make lib-host
+	make target
+	make host
 
 clean:
+	cd sharedlibs; make clean
 	cd BusinessLayer; make clean
 	cd API; make clean
 	cd HAL; make clean
