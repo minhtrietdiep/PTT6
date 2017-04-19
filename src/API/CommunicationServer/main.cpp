@@ -1,11 +1,11 @@
-#include <Const.h>
 #include "Thread.h"
 #include "CommunicationServer.h"
 #include "MessageQueue.h"
+
+#include <Const.h>
 #include <Logger.h>
 
 #include <iostream>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
