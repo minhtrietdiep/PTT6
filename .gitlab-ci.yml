@@ -1,6 +1,7 @@
 stages:
   - build
   - cross-build
+  -test
 build:
   stage: build
   script:
@@ -11,5 +12,10 @@ cross-build:
     script:
         - cd ./src/API/
         - make all
+test:
+    stage: test
+    script:
+        - cd ./src/BusinessLayer
+        - make test
 after_script:
   #- make clean
