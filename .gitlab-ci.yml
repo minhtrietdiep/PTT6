@@ -1,7 +1,7 @@
 before_script:
     - cd ./src/BusinessLayer/Logging
     - make all
-    - cd ./src/API
+    - cd ../../API
     - make all
 stages:
   - compile
