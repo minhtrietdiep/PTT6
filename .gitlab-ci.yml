@@ -6,10 +6,12 @@ stages:
 compile:
   stage: compile
   script:
+    - make lib-host
     - make host
 cross-compile:
     stage: cross-compile
     script:
-        - make target
+    - make lib-target
+    - make target
 after_script:
   #  - make clean

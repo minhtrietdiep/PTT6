@@ -1,10 +1,15 @@
+#ifndef _LOGGER_H_
+#define _LOGGER_H_
+
+#pragma once
+
 /*
  * Logger definition
  * Logging format:
  * TIME;VERSION;FUNCTIONCALL;MESSAGE;\n
  */
 
-#pragma once
+
 #include <string>
 #include <array>
 
@@ -44,4 +49,6 @@ private:
     Severity printLevel;
     std::string logPath;
 };
+
+#endif
 
