@@ -1,6 +1,7 @@
 stages:
   - build
   - cross-build
+  - valgrind
 build:
   stage: build
   script:
