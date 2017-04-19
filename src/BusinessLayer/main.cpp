@@ -1,5 +1,5 @@
 #include <Const.h>
-#include <Thread.h>
+//#include <Thread.h>
 #include <MessageQueue.h>
 #include <Logger.h>
 #include <JSONParser.h>
@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 
 int main(int argc, char **argv)
 {
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
     std::cout << "Press any key to exit" << std::endl;    
     getchar();
 
-    pthread_exit(NULL);
+    //pthread_exit(NULL);
     return 0;
 }
 
