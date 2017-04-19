@@ -1,15 +1,16 @@
 stages:
-  - build
-  - cross-build
-build:
-  stage: build
+  - compile
+  - cross-compile
+compile:
+  stage: compile
   script:
     - cd ./src
     - make
-cross-build:
-    stage: cross-build
+cross-compile:
+    stage: cross-compile
     script:
         - cd ./src/API/
-        - make all
+        - make
+
 after_script:
   #- make clean
