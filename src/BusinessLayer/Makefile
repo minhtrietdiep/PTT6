@@ -1,11 +1,11 @@
 CFLAGS=-O2 -Wall -std=c++11
 SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-LIBPATH=-L ../../lib -I ../../lib/include
-LIBS=-lstdc++ -lpthread -lrt
+LIBPATH=-L ../lib -I ../lib/include
+LIBS=-lstdc++
 LIBSTARGET=-lcommunication -llogger
 LIBSHOST=-lcommunicationhost -lloggerhost
-OUTPUT=communication
+OUTPUT=bl
 
 lib-target:
 	cd Logging; make lib-target
@@ -37,6 +37,3 @@ clean:
 	cd Logging; make clean
 	rm -f *.out
 	rm -f *.o
-	rm -f ../../lib/lib${OUTPUT}.a
-	rm -f ../../lib/lib${OUTPUT}host.a
-	
