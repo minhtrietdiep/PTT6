@@ -2,8 +2,8 @@ CC=g++
 CFLAGS=-c -Wall 
 LDFLAGS=
 TESTLDFLAGS=-lpthread -lgtest -lgtest_main -L/usr/lib -pthread
-SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
-TESTSOURCES=Tests/Test_Config.cpp
+SOURCES=$(wildcard *.cpp)
+TESTSOURCES=$(wildcard Tests/*.cpp)
 TESTOBJECTS=$(TESTSOURCES:.cpp=.o)
 OBJECTS=$(SOURCES:.cpp=.o)
 TESTEXECUTABLE=Tests/RunTests.out
