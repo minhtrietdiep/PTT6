@@ -6,12 +6,12 @@ build:
   stage: build
   script:
     - cd ./src
-    - make# host
+    - make
 cross-build:
     stage: cross-build
     script:
         - cd ./src/API/
-        - make# target
+        - make
 valgrind:
     stage: valgrind
     script:
