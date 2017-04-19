@@ -1,21 +1,16 @@
 stages:
-  - build
-  - cross-build
-  - valgrind
-build:
-  stage: build
+  - compile
+  - cross-compile
+compile:
+  stage: compile
   script:
     - cd ./src
     - make
-cross-build:
-    stage: cross-build
+cross-compile:
+    stage: cross-compile
     script:
         - cd ./src/API/
         - make
-valgrind:
-    stage: valgrind
-    script:
-        - cd ./src/API
-        - valgrind communication-host.out
+
 after_script:
   #- make clean
