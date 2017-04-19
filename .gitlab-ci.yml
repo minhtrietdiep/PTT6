@@ -1,11 +1,5 @@
 before_script:
-    - cd ./src/BusinessLayer/Logging
-    - make lib-target
-    - make lib-host
-    - cd ../../API
-    - make lib-target
-    - make lib-host
-    - cd ../
+    - cd ./src
 stages:
   - compile
   - cross-compile
@@ -18,4 +12,4 @@ cross-compile:
     script:
         - make target
 after_script:
-  #- make clean
+  #  - make clean

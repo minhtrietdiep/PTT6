@@ -1,17 +1,42 @@
-CC=g++
-CFLAGS=-c -Wall
-LDFLAGS=
+CFLAGS=-O2 -Wall -std=c++11
 SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=BL.out
+LIBPATH=-L ../../lib -I ../../lib/include
+LIBS=-lstdc++ -lpthread -lrt
+LIBSTARGET=-lcommunication -llogger
+LIBSHOST=-lcommunicationhost -lloggerhost
+OUTPUT=communication
 
-all: $(SOURCES) $(EXECUTABLE)
+lib-target:
+	cd Logging; make lib-target
 
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+lib-host:
+	cd Logging; make lib-host
+	
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+target:
+	cd Logging; make target
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBSTARGET} ${LIBS}
+
+host:
+	cd Logging; make host
+	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBSHOST} ${LIBS}
+
+test:
+
+all:
+	cd Logging; make all
+	make lib-target
+	make lib-host
+	make target
+	make host
+	make test
+	
 
 clean:
-	$(RM) $(OBJECTS) $(EXECUTABLE)
+	cd Logging; make clean
+	rm -f *.out
+	rm -f *.o
+	rm -f ../../lib/lib${OUTPUT}.a
+	rm -f ../../lib/lib${OUTPUT}host.a
+	
