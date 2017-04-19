@@ -11,7 +11,7 @@ cross-build:
     script:
         - cd ./src/API/
         - make# target
-valgrind
+valgrind:
     stage: valgrind
     script:
         - cd ./src/API
