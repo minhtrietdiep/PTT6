@@ -1,8 +1,8 @@
-#include "../lib/Const.h"
+#include <Const.h>
 #include "Thread.h"
 #include "CommunicationServer.h"
 #include "MessageQueue.h"
-#include "../BusinessLayer/Logging/Logger.h"
+#include <Logger.h>
 
 #include <iostream>
 
