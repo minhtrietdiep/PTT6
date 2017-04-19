@@ -1,17 +1,36 @@
-CC=g++
-CFLAGS=-c -Wall
-LDFLAGS=
-SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
+CFLAGS=-O2 -Wall -std=c++11
+SOURCES=
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=BL.out
+LIBPATH=-L ../lib -I ../lib -I ../API -I ../sharedlibs # pls less dirty or something idk
+LIBS=-lstdc++ -lpthread -lrt
+LIBSTARGET= -lcommunication -llogger -ljsonparser
+LIBSHOST= -lcommunicationhost -lloggerhost -ljsonparserhost
+OUTPUT=mqjson
 
-all: $(SOURCES) $(EXECUTABLE)
+lib-target:
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
+	ar rvs ../lib/lib${OUTPUT}.a ${OBJECTS} -c
+	rm -f $(OBJECTS)
 
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+lib-host:
+	g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
+	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
+	rm -f $(OBJECTS)
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+target:
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBSTARGET} ${LIBS}
+
+host:
+	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBSHOST} ${LIBS}
+
+all:
+	make lib-target
+	make lib-host
+	make target
+	make host
 
 clean:
-	$(RM) $(OBJECTS) $(EXECUTABLE)
+	rm -f *.out
+	rm -f *.o
+	rm -f ../lib/lib${OUTPUT}.a
+	rm -f ../lib/lib${OUTPUT}host.a

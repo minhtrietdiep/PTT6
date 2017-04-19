@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     {
         std::cout << mq.Read(MQ_NAME_RECEIVED_MESSAGES) << std::endl;
         printf("MQ count: %ld\n\n", mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES));
-        getchar();
+//        getchar();
     }
 
     return 0;

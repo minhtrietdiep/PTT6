@@ -6,7 +6,7 @@ LIBSTARGET=-ljsonparser
 LIBSHOST=-ljsonparserhost
 OUTPUT=jsonparser
 lib-target:
-	arm-linux-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 lib-host:
@@ -14,9 +14,9 @@ lib-host:
 	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 target:
-	arm-linux-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBS} ${LIBSTARGET}
+#	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBS} ${LIBSTARGET}
 host:
-	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBS} ${LIBSHOST}
+#	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBS} ${LIBSHOST}
 all:
 	make lib-target
 	make lib-host
