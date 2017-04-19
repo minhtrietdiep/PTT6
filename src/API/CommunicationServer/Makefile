@@ -20,16 +20,16 @@ lib-host:
 	rm -f $(OBJECTS)
 
 target:
-	make lib-target
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBSTARGET} ${LIBS}
 
 host:
-	make lib-host
 	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBSHOST} ${LIBS}
 
 mqread:
 	g++ ${CFLAGS} ${LIBPATH} -w -o mqread-host.out mqread.cpp ${LIBSHOST} ${LIBS}
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o mqread.out mqread.cpp ${LIBSTARGET} ${LIBS}
+
+test:
 
 all:
 	make lib-target

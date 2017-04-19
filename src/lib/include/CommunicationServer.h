@@ -3,7 +3,7 @@
 #include <string>
 #include <pthread.h>
 #include <vector>
-#include "../BusinessLayer/Logging/Logger.h"
+#include <Logger.h>
 
 class Thread;
 
