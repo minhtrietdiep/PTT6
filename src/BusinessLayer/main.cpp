@@ -1,9 +1,9 @@
-#include "../lib/Const.h"
-#include "Thread.h"
-#include "MessageQueue.h"
-#include "../BusinessLayer/Logging/Logger.h"
-#include "../sharedlibs/JSONParser.h"
-#include "../sharedlibs/ClientMessage.h"
+#include <Const.h>
+#include <Thread.h>
+#include <MessageQueue.h>
+#include <Logger.h>
+#include <JSONParser.h>
+#include <ClientMessage.h>
 
 #include <iostream>
 

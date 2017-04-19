@@ -1,10 +1,10 @@
 CFLAGS=-O2 -Wall -std=c++11
 SOURCES=
 OBJECTS=$(SOURCES:.cpp=.o)
-LIBPATH=-L ../lib -I ../lib -I ../API -I ../sharedlibs # pls less dirty or something idk
+LIBPATH=-L ../lib -I ../lib/include -I ../sharedlibs # pls less dirty or something idk
 LIBS=-lstdc++ -lpthread -lrt
-LIBSTARGET= -lcommunication -llogger -ljsonparser
-LIBSHOST= -lcommunicationhost -lloggerhost -ljsonparserhost
+LIBSTARGET= -lcommunication -llogger -ljsonparser 
+LIBSHOST= -lcommunicationhost -lloggerhost -ljsonparserhost 
 OUTPUT=mqjson
 
 lib-target:
@@ -34,3 +34,4 @@ clean:
 	rm -f *.o
 	rm -f ../lib/lib${OUTPUT}.a
 	rm -f ../lib/lib${OUTPUT}host.a
+

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <pthread.h>
-#include "../BusinessLayer/Logging/Logger.h"
+#include <Logger.h>
 
 class CommunicationServer;
 
