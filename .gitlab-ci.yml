@@ -5,11 +5,16 @@ build:
   stage: build
   script:
     - cd ./src
-    - make
+    - make# host
 cross-build:
     stage: cross-build
     script:
         - cd ./src/API/
-        - make all
+        - make# target
+valgrind
+    stage: valgrind
+    script:
+        - cd ./src/API
+        - valgrind communication-host.out
 after_script:
   #- make clean
