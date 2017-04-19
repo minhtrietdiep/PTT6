@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=
-SUBDIRS=BusinessLayer/ UI/ HAL/
+SUBDIRS=BusinessLayer/ UI/ HAL/ API/
 
 BUILDDIRS = $(SUBDIRS:%=build-%)
 CLEANDIRS = $(SUBDIRS:%=clean-%)
