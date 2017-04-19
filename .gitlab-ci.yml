@@ -1,3 +1,8 @@
+before_script:
+    - cd ./src/BusinessLayer/Logging
+    - make all
+    - cd ./src/API
+    - make all
 stages:
   - compile
   - cross-compile
@@ -5,12 +10,11 @@ compile:
   stage: compile
   script:
     - cd ./src
-    - make
+    - make host
 cross-compile:
     stage: cross-compile
     script:
-        - cd ./src/API/
-        - make
-
+        - cd ./src
+        - make target
 after_script:
   #- make clean
