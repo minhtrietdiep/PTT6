@@ -3,12 +3,14 @@ lib-target:
 	cd API; make lib-target
 	cd HAL; make lib-target
 	cd UI; make lib-target
+	cd sharedlibs; make lib-target
 
 lib-host:
 	cd BusinessLayer; make lib-host
 	cd API; make lib-host
 	cd HAL; make lib-host
 	cd UI; make lib-host
+	cd sharedlibs; make lib-host
 
 target:
 	cd BusinessLayer; make target
