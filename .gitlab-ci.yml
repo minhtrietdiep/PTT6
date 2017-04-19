@@ -12,4 +12,4 @@ cross-compile:
     script:
         - make target
 after_script:
-    make clean
+    - make clean
