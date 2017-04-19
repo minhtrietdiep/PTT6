@@ -1,15 +1,22 @@
+<<<<<<< HEAD
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
 
 #pragma once
 
+=======
+>>>>>>> d006df4f6a351d69a8c470d42c729c86f9905e23
 /*
  * Logger definition
  * Logging format:
  * TIME;VERSION;FUNCTIONCALL;MESSAGE;\n
  */
 
+<<<<<<< HEAD
 
+=======
+#pragma once
+>>>>>>> d006df4f6a351d69a8c470d42c729c86f9905e23
 #include <string>
 #include <array>
 
@@ -50,5 +57,8 @@ private:
     std::string logPath;
 };
 
+<<<<<<< HEAD
 #endif
 
+=======
+>>>>>>> d006df4f6a351d69a8c470d42c729c86f9905e23
