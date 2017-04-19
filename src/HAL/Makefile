@@ -24,7 +24,6 @@ all:
 	make lib-host
 	make target
 	make host
-	make mqread
 
 clean:
 	rm -f *.out
