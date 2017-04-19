@@ -12,5 +12,6 @@ test:
     script:
         - cd ./src/BusinessLayer
         - make test
+        - ./Tests/RunTests.out
 after_script:
   #- make clean
