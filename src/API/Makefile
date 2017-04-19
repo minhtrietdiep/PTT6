@@ -1,7 +1,20 @@
-CXX = g++
-CFLAGS = 
-INC = -I.
+lib-target:
+	cd CommunicationServer; make lib-target
 
-all: ;
+lib-host:
+	cd CommunicationServer; make lib-host
 
-clean: ;
+target:
+	cd CommunicationServer; make target
+
+host:
+	cd CommunicationServer; make host
+
+test: 
+	cd CommunicationServer; make test
+
+all:
+	cd CommunicationServer; make all
+
+clean:
+	cd CommunicationServer; make clean
