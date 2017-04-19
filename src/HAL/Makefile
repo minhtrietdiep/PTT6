@@ -1,11 +1,11 @@
 CFLAGS=-O2 -Wall -std=c++11
 SOURCES=
 OBJECTS=$(SOURCES:.cpp=.o)
-LIBPATH=-L ../../lib -I ../../lib/include
+LIBPATH=-L ../lib -I ../lib/include
 LIBS=-lstdc++ -lpthread -lrt
 LIBSTARGET=-lcommunication -llogger
 LIBSHOST=-lcommunicationhost -lloggerhost
-OUTPUT=communication
+OUTPUT=hal
 
 lib-target:
 
@@ -29,5 +29,3 @@ all:
 clean:
 	rm -f *.out
 	rm -f *.o
-	rm -f ../../lib/lib${OUTPUT}.a
-	rm -f ../../lib/lib${OUTPUT}host.a
