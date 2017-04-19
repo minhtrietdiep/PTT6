@@ -4,7 +4,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 LIBPATH=-L ../lib -I ../lib/include -I ../sharedlibs
 LIBS=-lstdc++ -lrt
 LIBSTARGET=-lcommunication -llogger -ljsonparser
-LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
+#LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
 OUTPUT=bl
 
 lib-target:
@@ -16,11 +16,11 @@ lib-host:
 
 target:
 	cd Logging; make target
-	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBSTARGET} ${LIBS}
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out ${SOURCES} ${LIBSTARGET} ${LIBS}
 
 host:
 	cd Logging; make host
-	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBSHOST} ${LIBS}
+	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out ${SOURCES} ${LIBSHOST} ${LIBS}
 
 test:
 
