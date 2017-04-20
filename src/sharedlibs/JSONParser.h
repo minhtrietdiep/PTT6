@@ -14,7 +14,9 @@ class JSONParser
 public:
   JSONParser();
   ~JSONParser();
-  Error JsonToClientMessage(std::string src, ClientMessage* dest);
+  Error JsonToClientMessage(std::string src,
+                            ClientMessage* dest,
+                            std::string &details);
   std::string ClientMessageToJson(ClientMessage task);
 
 private:

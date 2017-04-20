@@ -13,34 +13,46 @@ JSONParser::JSONParser() { }
 JSONParser::~JSONParser() { }
 
 
-Error JSONParser::JsonToClientMessage(std::string src, ClientMessage* dest)
-{
-    if(src == "" || dest == NULL){  return Error::VAR_NULL;  } 
+Error JSONParser::JsonToClientMessage(std::string src, ClientMessage* dest, std::string &details) {
+    if(src == "" || dest == NULL) {
+        details = "Invalid source";
+        return Error::VAR_NULL;
+    } 
     Error ret = Error::NONE;
     rapidjson::Document jsonObject;
     jsonObject.Parse(src.c_str());
-    if(jsonObject.HasParseError() || !jsonObject["function"].IsObject()){  ret = Error::PARSE_ERROR;  }
-    else
-    {
-        const rapidjson::Value& function = jsonObject["function"].GetObject();
-        if(!function["priority"].IsInt()){  ret = Error::PARSE_ERROR;    }
-        else if(!function["sender"].IsString()){  ret = Error::PARSE_ERROR;    }
-        else if(!function["functionName"].IsString()){  ret = Error::PARSE_ERROR;    }
-        else if(!function["parameters"].IsArray()){  ret = Error::PARSE_ERROR;    }
-        if(ret == Error::NONE)
-        {
-            dest->SetPriority(function["priority"].GetInt());
-            dest->SetSender(function["sender"].GetString());
-            dest->SetFunctionName(function["functionName"].GetString());
-            int arraySize = function["parameters"].Size();
-            std::string parameters[10];
-            for (int i = 0; i < arraySize; i++) 
-            {
-                parameters[i]=function["parameters"][i]["value"].GetString();
-            } 
-            dest->SetParams(arraySize, parameters);
-        }
+    if(jsonObject.HasParseError() || !jsonObject["Function"].IsObject()) {
+        details = "Can't parse root";
+        return Error::PARSE_ERROR;
     }
+    const rapidjson::Value& function = jsonObject["Function"].GetObject();
+    if(!function["Priority"].IsString()) {
+        details = "Priority is not string";
+        return Error::PARSE_ERROR;
+    }
+    else if(!function["Sender"].IsString()) {
+        details = "Sender is not string";
+        return Error::PARSE_ERROR;
+    }
+    else if(!function["FunctionName"].IsString()) {
+        details = "FunctionName is not string";
+        return Error::PARSE_ERROR;
+    }
+    else if(!function["Parameters"].IsArray()) {
+        details = "Parameters is not array";
+        return Error::PARSE_ERROR;    
+    }
+
+    dest->SetPriority(std::stoi(function["Priority"].GetString()));
+    dest->SetSender(function["Sender"].GetString());
+    dest->SetFunctionName(function["FunctionName"].GetString());
+    int arraySize = function["Parameters"].Size();
+    std::string parameters[10];
+    for (int i = 0; i < arraySize; i++) 
+    {
+        parameters[i]=function["Parameters"][i]["Value"].GetString();
+    } 
+    dest->SetParams(arraySize, parameters);
     return ret;
 }
 
@@ -51,24 +63,24 @@ std::string ClientMessageToJson(ClientMessage task)
 	rapidjson::Value functionObj;
     rapidjson::Document::AllocatorType& allocator = jsonObject.GetAllocator();
     functionObj.SetObject();
-    functionObj.AddMember("priority",task.GetPriority(),jsonObject.GetAllocator());
-    functionObj.AddMember("sender", rapidjson::Value(task.GetSender().c_str(), allocator).Move(),allocator);
-    functionObj.AddMember("functionName",rapidjson::Value(task.GetFunctionName().c_str(),allocator),allocator);
-    functionObj.AddMember("returnType",rapidjson::Value("response",allocator),allocator);
+    functionObj.AddMember("Priority",task.GetPriority(),jsonObject.GetAllocator());
+    functionObj.AddMember("Sender", rapidjson::Value(task.GetSender().c_str(), allocator).Move(),allocator);
+    functionObj.AddMember("FunctionName",rapidjson::Value(task.GetFunctionName().c_str(),allocator),allocator);
+    functionObj.AddMember("ReturnType",rapidjson::Value("Response",allocator),allocator);
     
     rapidjson::Value parameters(rapidjson::kArrayType);
     for(int i=0;i<2;i++)
     {
         rapidjson::Value param;
         param.SetObject();
-        param.AddMember("value",rapidjson::Value(task.GetParam(i).c_str(),allocator),jsonObject.GetAllocator());
+        param.AddMember("Value",rapidjson::Value(task.GetParam(i).c_str(),allocator),jsonObject.GetAllocator());
         //param.AddMember("dataType",task.GetPriority(),jsonObject.GetAllocator());
         //param.AddMember("value",task.GetPriority(),jsonObject.GetAllocator());
         parameters.PushBack(param, allocator);
     }
-    functionObj.AddMember("parameters",parameters,allocator);
+    functionObj.AddMember("Parameters",parameters,allocator);
     jsonObject.SetObject();
-    jsonObject.AddMember("function", functionObj, jsonObject.GetAllocator());
+    jsonObject.AddMember("Function", functionObj, jsonObject.GetAllocator());
 
     rapidjson::StringBuffer buffer;
 
@@ -78,6 +90,4 @@ std::string ClientMessageToJson(ClientMessage task)
     jsonObject.Accept(writer);
     return strdup( buffer.GetString() );
 }
-
-
 
