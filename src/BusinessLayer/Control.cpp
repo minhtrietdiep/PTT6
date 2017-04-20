@@ -1,9 +1,12 @@
 #include "Headers/Control.h"
-
+#include <fstream>
 
 Control::Control(std::vector<Preset> presets)
 {
     m_Presets = presets;
+    std::fstream fs;
+    fs.open(m_FileName, std::fstream::in);
+    fs.close();
 }
 
 Control::~Control()
