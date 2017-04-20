@@ -107,11 +107,12 @@ std::string MessageQueue::Read(const char *mqName)
     return std::string(buffer);
 }
 
+// @Lars: Since this gets called lots, logging is not a smart thing to do here.
 long MessageQueue::GetMessageCount(const char *mqName)
 {
     struct mq_attr mqAttributes;
 
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "opening messagequeue");
+    //logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "opening messagequeue");
 
     mqd_t mq = mq_open(mqName, O_RDONLY);
     if (mq == (mqd_t)-1)
@@ -119,12 +120,16 @@ long MessageQueue::GetMessageCount(const char *mqName)
         this->m_Error("mq_open() failed");
     }
     
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "getting messagequeue attributes");
+    //logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "getting messagequeue attributes");
     
     if (mq_getattr(mq, &mqAttributes) < 0)
     {
         this->m_Error("mq_getattr() failed");
     }
-    
+
+    int ret = mq_close(mq);
+    if (ret != 0) {
+        logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Failed to close mq handle: " + errno);
+    }
     return mqAttributes.mq_curmsgs;
 }
