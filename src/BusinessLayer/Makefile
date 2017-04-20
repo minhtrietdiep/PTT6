@@ -8,7 +8,7 @@ TESTOBJECTS=$(TESTSOURCES:.cpp=.o)
 LIBPATH=-L ../lib -I ../lib/include -I ../sharedlibs
 LIBS=-lstdc++ -lrt
 LIBSTARGET=-lcommunication -llogger -ljsonparser
-#LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
+LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
 OUTPUT=bl
 TESTEXECUTABLE=Tests/RunTests.out
 
