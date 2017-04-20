@@ -5,17 +5,17 @@
 #include <vector>
 #include "Move.h"
 
-class Order {
+class Order 
+{
+	private:
+		std::vector<Move> m_Moves;
 
-private:
-
-public:
-
-std::vector<Move> List;
-void Start();
-void Stop();
-void Reset();
-
+	public:
+		Order(std::vector<Move> moves);
+        std::vector<Move> GetMoves();
+		void Start();
+		void Stop();
+		void Reset();
 };
 
 #endif  //  ORDER_H_
