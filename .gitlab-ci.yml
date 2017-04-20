@@ -20,7 +20,7 @@ cross-compile:
 unit-test:
     stage: unit-test
     - make test
-    - ./BusinessLayer/Tests/RunTests.out
+    #- ./BusinessLayer/Tests/RunTests.out
     #todo: ./ into api en de rest
 after_script:
   #  - make clean
