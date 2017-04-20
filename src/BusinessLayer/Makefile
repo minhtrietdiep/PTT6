@@ -10,7 +10,7 @@ LIBS=-lstdc++ -lrt
 LIBSTARGET=-lcommunication -llogger -ljsonparser
 LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
 OUTPUT=bl
-TESTEXECUTABLE=Tests/RunTests.out
+TESTEXECUTABLE=Tests/$(OUTPUT)-RunTests.out
 
 lib-target:
 	cd Logging; make lib-target
