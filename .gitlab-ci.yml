@@ -1,9 +1,17 @@
-stages:
-  - build
-build:
-  stage: build
-  script:
+before_script:
     - cd ./src
-    - make
+stages:
+  - compile
+  - cross-compile
+compile:
+  stage: compile
+  script:
+    - make lib-host
+    - make host
+cross-compile:
+    stage: cross-compile
+    script:
+    - make lib-target
+    - make target
 after_script:
-  #- make clean
+  #  - make clean
