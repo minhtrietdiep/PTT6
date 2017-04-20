@@ -19,8 +19,9 @@ cross-compile:
     - make target
 unit-test:
     stage: unit-test
+    script:
     - make test
-    #- ./BusinessLayer/Tests/RunTests.out
+    - ./BusinessLayer/Tests/bl-RunTests.out
     #todo: ./ into api en de rest
 after_script:
   #  - make clean
