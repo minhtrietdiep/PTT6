@@ -1,17 +1,17 @@
-stages:
-  - build
-  - test
-build:
-  stage: build
-  script:
+before_script:
     - cd ./src
-    - make
-
-test:
-    stage: test
+stages:
+  - compile
+  - cross-compile
+compile:
+  stage: compile
+  script:
+    - make lib-host
+    - make host
+cross-compile:
+    stage: cross-compile
     script:
-        - cd ./src/BusinessLayer
-        - make test
-        - ./Tests/RunTests.out
+    - make lib-target
+    - make target
 after_script:
-  #- make clean
+  #  - make clean

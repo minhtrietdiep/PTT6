@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "Logger.h"
+#include <Logger.h>
+#include <Const.h>
 #include "BanaanTest.h"
-#include "Const.h"
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 

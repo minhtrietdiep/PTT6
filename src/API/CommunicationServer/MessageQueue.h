@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "../BusinessLayer/Logging/Logger.h"
+#include <Logger.h>
 
 class MessageQueue
 {
