@@ -6,6 +6,7 @@ after_script:
 stages:
   - compile
   - cross-compile
+  - unit-test
 compile:
   stage: compile
   script:
@@ -16,5 +17,10 @@ cross-compile:
     script:
     - make lib-target
     - make target
+unit-test:
+    stage: unit-test
+    - make test
+    - ./BusinessLayer/Tests/RunTests.out
+    #todo: ./ into api en de rest
 after_script:
   #  - make clean
