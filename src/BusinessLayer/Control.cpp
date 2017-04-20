@@ -1,12 +1,22 @@
 #include "Headers/Control.h"
 #include <fstream>
+#include "../sharedlibs/include/rapidjson/document.h"
 
 Control::Control(std::vector<Preset> presets)
 {
     m_Presets = presets;
     std::fstream fs;
     fs.open(m_FileName, std::fstream::in);
+
+    for (size_t i = 0; i < 3; ++i) 
+    {
+        rapidjson::Value item(i);
+       // fs.push_back(&item);
+        std::cout << item.GetInt() << std::endl;
+    }
+
     fs.close();
+
 }
 
 Control::~Control()

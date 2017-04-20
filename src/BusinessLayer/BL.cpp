@@ -21,7 +21,7 @@ void init()
 int main(int argc, char** argv)
 {
 	init();
-    std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
+   // std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
     return 0;
 }
 
