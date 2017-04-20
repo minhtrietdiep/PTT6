@@ -3,7 +3,7 @@ SOURCES=
 #Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBPATH=-L ../lib -I ../lib/include 
-LIBS=-lstdc++ -lrt
+LIBS=-lstdc++ -lrt -lpthread
 LIBSTARGET=-lcommunication -llogger -ljsonparser
 LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
 OUTPUT=bl
