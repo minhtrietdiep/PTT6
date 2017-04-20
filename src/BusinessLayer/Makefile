@@ -33,6 +33,11 @@ all:
 	make test
 	
 
+test: $(TESTSOURCES) $(TESTEXECUTABLE)
+
+$(TESTEXECUTABLE):$(TESTOBJECTS)
+	$(CC) $(TESTOBJECTS) $(TESTLDFLAGS)  -o $@
+
 clean:
 	cd Logging; make clean
 	rm -f *.out
