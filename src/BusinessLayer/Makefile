@@ -1,5 +1,5 @@
 CFLAGS=-O2 -Wall -std=c++11
-SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
+SOURCES=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBPATH=-L ../lib -I ../lib/include -I ../sharedlibs
 LIBS=-lstdc++ -lrt
