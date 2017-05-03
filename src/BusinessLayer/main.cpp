@@ -25,6 +25,7 @@
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 
+// CTRL-C, CTRL-V because Linux doesn't have a kbhit
 int kbhit(void) {
   struct termios oldt, newt;
   int ch;
@@ -50,10 +51,11 @@ int kbhit(void) {
   return 0;
 }
 
+// Generate a randomly numbered JSON message
 std::string generateJson() {
     JSONParser jsParser;
     std::string funcName = "Generated";
-    funcName += std::to_string(rand() % 10);
+    funcName += std::to_string(rand() % 100);
     ClientMessage cm(
         0,
         funcName,
@@ -64,21 +66,24 @@ std::string generateJson() {
     return message;
 }
 
-void generateMq() {
+// Generate/add a message to MessageQueue
+void generateReceivedMessage() {
     MessageQueue mq;
     mq.Write(MQ_NAME_RECEIVED_MESSAGES, generateJson());
 }
 
-void generateCm() {
+void generateSentMessage() {
     // nope! :D
 }
 
+// Consume the clientMessage. This can be blocking. We can return the
+// ClientMessage we got, but also a new one if desired?
 ClientMessage slowFunc(ClientMessage cm) {
     int priority = cm.GetPriority();
     std::string sender = cm.GetSender();
     std::string funcName = cm.GetFunctionName();
     std::vector<Parameter> params = cm.GetParams();
-    int timeout = 2000;
+    int timeout = rand() % 5000;
     std::cout << "Priority:      " << priority << "\n";
     std::cout << "Sender:        " <<  sender << "\n";
     std::cout << "Function Name: " << funcName << "\n";
@@ -106,7 +111,7 @@ int main(int argc, char **argv) {
     printf("Press 1 to generate MessageQueue->ClientMessage item\n");
     printf("Press 2 to generate ClientMessage->MessageQueue item\n");
     while (true) {
-        // User input
+        // User input, because we want to create fake messages to test too
         if (kbhit()) {
             char c = getchar();
             if (c == ESC) {
@@ -115,23 +120,26 @@ int main(int argc, char **argv) {
             }
             if (c == '1') {
                 std::cout << "\n";
-                generateMq();
+                generateReceivedMessage();
             }
             if (c == '2') {
                 std::cout << "\n";
-                generateCm();
+                generateSentMessage();
             }
         }
 
-        // Messagequeue handling
+        // After parsing, launch a function that executes whatever is in the
+        // ClientMessage. This is done in a new thread to make this async.
         if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) {
             std::string rawMq;
             rawMq = mq.Read(MQ_NAME_RECEIVED_MESSAGES);
             ClientMessage clientMessage;
             std::string parseInfo;
-            Error result = jsparser.JsonToClientMessage(rawMq, &clientMessage, parseInfo);
+            Error result = jsparser.JsonToClientMessage(
+                rawMq, 
+                &clientMessage, 
+                parseInfo);
             if (result == Error::NONE) {
-                // return(args)
                 std::packaged_task<ClientMessage(ClientMessage)> task(&slowFunc);
                 auto future = task.get_future();
                 std::thread thread(std::move(task), clientMessage);
@@ -139,24 +147,38 @@ int main(int argc, char **argv) {
                 threads.push_back(std::move(thread));
                 
             } else {
-                logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Parsing failed: " + parseInfo);
+                logger.Write(
+                    Logger::Severity::ERROR, 
+                    __PRETTY_FUNCTION__, 
+                    "Parsing failed: " + parseInfo);
             }
         }
 
-        for (int i = 0; i < futures.size(); i++) {
-            auto status = futures.at(i).wait_for(std::chrono::milliseconds(0));
+        // We check the threads here, using C++11/STL threading. We also know
+        // which thread (ClientMessage) is done.
+        // Also don't use a ranged for, because we can remove the current
+        // element. Need the iterator!
+        for (auto it = futures.begin(); it != futures.end();) {
+            auto status = (*it).wait_for(std::chrono::milliseconds(0));
             if (status == std::future_status::ready) {
-                ClientMessage doneMessage = futures.at(i).get();
-                std::cout << "Function's done! (" << doneMessage.GetFunctionName() << ")\n";
-                futures.erase(futures.begin()+i);
+                ClientMessage doneMessage = (*it).get();
+                std::cout << "Function's done! (" << 
+                    doneMessage.GetFunctionName() << ")\n";
+                // We're done tracking it so we can erase the progress handle.
+                futures.erase(it);
+                std::cout << "Threads left: " << futures.size() << "\n";
+            }
+            else {
+                ++it;
             }
         }
 
-        // Let's not make the CPU 100% always.
+        // Let's go easy on the cpu here.
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
-    for (int i = 0; i < threads.size(); i++) {
-        threads.at(i).join();
+    // Use references because otherwise copy ctor and dtor are called.
+    for (auto &thread : threads) {
+        thread.join();
     }
     printf("Halted program\n");    
     return 0;
