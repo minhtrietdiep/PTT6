@@ -1,4 +1,5 @@
 CFLAGS=-O2 -Wall -std=c++11
+GFLAGS=-O0 -Wall -std=c++11 -g
 SOURCES=
 #Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
@@ -22,6 +23,9 @@ target:
 host:
 	cd Logging; make host
 	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out main.cpp ${LIBSHOST} ${LIBS}
+host-g:
+	cd Logging; make host
+	g++ ${GFLAGS} ${LIBPATH} -w -o $(OUTPUT)-host.out main.cpp ${LIBSHOST} ${LIBS}
 
 test:
 
