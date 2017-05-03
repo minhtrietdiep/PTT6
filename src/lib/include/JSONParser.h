@@ -17,7 +17,7 @@ public:
   Error JsonToClientMessage(std::string src,
                             ClientMessage* dest,
                             std::string &details);
-  std::string ClientMessageToJson(ClientMessage task);
+  std::string ClientMessageToJson(ClientMessage &task);
 
 private:
   
