@@ -6,9 +6,7 @@
 #include "include/rapidjson/writer.h"
 #include "include/rapidjson/stringbuffer.h"
 
-
 JSONParser::JSONParser() { }
-
 
 JSONParser::~JSONParser() { }
 
@@ -47,12 +45,18 @@ Error JSONParser::JsonToClientMessage(std::string src, ClientMessage* dest, std:
     dest->SetSender(function["Sender"].GetString());
     dest->SetFunctionName(function["FunctionName"].GetString());
     int arraySize = function["Parameters"].Size();
-    std::string parameters[10];
+    std::vector<Parameter> parameters;
     for (int i = 0; i < arraySize; i++) 
     {
-        parameters[i]=function["Parameters"][i]["Value"].GetString();
-    } 
-    dest->SetParams(arraySize, parameters);
+        
+        std::string name = function["Parameters"][i]["Name"].GetString();;
+        std::string type = function["Parameters"][i]["DataType"].GetString();;
+        std::string value = function["Parameters"][i]["Value"].GetString();;
+        Parameter p;
+        p = { name, type, value };
+        parameters.push_back(p);
+    }
+    dest->SetParams(parameters);
     return ret;
 }
 
@@ -73,7 +77,7 @@ std::string ClientMessageToJson(ClientMessage task)
     {
         rapidjson::Value param;
         param.SetObject();
-        param.AddMember("Value",rapidjson::Value(task.GetParam(i).c_str(),allocator),jsonObject.GetAllocator());
+        //param.AddMember("Value",rapidjson::Value(task.GetParams()[i].c_str(),allocator),jsonObject.GetAllocator());
         //param.AddMember("dataType",task.GetPriority(),jsonObject.GetAllocator());
         //param.AddMember("value",task.GetPriority(),jsonObject.GetAllocator());
         parameters.PushBack(param, allocator);

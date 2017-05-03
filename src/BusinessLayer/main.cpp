@@ -50,18 +50,31 @@ int kbhit(void) {
   return 0;
 }
 
-void someFunctionThatTakesAWhile(int priority, std::string sender, std::string funcName) {
+void someFunctionThatTakesAWhile(int priority,
+    std::string sender,
+    std::string funcName,
+    std::vector<Parameter> params) {
     std::cout << priority << "\n";
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::cout << sender << "\n";
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::cout << funcName << "\n";
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    for (auto p : params) {
+        std::cout   << p.Name << "\n"
+                    << p.Type << "\n"
+                    << p.Value << "\n";
+    }
 }
 
 std::thread* consumeClientMessage(ClientMessage cm) {
     printf("New thread:\n");
-    std::thread* thread = new std::thread(someFunctionThatTakesAWhile, cm.GetPriority(), cm.GetSender(), cm.GetFunctionName());
+    std::thread* thread = new std::thread(someFunctionThatTakesAWhile,
+            cm.GetPriority(),
+            cm.GetSender(),
+            cm.GetFunctionName(),
+            cm.GetParams());
+
     //thread.join();
     return thread;
 }
