@@ -1,5 +1,7 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
 before_script:
-    - cd ./src
+  - cd ./src
 stages:
   - compile
   - cross-compile

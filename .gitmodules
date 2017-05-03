@@ -1,0 +1,3 @@
+[submodule "src/sharedlibs"]
+	path = src/sharedlibs
+	url = ../../I332286/PTT6-sharedLibs
