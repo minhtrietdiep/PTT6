@@ -6,7 +6,7 @@
 #include <../sharedlibs/include/rapidjson/filereadstream.h>
 #include <fstream>
 
-using namespace rapidjson;
+
 
 Control::Control(std::vector<Preset> presets)
 {
@@ -15,8 +15,8 @@ Control::Control(std::vector<Preset> presets)
     
     FILE* fp = fopen(m_FileName, "r"); // non-Windows use "r"
     char readBuffer[65536];
-    FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-    Document d;
+    rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+    rapidjson::Document d;
     d.ParseStream(is);
 
 printf("PlateList = %s\n", d["PlateList"].GetString());

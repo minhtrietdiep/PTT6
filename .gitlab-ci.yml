@@ -1,8 +1,12 @@
 before_script:
     - cd ./src
+after_script:
+    - cd ./src
+    - make clean
 stages:
   - compile
   - cross-compile
+  - unit-test
 compile:
   stage: compile
   script:
@@ -13,5 +17,11 @@ cross-compile:
     script:
     - make lib-target
     - make target
+unit-test:
+    stage: unit-test
+    script:
+    - make test
+    - ./BusinessLayer/Tests/bl-RunTests.out
+    #todo: ./ into api en de rest
 after_script:
   #  - make clean
