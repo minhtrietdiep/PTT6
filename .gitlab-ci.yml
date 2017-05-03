@@ -1,6 +1,7 @@
-variables:
-  GIT_SUBMODULE_STRATEGY: recursive
 before_script:
+  - rm -rf ./src/sharedlibs
+  - git submodule sync --recursive
+  - git submodule update --init --recursive
   - cd ./src
 stages:
   - compile
