@@ -14,6 +14,7 @@
 
 int main(int argc, char **argv)
 {
+    /*
     MessageQueue mq;
     std::vector<std::string> messages;
     std::vector<ClientMessage> clientmessages;
@@ -36,8 +37,17 @@ int main(int argc, char **argv)
     }
     std::cout << "Press any key to exit" << std::endl;    
     getchar();
+    */
 
     //pthread_exit(NULL);
+
+    Plate *p1 = new Plate(1,1,0,2,5);
+    std::vector<Plate> *plates = new std::vector<Plate>();
+    plates->push_back(*p1);
+    Preset *preset1 = new Preset(1,*plates);
+    std::vector<Preset> *presets = new std::vector<Preset>(1, *preset1);
+    m_control = new Control(*presets);
+
     return 0;
 }
 
