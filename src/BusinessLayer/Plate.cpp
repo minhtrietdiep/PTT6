@@ -8,7 +8,6 @@ Plate::Plate(int id, int drivePos, int colimatorPosition, int properties, double
 	m_ColimatorPosition = colimatorPosition;
 	m_Properties = properties;
 	m_Thickness = thickness;
-	std::cout<<"New plate "<<id<<std::endl;
 }
 double Plate::GetThickness()
 {

@@ -21,7 +21,9 @@ void init()
 
     //std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
     //std::cout << control->GetPresets()[0].GetPlatelist()[1].GetThickness() << std::endl; //just to test
-    control->PlateToDrive(10);
+    //control->ResetSystem();
+    control->SetPreset(1);
+
 
 }
 

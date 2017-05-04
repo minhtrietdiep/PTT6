@@ -12,6 +12,8 @@ class Config
 	
 	public:
 		Config();
+		std::vector<Plate> GetDrivelist();
+		std::vector<Plate> GetCollimatorlist();
 		int DownloadConfig();
 		int UploadConfig();
 		int SaveConfig();
