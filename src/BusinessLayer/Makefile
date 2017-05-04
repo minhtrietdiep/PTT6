@@ -46,4 +46,3 @@ clean:
 	rm -f *.out
 	rm -f *.o
 	$(RM) $(TESTOBJECTS) $(TESTEXECUTABLE)
-

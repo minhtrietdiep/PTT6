@@ -3,18 +3,25 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
-
+typedef struct Parameter {
+  std::string Name;
+  std::string Type;
+  std::string Value;
+}Parameter;
+  
 class ClientMessage
 {
 public:
+
+
   ClientMessage();
   ClientMessage(int p_MessageId, 
                 std::string p_FuntionName, 
                 std::string p_Sender, 
                 int p_Priority,
-                int p_Size,
-                std::string p_Parameters[]);
+                std::vector<Parameter> p_Parameters);
   ~ClientMessage();
   void SetMessageId(int p_MessageId);
   int GetMessageId();
@@ -24,8 +31,8 @@ public:
   std::string GetSender();
   void SetPriority(int p_Priority);
   int GetPriority();
-  void SetParams(int p_Size, std::string p_Parameters[]);
-  std::string GetParam(int p_Index);
+  void SetParams(std::vector<Parameter> p_Parameters);
+  std::vector<Parameter> GetParams();
   std::string GetString();
 
 private:
@@ -33,7 +40,7 @@ private:
   std::string functionName;
   std::string sender;
   int priority;
-  std::string* parameters;
+  std::vector<Parameter> parameters;
 };
 
 

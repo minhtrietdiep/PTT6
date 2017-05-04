@@ -11,18 +11,13 @@ ClientMessage::ClientMessage(int p_MessageId,
                              std::string p_FuntionName, 
                              std::string p_Sender, 
                              int p_Priority,
-                             int p_Size,
-                             std::string* p_Parameters)
+                             std::vector<Parameter> p_Parameters)
 {
     this->messageId = p_MessageId;
     this->functionName = p_FuntionName;
     this->sender = p_Sender;
     this->priority = p_Priority;
-    this->parameters = new std::string[p_Size];
-    for (int i = 0; i < p_Size; i++)
-    {
-        this->parameters[i] = p_Parameters[i];
-    }
+    parameters = p_Parameters;
 }
 
 ClientMessage::~ClientMessage()
@@ -70,18 +65,16 @@ int ClientMessage::GetPriority()
     return this->priority;
 }
 
-void ClientMessage::SetParams(int p_Size, std::string p_Parameters[])
+void ClientMessage::SetParams(std::vector<Parameter> p_Parameters)
 {
-    this->parameters = new std::string[p_Size];
-    for (int i = 0; i < p_Size; i++)
-    {
-        this->parameters[i] = p_Parameters[i];
+    for (auto p : p_Parameters) {
+        parameters.push_back(p);
     }
 }
 
-std::string ClientMessage::GetParam(int p_Index)
+std::vector<Parameter> ClientMessage::GetParams()
 {
-    return this->parameters[p_Index];
+    return parameters;
 }
 
 std::string ClientMessage::GetString()
@@ -89,13 +82,19 @@ std::string ClientMessage::GetString()
     std::stringstream ss;
     ss << this->priority;
 
+    auto params = this->GetParams();
+
     std::string d = "Method: ";
     d += this->functionName;
     d += "\n Priority: ";
     d += ss.str();
-    d += "\n params: ";
-    d += this->GetParam(0);
-    d += ", ";
-    d += this->GetParam(1);
+    d += "\n ParamCount: ";
+    d += params.size();
+    d += "\n ";
+    for (auto param : params) {
+        d += "\nName: " + param.Name;
+        d += "\nType: " + param.Type;
+        d += "\nVal : " + param.Value;
+    }
     return d;
 }
