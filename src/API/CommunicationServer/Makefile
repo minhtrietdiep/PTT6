@@ -29,6 +29,10 @@ mqread:
 	g++ ${CFLAGS} ${LIBPATH} -w -o mqread-host.out mqread.cpp ${LIBSHOST} ${LIBS}
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o mqread.out mqread.cpp ${LIBSTARGET} ${LIBS}
 
+mqsend:
+	g++ ${CFLAGS} ${LIBPATH} -w -o mqsend-host.out mqsend.cpp ${LIBSHOST} ${LIBS}
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o mqsend.out mqsend.cpp ${LIBSTARGET} ${LIBS}
+
 test:
 
 all:
@@ -37,6 +41,7 @@ all:
 	make target
 	make host
 	make mqread
+	make mqsend
 
 clean:
 	rm -f *.out
