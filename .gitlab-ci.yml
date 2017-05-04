@@ -1,8 +1,5 @@
 before_script:
-    - cd ./src
-after_script:
-    - cd ./src
-    - make clean
+  - cd ./src
 stages:
   - compile
   - cross-compile
