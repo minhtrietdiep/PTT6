@@ -21,9 +21,13 @@
 #include <JSONParser.h>
 #include <ClientMessage.h>
 
+#include "../API/Interfaces/IUIControl.h"
+#include "Control.h"
+
 #define ESC 0x1B
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
+Control control({});
 
 // CTRL-C, CTRL-V because Linux doesn't have a kbhit
 int kbhit(void) {
@@ -54,10 +58,10 @@ int kbhit(void) {
 // Generate a randomly numbered JSON message
 std::string generateJson() {
     JSONParser jsParser;
-    std::string funcName = "Generated";
-    funcName += std::to_string(rand() % 100);
+    std::string funcName = "EmergencyStop";
+    //funcName += std::to_string(rand() % 100);
     ClientMessage cm(
-        0,
+        99,
         funcName,
         "0.0.0.0",
         0,
@@ -77,9 +81,24 @@ void generateSentMessage() {
     mq.Write(MQ_NAME_SEND_MESSAGES, generateJson());
 }
 
+
+void executeFunction(IUIControl *control, std::string functionName, std::vector<Parameter> params) {
+    if (functionName == "PlateToDrive") control->PlateToDrive(0);
+    if (functionName == "PlateToCollimator") control->PlateToCollimator(0);
+    if (functionName == "CancelCurrentOperation") control->CancelCurrentOperation();
+    if (functionName == "SetPreset") control->SetPreset(0);
+    if (functionName == "EmergencyStop") control->EmergencyStop();
+    if (functionName == "ContinueSystem") control->ContinueSystem();
+    if (functionName == "ResetSystem") control->ResetSystem();
+    if (functionName == "UploadConfig") control->UploadConfig();
+    if (functionName == "DownloadConfig") control->DownloadConfig();
+}
+
 // Consume the clientMessage. This can be blocking. We can return the
 // ClientMessage we got, but also a new one if desired?
 ClientMessage slowFunc(ClientMessage cm) {
+    // We only have one Control for now...
+
     int priority = cm.GetPriority();
     std::string sender = cm.GetSender();
     std::string funcName = cm.GetFunctionName();
@@ -93,11 +112,12 @@ ClientMessage slowFunc(ClientMessage cm) {
                     << p.Type << "\n"
                     << p.Value << "\n";
     }
-    std::cout << "Doing stuff for " << timeout << " milliseconds\n";
+    //std::cout << "Doing stuff for " << timeout << " milliseconds\n";
+    
+    executeFunction(&control, funcName, params);
+
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
-    // Don't print anything because we're sneaky,
-    // and we want to respond on the thread being done.
-    //std::cout << "Function done!\n";
+
     return cm;
 }
 

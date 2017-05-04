@@ -1,0 +1,47 @@
+[
+    {
+        "m_PresetID" : 0,
+        "m_PresetName" : "Preset1",
+        "m_PlateIDs" : 
+        [
+            {
+                "ID" : 1
+            },
+            {
+                "ID" : 3
+            },
+            {
+                "ID" : 2
+            }
+        ]
+    },
+    {
+        "m_PresetID" : 1,
+        "m_PresetName" : "Preset2",
+        "m_PlateIDs" : 
+        [
+            {
+                "ID" : 0
+            },
+            {
+                "ID" : 3
+            }
+        ]
+    },
+    {
+        "m_PresetID" : 2,
+        "m_PresetName" : "Preset3",
+        "m_PlateIDs" : 
+        [
+            {
+                "ID" : 1
+            },
+            {
+                "ID" : 2
+            },
+            {
+                "ID" : 3
+            }
+        ]
+    }
+]
