@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include <Const.h>
 #include <iostream>
 #include <fstream>
 #include <ctime>
@@ -13,12 +14,9 @@ Logger::Logger(const std::string &systemVersion, Severity printLevel, std::strin
     systemVersion(systemVersion),
     printLevel(printLevel),
     logPath(logPath) {
-//    struct stat st = {0};
-//    if (stat(logPath.c_str(), &st) == -1) {
-//        mkdir(logPath.c_str(), 0700);
-//    }
+
     fileName = logPath;//logPath + getTime() + logExt;
-    //writeHeader();
+    WriteHeader();
 }
 
 Logger::~Logger() {}
@@ -50,6 +48,12 @@ std::string Logger::GetFileName() {
 // Literally write this:
 // "TIMESTAMP;SYSTEMVERSION;MODULENAME;FUNCTIONCALL;RETURNVALUE;\n"    
 void Logger::WriteHeader() {
+
+    struct stat st = {0};
+    if (stat(LOG_FOLDER, &st) == -1) {
+        mkdir(LOG_FOLDER, 0700);
+    }
+
     std::ofstream logFile(fileName, std::ios_base::out | std::ios_base::app);
     logFile << "TIMESTAMP"     << separator
             << "SEVERITY"      << separator

@@ -31,10 +31,11 @@ test:
 	cd UI; make test
 
 all:
-	make lib-target
 	make lib-host
-	make target
+	make lib-target
 	make host
+	make target
+	make test
 
 clean:
 	cd sharedlibs; make clean

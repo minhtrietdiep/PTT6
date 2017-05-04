@@ -7,6 +7,7 @@
 #define MQ_MAX_MESSAGE 10
 
 #define LOG_PRINTLEVEL Logger::Severity::DEBUG
+#define LOG_FOLDER "./logs/"
 #define LOG_PATH "./logs/things.csv"
 
 #define VERSION "0.0.1"
