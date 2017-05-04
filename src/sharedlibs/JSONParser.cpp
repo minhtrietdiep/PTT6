@@ -103,4 +103,3 @@ std::string JSONParser::ClientMessageToJson(ClientMessage &task)
     jsonObject.Accept(writer);
     return std::string( buffer.GetString() );
 }
-
