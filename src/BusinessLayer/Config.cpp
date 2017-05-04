@@ -1,4 +1,4 @@
-#include "Headers/Config.h"
+#include "Config.h"
 
 Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 {
