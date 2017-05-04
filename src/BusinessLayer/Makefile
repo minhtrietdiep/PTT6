@@ -1,8 +1,9 @@
 CFLAGS=-O2 -Wall -std=c++11
-SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
+SOURCES=
+#Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp BL.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-LIBPATH=-L ../lib -I ../lib/include -I ../sharedlibs
-LIBS=-lstdc++ -lrt
+LIBPATH=-L ../lib -I ../lib/include 
+LIBS=-lstdc++ -lrt -lpthread
 LIBSTARGET=-lcommunication -llogger -ljsonparser
 LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
 OUTPUT=bl
@@ -25,13 +26,10 @@ host:
 test:
 
 all:
-	cd Logging; make all
 	make lib-target
 	make lib-host
 	make target
 	make host
-	make test
-	
 
 test: $(TESTSOURCES) $(TESTEXECUTABLE)
 

@@ -1,15 +1,20 @@
 CFLAGS=-O2 -Wall -std=c++11
 SOURCES=JSONParser.cpp ClientMessage.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-LIBPATH=-L ../lib/ -I ../lib/
+LIBPATH=-L ../lib/ -I ../lib/include
+LIBS=
 LIBSTARGET=-ljsonparser
 LIBSHOST=-ljsonparserhost
 OUTPUT=jsonparser
 lib-target:
+	cp Error.h ../lib/include
+	cp $(SOURCES:.cpp=.h) ../lib/include
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 lib-host:
+	cp Error.h ../lib/include
+	cp $(SOURCES:.cpp=.h) ../lib/include
 	g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
