@@ -6,11 +6,10 @@
 
 class Step 
 {
-
     private:
         int m_StepID;
     public:
-        
+    Step();       
 
 
 };
