@@ -12,7 +12,7 @@ namespace CalibrationPlateChangerClient {
         public MainForm() {
             TESTgenerateTestData();
             InitializeComponent();
-            m_PlateChanger = new PlateChangerAPI("192.168.0.10", 4244);
+            m_PlateChanger = new PlateChangerAPI("10.0.2.2", 4244);
             UpdateUI(m_PresetList, m_CollimatorPlateList, m_DrivePlateList);
         }
 
