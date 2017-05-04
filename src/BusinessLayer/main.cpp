@@ -108,6 +108,7 @@ int main(int argc, char **argv) {
     std::vector<std::future<ClientMessage>> futures;
     std::vector<std::thread> threads;
     printf("Press ESC to quit\n");
+    printf("Press 9 to hard-exit\n");
     printf("Press 1 to generate MessageQueue->ClientMessage item\n");
     printf("Press 2 to generate ClientMessage->MessageQueue item\n");
     while (true) {
@@ -117,6 +118,10 @@ int main(int argc, char **argv) {
             if (c == ESC) {
                 std::cout << "\n";
                 break;
+            }
+            if (c == '9') {
+                std::cout << "\n";
+                std::terminate();
             }
             if (c == '1') {
                 std::cout << "\n";
