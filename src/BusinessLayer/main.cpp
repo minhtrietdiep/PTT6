@@ -55,16 +55,28 @@ int kbhit(void) {
   return 0;
 }
 
+std::vector<std::string> knownOperations = {
+"PlateToDrive"          ,
+"PlateToCollimator"     ,
+"CancelCurrentOperation",
+"SetPreset"             ,
+"EmergencyStop"         ,
+"ContinueSystem"        ,
+"ResetSystem"           ,
+"UploadConfig"          ,
+"DownloadConfig"        ,
+};
+
 // Generate a randomly numbered JSON message
 std::string generateJson() {
     JSONParser jsParser;
-    std::string funcName = "EmergencyStop";
-    //funcName += std::to_string(rand() % 100);
+    std::string funcName = 
+        knownOperations.at(rand() % knownOperations.size());
     ClientMessage cm(
-        99,
+        0,
         funcName,
         "0.0.0.0",
-        0,
+        rand() % 10,
         {});
     std::string message = jsParser.ClientMessageToJson(cm);
     return message;
@@ -111,9 +123,7 @@ ClientMessage slowFunc(ClientMessage cm) {
         std::cout   << p.Name << "\n"
                     << p.Type << "\n"
                     << p.Value << "\n";
-    }
-    //std::cout << "Doing stuff for " << timeout << " milliseconds\n";
-    
+    }    
     executeFunction(&control, funcName, params);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
@@ -159,6 +169,9 @@ int main(int argc, char **argv) {
         if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) {
             std::string rawMq;
             rawMq = mq.Read(MQ_NAME_RECEIVED_MESSAGES);
+
+            std::cout << rawMq << "\n";
+
             ClientMessage clientMessage;
             std::string parseInfo;
             Error result = jsparser.JsonToClientMessage(

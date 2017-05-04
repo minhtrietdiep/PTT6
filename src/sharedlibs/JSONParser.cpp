@@ -19,11 +19,29 @@ Error JSONParser::JsonToClientMessage(std::string src, ClientMessage* dest, std:
     Error ret = Error::NONE;
     rapidjson::Document jsonObject;
     jsonObject.Parse(src.c_str());
-    if(jsonObject.HasParseError() || !jsonObject["Function"].IsObject()) {
-        details = "Can't parse root";
+    if(jsonObject.HasParseError()) {
+        details = "Can't parse string";
+        return Error::PARSE_ERROR;
+    }
+    if (!jsonObject.HasMember("Function")) {
+        details = "JSON doesn't contain \"Function\" as root";
+        return Error::PARSE_ERROR;
+    }
+    if(!jsonObject["Function"].IsObject()) {
+        details = "\"Function\" is not an object";
         return Error::PARSE_ERROR;
     }
     const rapidjson::Value& function = jsonObject["Function"].GetObject();
+
+    if (!function.HasMember("Priority") ||
+        !function.HasMember("Sender") ||
+        !function.HasMember("FunctionName") ||
+        !function.HasMember("ReturnType") ||
+        !function.HasMember("Parameters")) {
+        details = "\"Function\" misses or has corrupted members";
+        return Error::PARSE_ERROR;
+    }
+
     if(!function["Priority"].IsString()) {
         details = "Priority is not string";
         return Error::PARSE_ERROR;
@@ -44,6 +62,7 @@ Error JSONParser::JsonToClientMessage(std::string src, ClientMessage* dest, std:
     dest->SetPriority(std::stoi(function["Priority"].GetString()));
     dest->SetSender(function["Sender"].GetString());
     dest->SetFunctionName(function["FunctionName"].GetString());
+
     int arraySize = function["Parameters"].Size();
     std::vector<Parameter> parameters;
     for (int i = 0; i < arraySize; i++) 
