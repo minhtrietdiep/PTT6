@@ -5,8 +5,8 @@ SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp 
 OBJECTS=$(SOURCES:.cpp=.o)
 TESTSOURCES=$(wildcard Tests/*.cpp)
 TESTOBJECTS=$(TESTSOURCES:.cpp=.o)
-LIBPATH=-L ../lib -I ../lib/include -I ../sharedlibs
-LIBS=-lstdc++ -lrt
+LIBPATH=-L ../lib -I ../lib/include 
+LIBS=-lstdc++ -lrt -lpthread
 LIBSTARGET=-lcommunication -llogger -ljsonparser
 LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
 OUTPUT=bl
@@ -36,16 +36,14 @@ $(TESTEXECUTABLE):$(TESTOBJECTS)
 	$(CC) $(TESTOBJECTS) $(TESTLDFLAGS)  -o $@
 
 all:
-	cd Logging; make all
 	make lib-target
 	make lib-host
 	make target
 	make host
-	make test
-	
 
 clean:
 	cd Logging; make clean
 	rm -f *.out
 	rm -f *.o
 	$(RM) $(TESTOBJECTS) $(TESTEXECUTABLE)
+

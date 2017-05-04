@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -18,28 +19,35 @@ CommunicationServer::CommunicationServer(int port)
 {
     logger = new Logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 
-    this->m_mainThread = new Thread;
-    this->m_mainThread->my_args.serverSocket = this->m_CreateServerSocket(port);
-    this->m_mainThread->my_args.communication = this;
-    this->m_mainThread->my_args.logger = logger;
+    
+    m_mainThread = new Thread;
+    m_mainThread->my_args.serverSocket = m_CreateServerSocket(port);
+    m_mainThread->my_args.communication = this;
+    m_mainThread->my_args.logger = logger;
+    m_mainThread->my_args.clientSockets = new std::vector<int*>;
 
-    pthread_create(&this->m_thread, NULL, this->m_mainThread->ListenerThread, &this->m_mainThread->my_args);
-    pthread_detach(this->m_thread);
+    pthread_create(&m_thread, NULL, m_mainThread->ListenerThread, &m_mainThread->my_args);
+    pthread_detach(m_thread);
 }
 
 CommunicationServer::~CommunicationServer()
 {
-   for(unsigned int i=0; i < this->m_mainThread->my_args.clientSockets.size(); i++)
-   {
-        close(*this->m_mainThread->my_args.clientSockets[i]);
-        pthread_cancel(this->m_mainThread->my_args.receiveThreads[i]);
+    for(unsigned int i = 0; i < m_mainThread->my_args.clientSockets->size(); i++)
+    {
+        close(*m_mainThread->my_args.clientSockets->at(i));
     }
 
-    pthread_cancel(this->m_thread);
-    shutdown(this->m_mainThread->my_args.serverSocket, SHUT_RDWR);
-    close(this->m_mainThread->my_args.serverSocket);
+    for(unsigned int i=0; i < m_mainThread->my_args.receiveThreads.size(); i++)
+    {
+        pthread_cancel(m_mainThread->my_args.receiveThreads.at(i));
+    }
+    
+    pthread_cancel(m_thread);
+    shutdown(m_mainThread->my_args.serverSocket, SHUT_RDWR);
+    close(m_mainThread->my_args.serverSocket);
 
-    delete this->m_mainThread;
+    delete m_mainThread->my_args.clientSockets;
+    delete m_mainThread;
 
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "killed threads and closed sockets");
 
@@ -70,22 +78,22 @@ int CommunicationServer::m_CreateServerSocket(int port)
     
     if(serverSocket < 0)
     {
-        this->m_Error("socket() failed");
+        m_Error("socket() failed");
     }
 
     if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value)) < 0)
     {
-        this->m_Error("setsockopt() failed");
+        m_Error("setsockopt() failed");
     }
 
     if(bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0)
     {
-        this->m_Error("bind() failed");
+        m_Error("bind() failed");
     }
 
     if(listen(serverSocket, 5) < 0)
     {
-        this->m_Error("listen() failed");
+        m_Error("listen() failed");
     }
 
     char stringt[256];
@@ -104,7 +112,7 @@ int CommunicationServer::AcceptTCPConnection(int serverSocket)
 
     if(clientSocket < 0)
     {
-        this->m_Error("accept() failed");
+        m_Error("accept() failed");
     }
 
     char stringt[256];
@@ -122,7 +130,7 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
 
     if(receiveMessageSize < 0)
     {
-        this->m_Error("recv() failed");
+        m_Error("recv() failed");
     }
 
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message received");
@@ -138,7 +146,7 @@ int CommunicationServer::SendMessage(int socket, char *message, int bufferSize)
 
     if(sendMessageSize < 0)
     {
-        this->m_Error("send() failed");
+        m_Error("send() failed");
     }
 
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message sent");

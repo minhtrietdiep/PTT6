@@ -33,7 +33,7 @@ void MessageQueue::Create(const char *mqName)
     
     if (mq_unlink(mqName) < 0 && errno != ENOENT)
     {
-        this->m_Error("mq_unlink() failed");
+        m_Error("mq_unlink() failed");
     }
 
     struct mq_attr mqAttributes;
@@ -45,7 +45,7 @@ void MessageQueue::Create(const char *mqName)
     mqd_t mq = mq_open(mqName, O_RDWR | O_CREAT, 0644, &mqAttributes);
     if (mq == (mqd_t)-1)
     {
-        this->m_Error("mq_open() failed---");
+        m_Error("mq_open() failed");
     }
 
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "messagequeue created");
@@ -57,7 +57,7 @@ void MessageQueue::Close(const char *mqName)
     
     if (mq_unlink(mqName) < 0)
     {
-        this->m_Error("mq_unlink() failed");
+        m_Error("mq_unlink() failed");
     }
 
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "messagequeue closed");
@@ -70,14 +70,14 @@ void MessageQueue::Write(const char *mqName, std::string data)
     mqd_t mq = mq_open(mqName, O_WRONLY);
     if (mq == (mqd_t)-1)
     {
-        this->m_Error("mq_open() failed");
+        m_Error("mq_open() failed");
     }
 
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "writing to messagequeue");
     
     if (mq_send(mq, data.c_str(), MAX_MESSAGE_SIZE, MQ_MESSAGE_PRIORITY) < 0)
     {
-        this->m_Error("mq_send() failed");
+        m_Error("mq_send() failed");
     }
 
 }
@@ -92,7 +92,7 @@ std::string MessageQueue::Read(const char *mqName)
     mqd_t mq = mq_open(mqName, O_RDONLY);
     if (mq == (mqd_t)-1)
     {
-        this->m_Error("mq_open() failed");
+        m_Error("mq_open() failed");
     }
     
     logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "reading messagequeue");
@@ -100,31 +100,36 @@ std::string MessageQueue::Read(const char *mqName)
     messageSize = mq_receive(mq, buffer, MAX_MESSAGE_SIZE, MQ_MESSAGE_PRIORITY);
     if (messageSize < 0)
     {
-        this->m_Error("mq_receive() failed");
+        m_Error("mq_receive() failed");
     }
     buffer[messageSize] = '\0';
     
     return std::string(buffer);
 }
 
+// @Lars: Since this gets called lots, logging is not a smart thing to do here.
 long MessageQueue::GetMessageCount(const char *mqName)
 {
     struct mq_attr mqAttributes;
 
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "opening messagequeue");
+    //logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "opening messagequeue");
 
     mqd_t mq = mq_open(mqName, O_RDONLY);
     if (mq == (mqd_t)-1)
     {
-        this->m_Error("mq_open() failed");
+        m_Error("mq_open() failed");
     }
     
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "getting messagequeue attributes");
+    //logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "getting messagequeue attributes");
     
     if (mq_getattr(mq, &mqAttributes) < 0)
     {
-        this->m_Error("mq_getattr() failed");
+        m_Error("mq_getattr() failed");
     }
-    
+
+    int ret = mq_close(mq);
+    if (ret != 0) {
+        logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Failed to close mq handle: " + errno);
+    }
     return mqAttributes.mq_curmsgs;
 }

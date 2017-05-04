@@ -38,6 +38,7 @@ all:
 	make test
 
 clean:
+	cd sharedlibs; make clean
 	cd BusinessLayer; make clean
 	cd API; make clean
 	cd HAL; make clean
