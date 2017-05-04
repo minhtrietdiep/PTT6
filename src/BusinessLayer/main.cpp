@@ -12,8 +12,23 @@
 #include <string>
 #include <vector>
 
+#include "Headers/Control.h"
+
+void init()
+{
+
+    Control *control = new Control();
+
+    //std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
+    //std::cout << control->GetPresets()[0].GetPlatelist()[1].GetThickness() << std::endl; //just to test
+    control->PlateToDrive(10);
+
+}
+
 int main(int argc, char **argv)
 {
+    init();
+/*
     MessageQueue mq;
     std::vector<std::string> messages;
     std::vector<ClientMessage> clientmessages;
@@ -38,6 +53,6 @@ int main(int argc, char **argv)
     getchar();
 
     //pthread_exit(NULL);
-    return 0;
+    */return 0;
 }
 

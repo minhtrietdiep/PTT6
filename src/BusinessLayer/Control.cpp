@@ -8,19 +8,20 @@
 
 
 
-Control::Control(std::vector<Preset> presets)
+Control::Control()
 {
+    m_Order = new Order();
+    m_Config = new Config();
+
     
-    m_Presets = presets;
-    
-    FILE* fp = fopen(m_FileName, "r"); // non-Windows use "r"
+    /*FILE* fp = fopen(m_FileName, "r"); // non-Windows use "r"
     char readBuffer[65536];
     rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     rapidjson::Document d;
     d.ParseStream(is);
 
 printf("PlateList = %s\n", d["PlateList"].GetString());
-/*
+
     Value& s = d["stars"];
     s.SetInt(s.GetInt() + 1);
     // 3. Stringify the DOM
@@ -30,10 +31,10 @@ printf("PlateList = %s\n", d["PlateList"].GetString());
     // Output {"project":"rapidjson","stars":11}
     std::cout << buffer.GetString() << std::endl;
     std::cout << "hoi" << std::endl;
-*/
+
     fclose(fp);
     
-        /*
+        
     std::printf("test\n");
     const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
 
@@ -49,12 +50,12 @@ printf("PlateList = %s\n", d["PlateList"].GetString());
     //assert(d["Preset"].IsString());
     //printf("Preset = %s\n", d["Preset"].GetString());
 
-    */
+    
 
         // 1. Parse a JSON string into DOM.
     const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
     const char* json1 = "{\"hello\": \"world\",\"t\": true ,\"f\": false,\"n\": null,\"i\": 123,\"pi\": 3.1416,\"a\": [1, 2, 3, 4]}";
-/*
+
     Document d;
     d.Parse(json);
 

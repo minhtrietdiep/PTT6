@@ -3,18 +3,17 @@
 
 #include <iostream>
 #include <vector>
-#include "Plate.h"
 
 class Preset
 {
-	private:
+    private:
         int m_ID;
-        std::vector<Plate> m_PlateList;
+        std::vector<int> m_PlateList;
 
-	public:
-		Preset(int id,std::vector<Plate> platelist);
+    public:
+        Preset(int id,std::vector<int> PlateList);
         int GetID();
-        std::vector<Plate> GetPlatelist();
+        std::vector<int> GetPlatelist();
 };
 
 #endif  //  PRESET_H_

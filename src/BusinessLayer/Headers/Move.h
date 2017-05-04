@@ -3,19 +3,15 @@
 
 #include <iostream>
 #include <vector>
-#include "Step.h"
 
 class Move {
 
 private:
-	int m_Source;
-	int m_Destination;
-	std::vector<Step> m_Steplist;
+    int m_PlateID;
+    int m_Destination;
 
 public:
-	Move(int Source,int Destination,std::vector<Step> Steplist);
-
-
+    Move(int PlateID,int Destination);
 };
 
 #endif  //  MOVE_H_
