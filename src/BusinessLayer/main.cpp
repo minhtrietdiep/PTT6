@@ -73,7 +73,8 @@ void generateReceivedMessage() {
 }
 
 void generateSentMessage() {
-    // nope! :D
+    MessageQueue mq;
+    mq.Write(MQ_NAME_SEND_MESSAGES, generateJson());
 }
 
 // Consume the clientMessage. This can be blocking. We can return the
