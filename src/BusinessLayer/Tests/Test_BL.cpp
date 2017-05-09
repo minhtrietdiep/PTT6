@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "../Headers/Plate.h"
  
 TEST(BLtest, test1) 
 {

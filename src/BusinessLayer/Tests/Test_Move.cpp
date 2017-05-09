@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "../Headers/Move.h"
  
 TEST(Movetest, test1) 
 {
