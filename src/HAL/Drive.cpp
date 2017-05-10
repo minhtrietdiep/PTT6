@@ -5,14 +5,16 @@ Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
     m_DriveID = driveid;
 }
 
-void Drive::OpenDrive()
+int Drive::OpenDrive()
 {
     std::cout << "Opening drive " << m_DriveID << std::endl;
+    return 1;
 }
 
-void Drive::CloseDrive()
+int Drive::CloseDrive()
 {
     std::cout << "Closing drive " << m_DriveID << std::endl;
+    return 1;
 }
 
 int Drive::GetDriveID()

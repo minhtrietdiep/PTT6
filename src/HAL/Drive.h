@@ -13,8 +13,8 @@ class Drive
 
     public:
         Drive(int driveid, Coordinates positions);
-        void OpenDrive();
-        void CloseDrive();
+        int OpenDrive();
+        int CloseDrive();
         int GetDriveID();
 };
 

@@ -1,11 +1,11 @@
 #include "Vacuum.h"
 
-void Vacuum::EnableVacuum()
+int Vacuum::EnableVacuum()
 {
-
+    return 1;
 }
 
-void Vacuum::DisableVacuum()
+int Vacuum::DisableVacuum()
 {
-    
+    return 1;
 }

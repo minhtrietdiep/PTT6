@@ -3,14 +3,16 @@
 
 #include <iostream>
 #include <vector>
+#include "Coordinates.h"
 
 class Arm
 {
     private:
-        //Coord m_HomePosition
+        Coordinates m_HomePosition;
 
     public:
-        void MoveToCoord();
+        Arm(Coordinates homeposition);
+        int MoveToCoord(Coordinates coordinates);
 
 };
 

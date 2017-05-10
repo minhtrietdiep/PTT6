@@ -10,8 +10,8 @@ class Vacuum
         int m_VacuumStatus;
 
     public:
-        void EnableVacuum();
-        void DisableVacuum();
+        int EnableVacuum();
+        int DisableVacuum();
 };
 
 #endif  //  VACUUM_H_

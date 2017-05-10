@@ -16,11 +16,11 @@ class HAL
 
     public:
         HAL(std::vector<Drive> drivelist, Vacuum vacuum, Arm arm);
-        void Pickup(bool on);
-        void MoveArm(int driveid);
-        void MoveArmToHome();
-        void OpenDrive(int driveid);
-        void CloseDrive(int driveid);
+        int Pickup(bool on);
+        int MoveArm(int driveid);
+        int MoveArmToHome();
+        int OpenDrive(int driveid);
+        int CloseDrive(int driveid);
 };
 
 #endif  //  HAL_H_
