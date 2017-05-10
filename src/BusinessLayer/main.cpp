@@ -9,6 +9,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 
 #include <future>
@@ -103,15 +104,46 @@ void generateSentMessage()
 
 void executeFunction(IUIControl *control, const std::string &functionName, const std::vector<Parameter> &params) 
 {
-    if (functionName == "PlateToDrive") control->PlateToDrive(0);
-    if (functionName == "PlateToCollimator") control->PlateToCollimator(0);
-    if (functionName == "CancelCurrentOperation") control->CancelCurrentOperation();
-    if (functionName == "SetPreset") control->SetPreset(0);
-    if (functionName == "EmergencyStop") control->EmergencyStop();
-    if (functionName == "ContinueSystem") control->ContinueSystem();
-    if (functionName == "ResetSystem") control->ResetSystem();
-    if (functionName == "UploadConfig") control->UploadConfig();
-    if (functionName == "DownloadConfig") control->DownloadConfig();
+    if (functionName == "PlateToDrive") 
+    {
+        control->PlateToDrive(0);
+    }
+    else if (functionName == "PlateToCollimator") 
+    {
+        control->PlateToCollimator(0);
+    }
+    else if (functionName == "CancelCurrentOperation") 
+    {
+        control->CancelCurrentOperation();
+    }
+    else if (functionName == "SetPreset") 
+    {
+        control->SetPreset(0);
+    }
+    else if (functionName == "EmergencyStop") 
+    {
+        control->EmergencyStop();
+    }
+    else if (functionName == "ContinueSystem") 
+    {
+        control->ContinueSystem();
+    }
+    else if (functionName == "ResetSystem")
+    {
+        control->ResetSystem();
+    } 
+    else if (functionName == "UploadConfig")
+    {
+        control->UploadConfig();   
+    }
+    else if (functionName == "DownloadConfig")
+    {
+        control->DownloadConfig();
+    } 
+    else
+    {
+        
+    }
 }
 
 // Consume the clientMessage. This can be blocking. We can return the
@@ -135,8 +167,14 @@ ClientMessage slowFunc(ClientMessage cm)
     }    
     executeFunction(&control, funcName, params);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
-
+    Parameter result = 
+    {
+        "ReturnValue",
+        "String",
+        "OK",
+    };
+    params.push_back(result);
+    cm.SetParams(params);
     return cm;
 }
 
@@ -221,8 +259,18 @@ int main(int argc, char **argv)
             if (status == std::future_status::ready) 
             {
                 ClientMessage doneMessage = (*it).get();
-                std::cout << "Function's done! (" << 
-                    doneMessage.GetFunctionName() << ")\n";
+
+                MessageQueue mq;
+                mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));
+
+                //std::stringstream msg;
+                //msg << "Function's done! (" << 
+                //    doneMessage.GetFunctionName() << ")";
+
+                logger.Write(Logger::Severity::INFO,
+                             __PRETTY_FUNCTION__,
+                             jsparser.ClientMessageToJson(doneMessage));
+
                 // We're done tracking it so we can erase the progress handle.
                 futures.erase(it);
                 std::cout << "Threads left: " << futures.size() << "\n";

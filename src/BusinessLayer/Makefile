@@ -13,17 +13,20 @@ OUTPUT=bl
 TESTEXECUTABLE=Tests/$(OUTPUT)-RunTests.out
 
 lib-target:
+	cp Error.h ../lib/include
 	cd Logging; make lib-target
 
 lib-host:
+	cp Error.h ../lib/include
 	cd Logging; make lib-host
-	
 
 target:
+	cp Error.h ../lib/include
 	cd Logging; make target
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out ${SOURCES} ${LIBSTARGET} ${LIBS}
 
 host:
+	cp Error.h ../lib/include
 	cd Logging; make host
 	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out ${SOURCES} ${LIBSHOST} ${LIBS}
 

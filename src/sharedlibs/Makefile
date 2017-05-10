@@ -8,19 +8,19 @@ LIBSTARGET=-ljsonparser
 LIBSHOST=-ljsonparserhost
 OUTPUT=jsonparser
 lib-target:
-	cp Error.h ../lib/include
+	cp JSONError.h ../lib/include
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 lib-host:
-	cp Error.h ../lib/include
+	cp JSONError.h ../lib/include
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 lib-host-g:
-	cp Error.h ../lib/include
+	cp JSONError.h ../lib/include
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	g++ ${GFLAGS}  ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c

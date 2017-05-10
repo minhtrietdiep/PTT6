@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include "Error.h"
+#include "JSONError.h"
 #include "JSONParser.h"
 #include "include/rapidjson/writer.h"
 #include "include/rapidjson/stringbuffer.h"

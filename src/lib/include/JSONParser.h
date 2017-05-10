@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Error.h"
+#include "JSONError.h"
 #include "ClientMessage.h"
 #include <rapidjson/document.h>
 
