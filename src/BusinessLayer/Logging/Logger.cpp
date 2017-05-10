@@ -10,29 +10,34 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-Logger::Logger(const std::string &systemVersion, Severity printLevel, std::string logPath) :
-    systemVersion(systemVersion),
-    printLevel(printLevel),
-    logPath(logPath) {
+Logger::Logger(const std::string &systemVersion,
+               Severity printLevel,
+               const std::string &logPath) :
+    m_systemVersion(systemVersion),
+    m_printLevel(printLevel),
+    m_logPath(logPath) 
+{
 
-    fileName = logPath;//logPath + getTime() + logExt;
+    m_fileName = m_logPath;//logPath + getTime() + logExt;
     WriteHeader();
 }
 
 Logger::~Logger() {}
 
 void Logger::Write(Severity severity,
-            std::string functionName, 
-            std::string message) {
+                   const std::string &functionName, 
+                   const std::string &message) 
+{
     std::stringstream logLine;
-    logLine << getTime()              << separator
-            << severityText(severity) << separator
-            << systemVersion          << separator
-            << functionName           << separator
-            << message                << separator << "\n";
-    std::ofstream logFile(fileName, std::ios_base::out | std::ios_base::app);
+    logLine << getTime()                << m_separator
+            << severityText(severity)   << m_separator
+            << m_systemVersion          << m_separator
+            << functionName             << m_separator
+            << message                  << m_separator << "\n";
+    std::ofstream logFile(m_fileName, std::ios_base::out | std::ios_base::app);
     logFile << logLine.str();
-    if ((int)severity >= (int)printLevel) {
+    if ((int)severity >= (int)m_printLevel) 
+    {
         std::stringstream trace;
         trace << "[" << getTime() << "] " <<
             severityText(severity) << ": " << message << std::endl; 
@@ -41,30 +46,34 @@ void Logger::Write(Severity severity,
     logFile.close();
 }
 
-std::string Logger::GetFileName() {
-    return fileName;
+std::string Logger::GetFileName() 
+{
+    return m_fileName;
 }
 
 // Literally write this:
 // "TIMESTAMP;SYSTEMVERSION;MODULENAME;FUNCTIONCALL;RETURNVALUE;\n"    
-void Logger::WriteHeader() {
+void Logger::WriteHeader() 
+{
 
     struct stat st = {0};
-    if (stat(LOG_FOLDER, &st) == -1) {
+    if (stat(LOG_FOLDER, &st) == -1) 
+    {
         mkdir(LOG_FOLDER, 0700);
     }
 
-    std::ofstream logFile(fileName, std::ios_base::out | std::ios_base::app);
-    logFile << "TIMESTAMP"     << separator
-            << "SEVERITY"      << separator
-            << "SYSTEMVERSION" << separator
-            << "FUNCTIONCALL"    << separator
-            << "MESSAGE"  << separator
+    std::ofstream logFile(m_fileName, std::ios_base::out | std::ios_base::app);
+    logFile << "TIMESTAMP"      << m_separator
+            << "SEVERITY"       << m_separator
+            << "SYSTEMVERSION"  << m_separator
+            << "FUNCTIONCALL"   << m_separator
+            << "MESSAGE"        << m_separator
             << "\n";
     logFile.close();
 }
 
-std::string Logger::getTime() {
+std::string Logger::getTime() 
+{
     std::stringstream timeTemp;
     time_t t = time(0);
     struct tm * now = localtime(&t);
@@ -77,11 +86,13 @@ std::string Logger::getTime() {
     return timeTemp.str();
 }
 
-std::string Logger::severityText(Severity severity) {
-    if (severity == Severity::Size) {
+std::string Logger::severityText(Severity severity) 
+{
+    if (severity == Severity::Size) 
+    {
         return "ERROR";
     }
 
-    return SeverityHelper[(int)severity];
+    return m_severityHelper[(int)severity];
 }
 

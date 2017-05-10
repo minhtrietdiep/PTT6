@@ -28,18 +28,9 @@ all:
 	make lib-host
 	make target
 	make host
-	make test-target
-	make test-host
 
 clean:
 	rm -f *.out
 	rm -f *.o
 	rm -f ../../lib/lib${OUTPUT}.a
 	rm -f ../../lib/lib${OUTPUT}host.a
-
-test-target:
-	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out BanaanTest.cpp main.cpp ${LIBSTARGET} ${LIBS}
-	
-test-host:
-	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out BanaanTest.cpp main.cpp ${LIBSHOST} ${LIBS}
-

@@ -13,11 +13,11 @@ ClientMessage::ClientMessage(int p_MessageId,
                              int p_Priority,
                              std::vector<Parameter> p_Parameters)
 {
-    this->messageId = p_MessageId;
-    this->functionName = p_FuntionName;
-    this->sender = p_Sender;
-    this->priority = p_Priority;
-    parameters = p_Parameters;
+    m_messageId = p_MessageId;
+    m_functionName = p_FuntionName;
+    m_sender = p_Sender;
+    m_priority = p_Priority;
+    m_parameters = p_Parameters;
 }
 
 ClientMessage::~ClientMessage()
@@ -27,65 +27,66 @@ ClientMessage::~ClientMessage()
 
 void ClientMessage::SetMessageId(int p_MessageId)
 {
-    this->messageId = p_MessageId;
+    m_messageId = p_MessageId;
 }
 
 int ClientMessage::GetMessageId()
 {
-    return this->messageId;
+    return m_messageId;
 }
 
-void ClientMessage::SetFunctionName(std::string p_FunctionName)
+void ClientMessage::SetFunctionName(const std::string &p_FunctionName)
 {
-    this->functionName = p_FunctionName;
+    m_functionName = p_FunctionName;
 }
 
 std::string ClientMessage::GetFunctionName()
 {
-    return this->functionName;
+    return m_functionName;
 }
 
-void ClientMessage::SetSender(std::string p_Sender)
+void ClientMessage::SetSender(const std::string &p_Sender)
 {
-    this->sender = p_Sender;
+    m_sender = p_Sender;
 }
 
 std::string ClientMessage::GetSender()
 {
-    return this->sender;
+    return m_sender;
 }
 
 void ClientMessage::SetPriority(int p_Priority)
 {
-    this->priority = p_Priority;
+    m_priority = p_Priority;
 }
 
 int ClientMessage::GetPriority()
 {
-    return this->priority;
+    return m_priority;
 }
 
-void ClientMessage::SetParams(std::vector<Parameter> p_Parameters)
+void ClientMessage::SetParams(const std::vector<Parameter> &p_Parameters)
 {
-    for (auto p : p_Parameters) {
-        parameters.push_back(p);
+    for (auto p : p_Parameters) 
+    {
+        m_parameters.push_back(p);
     }
 }
 
 std::vector<Parameter> ClientMessage::GetParams()
 {
-    return parameters;
+    return m_parameters;
 }
 
 std::string ClientMessage::GetString()
 {
     std::stringstream ss;
-    ss << this->priority;
+    ss << m_priority;
 
-    auto params = this->GetParams();
+    auto params = m_parameters;
 
     std::string d = "Method: ";
-    d += this->functionName;
+    d += m_functionName;
     d += "\n Priority: ";
     d += ss.str();
     d += "\n ParamCount: ";

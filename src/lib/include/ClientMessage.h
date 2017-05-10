@@ -1,5 +1,4 @@
-#ifndef ClientMessage_H
-#define ClientMessage_H
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -14,8 +13,6 @@ typedef struct Parameter {
 class ClientMessage
 {
 public:
-
-
   ClientMessage();
   ClientMessage(int p_MessageId, 
                 std::string p_FuntionName, 
@@ -25,23 +22,20 @@ public:
   ~ClientMessage();
   void SetMessageId(int p_MessageId);
   int GetMessageId();
-  void SetFunctionName(std::string p_FunctionName);
+  void SetFunctionName(const std::string &p_FunctionName);
   std::string GetFunctionName();
-  void SetSender(std::string p_Sender);
+  void SetSender(const std::string &p_Sender);
   std::string GetSender();
   void SetPriority(int p_Priority);
   int GetPriority();
-  void SetParams(std::vector<Parameter> p_Parameters);
+  void SetParams(const std::vector<Parameter> &p_Parameters);
   std::vector<Parameter> GetParams();
   std::string GetString();
 
 private:
-  int messageId;
-  std::string functionName;
-  std::string sender;
-  int priority;
-  std::vector<Parameter> parameters;
+  int m_messageId;
+  std::string m_functionName;
+  std::string m_sender;
+  int m_priority;
+  std::vector<Parameter> m_parameters;
 };
-
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef ERROR_H
-#define ERROR_H
+#pragma once
 
 enum class Error 
 {
@@ -7,5 +6,3 @@ enum class Error
 	VAR_NULL = -1,
 	PARSE_ERROR = -2
 };
-
-#endif /* ERROR_H */
