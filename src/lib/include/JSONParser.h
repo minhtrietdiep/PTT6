@@ -1,5 +1,4 @@
-#ifndef JSONComm_H
-#define JSONComm_H
+#pragma once
 
 #include <iostream>
 
@@ -14,7 +13,7 @@ class JSONParser
 public:
   JSONParser();
   ~JSONParser();
-  Error JsonToClientMessage(std::string src,
+  Error JsonToClientMessage(const std::string &src,
                             ClientMessage* dest,
                             std::string &details);
   std::string ClientMessageToJson(ClientMessage &task);
@@ -22,8 +21,3 @@ public:
 private:
   
 };
-
-
-
-
-#endif
