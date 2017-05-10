@@ -72,7 +72,8 @@ void Logger::WriteHeader()
     logFile.close();
 }
 
-std::string Logger::getTime() {
+std::string Logger::getTime() 
+{
     std::stringstream timeTemp;
     time_t t = time(0);
     struct tm * now = localtime(&t);
@@ -85,8 +86,10 @@ std::string Logger::getTime() {
     return timeTemp.str();
 }
 
-std::string Logger::severityText(Severity severity) {
-    if (severity == Severity::Size) {
+std::string Logger::severityText(Severity severity) 
+{
+    if (severity == Severity::Size) 
+    {
         return "ERROR";
     }
 
