@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-O2 -Wall -std=c++11
 TESTLDFLAGS=-lpthread -lgtest -lgtest_main -L/usr/lib -pthread
 SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp main.cpp\
- ../HAL/Arm.cpp ../HAL/Drive.cpp ../HAL/Vacuum.cpp ../HAL/HAL.cpp ../HAL/Coordinates.cpp
+../HAL/Arm.cpp ../HAL/Drive.cpp ../HAL/Vacuum.cpp ../HAL/HAL.cpp ../HAL/Coordinates.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o)
 TESTSOURCES=$(wildcard Tests/*.cpp)

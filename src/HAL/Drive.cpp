@@ -1,9 +1,8 @@
 #include "Drive.h"
 
-Drive::Drive(int driveid, Coordinates positions)
+Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
 {
     m_DriveID = driveid;
-    m_Positions = positions;
 }
 
 void Drive::OpenDrive()

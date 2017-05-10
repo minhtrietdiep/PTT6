@@ -17,3 +17,8 @@ std::vector<int> Coordinates::GetCoordinates()
     coordinates.push_back(m_Pos1);
     return coordinates;
 }
+
+Coordinates::~Coordinates()
+{
+
+}
