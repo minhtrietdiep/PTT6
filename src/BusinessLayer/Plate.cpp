@@ -1,5 +1,5 @@
-#include "Headers/Plate.h"
-#include <iostream>
+#include "Plate.h"
+
 
 Plate::Plate(int id, int drivePos, int colimatorPosition, int properties, double thickness)
 {

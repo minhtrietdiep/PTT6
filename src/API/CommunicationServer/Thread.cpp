@@ -28,7 +28,7 @@ Thread::~Thread()
 
 void * Thread::MessageThread(void *args)
 {
-    MessageThreadArgments * messageThreadArgs = (MessageThreadArgments *) args;
+    MessageThreadArguments * messageThreadArgs = (MessageThreadArguments *) args;
     MessageQueue mq;
 
     char receiveBuffer[MAX_MESSAGE_SIZE];
@@ -58,8 +58,6 @@ void * Thread::MessageThread(void *args)
             sprintf(stringt, "thread nr %lu, message: %s", pthread_self(), receiveBuffer);
 
             messageThreadArgs->logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
-            
-            //messageThreadArgs->communication->SendMessage(*messageThreadArgs->clientSocket, receiveBuffer, messageSize);
         }
     }
 
@@ -74,26 +72,67 @@ void * Thread::MessageThread(void *args)
 
 void * Thread::ListenerThread(void *args)
 {
-    ListenerThreadArgments * listenerThreadArgs = (ListenerThreadArgments *) args;
+    ListenerThreadArguments * listenerThreadArgs = (ListenerThreadArguments *) args;
+
+    Thread thread;
+
+    pthread_t senderThread;
+    
+    SenderThreadArguments senderThreadArgs;
+    senderThreadArgs.clientSockets = listenerThreadArgs->clientSockets;
+    senderThreadArgs.logger = listenerThreadArgs->logger;
+    senderThreadArgs.communication = listenerThreadArgs->communication;
+    
+    pthread_create(&senderThread, NULL, thread.SenderThread, &senderThreadArgs); 
+    pthread_detach(senderThread);
+
+    listenerThreadArgs->receiveThreads.push_back(senderThread);
 
     while(true)
     {
-        //listenerThreadArgs->logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "waiting for new client");
-
         pthread_t subThread;
-        Thread thread;
-        MessageThreadArgments messageThreadArgments;
-        messageThreadArgments.clientSocket = new int (listenerThreadArgs->communication->AcceptTCPConnection(listenerThreadArgs->serverSocket));
-        messageThreadArgments.communication = listenerThreadArgs->communication;
-        messageThreadArgments.logger = listenerThreadArgs->logger;
+        MessageThreadArguments messageThreadArguments;
+        messageThreadArguments.clientSocket = new int (listenerThreadArgs->communication->AcceptTCPConnection(listenerThreadArgs->serverSocket));
+        messageThreadArguments.communication = listenerThreadArgs->communication;
+        messageThreadArguments.logger = listenerThreadArgs->logger;
         
-        pthread_create(&subThread, NULL, thread.MessageThread, &messageThreadArgments); 
+        pthread_create(&subThread, NULL, thread.MessageThread, &messageThreadArguments); 
         pthread_detach(subThread);
 
-        //listenerThreadArgs->logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "new thread created");
+        listenerThreadArgs->logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "new thread created");
 
-        listenerThreadArgs->clientSockets.push_back(messageThreadArgments.clientSocket);
+        listenerThreadArgs->clientSockets->push_back(messageThreadArguments.clientSocket);
         listenerThreadArgs->receiveThreads.push_back(subThread);
+    }
+
+    return NULL;
+}
+
+void * Thread::SenderThread(void *args)
+{
+    SenderThreadArguments * senderThreadArgs = (SenderThreadArguments *) args;
+
+    char stringt[256];
+    sprintf(stringt, "sender thread created %lu", pthread_self());
+
+    senderThreadArgs->logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, std::string(stringt));
+
+    MessageQueue mq;
+
+    while(true)
+    {
+
+        std::string sendMessage = mq.Read(MQ_NAME_SEND_MESSAGES);
+
+        char *cstring = new char[sendMessage.length() + 1];
+        strcpy(cstring, sendMessage.c_str()); 
+
+        for(unsigned int i = 0; i < senderThreadArgs->clientSockets->size(); i++)
+        {
+            senderThreadArgs->communication->SendMessage(*senderThreadArgs->clientSockets->at(i), cstring, strlen(cstring));
+        }
+
+        delete [] cstring;
     }
 
     return NULL;
