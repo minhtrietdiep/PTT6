@@ -40,7 +40,6 @@ CommunicationServer::~CommunicationServer()
     for(unsigned int i=0; i < m_MainThread->my_args.receiveThreads.size(); i++)
     {
         pthread_cancel(m_MainThread->my_args.receiveThreads.at(i));
-        std::cout << i << std::endl;
     }
     
     pthread_cancel(m_Thread);
@@ -131,7 +130,8 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
 
     if(receiveMessageSize < 0)
     {
-        Error("recv() failed");
+        // Error("recv() failed");
+        // Don't exit program, just close socket and kill tread
     }
 
     m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message received");

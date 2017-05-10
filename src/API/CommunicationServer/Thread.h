@@ -11,9 +11,9 @@ class Thread
     public:
         Thread();
         ~Thread();
-        static void * MessageThread(void *args);
-        static void * ListenerThread(void *args);
-        static void * SenderThread(void *args);
+        static void *MessageThread(void *args);
+        static void *ListenerThread(void *args);
+        static void *SenderThread(void *args);
         struct MessageThreadArguments 
         {
             int *clientSocket;
