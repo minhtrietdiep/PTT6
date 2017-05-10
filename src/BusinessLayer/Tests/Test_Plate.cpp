@@ -29,3 +29,4 @@ TEST(NewPlate, GetThickness)
 {
     EXPECT_EQ(PLATETHICKNESS, m_Plate->GetThickness());
 }
+

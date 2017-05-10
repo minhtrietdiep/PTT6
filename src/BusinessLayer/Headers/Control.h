@@ -13,10 +13,10 @@
 class Control : public IUIControl, public IRemoteLog
 {
         private:
-        std::vector<Preset> *m_Presets;
+        std::vector<Preset> m_Presets;
         const char* m_FileName = "/Config/Preset.json";
-        Order *m_Order;
-        Config *m_Config;
+        Order m_Order;
+        Config m_Config;
         
 
         public:

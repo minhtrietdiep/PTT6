@@ -2,18 +2,21 @@
 
 Order::Order()
 {
-    std::vector<Move> *movelist = new std::vector<Move>();
-    m_MoveList = movelist;
+    m_MoveList = std::vector<Move>();
+}
+Order::~Order()
+{
+
 }
 
 std::vector<Move> Order::GetMoves()
 {
-    return *m_MoveList;
+    return m_MoveList;
 }
 
 void Order::NewMove(Move newMove)
 {
-    m_MoveList->push_back(newMove);
+    m_MoveList.push_back(newMove);
     std::cout << "Order:New Move..." << std::endl;
 }
 
@@ -29,6 +32,6 @@ void Order::Stop()
 
 void Order::Reset()
 {
-    m_MoveList->clear();
+    m_MoveList.clear();
 	std::cout << "Order:Resetting order..." << std::endl;
 }

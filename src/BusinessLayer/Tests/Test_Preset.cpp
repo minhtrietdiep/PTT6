@@ -12,11 +12,11 @@ Preset *m_Preset;
 
 TEST(Presettest, NewPreset) 
 {
-    std::vector<int> *presetlist = new std::vector<int> ;
-    presetlist->push_back(PRESETLISTVALUE0);
-    presetlist->push_back(PRESETLISTVALUE1);
-    presetlist->push_back(PRESETLISTVALUE2);
-    m_Preset = new Preset(PRESETID,*presetlist);
+    std::vector<int> presetlist;
+    presetlist.push_back(PRESETLISTVALUE0);
+    presetlist.push_back(PRESETLISTVALUE1);
+    presetlist.push_back(PRESETLISTVALUE2);
+    m_Preset = new Preset(PRESETID,presetlist);
 }    
 TEST(Presettest, GetPresetID) 
 {

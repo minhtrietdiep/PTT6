@@ -17,12 +17,12 @@
 void init()
 {
 
-    Control *control = new Control();
+    Control control = Control();
 
     //std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
     //std::cout << control->GetPresets()[0].GetPlatelist()[1].GetThickness() << std::endl; //just to test
     //control->ResetSystem();
-    control->SetPreset(1);
+    control.SetPreset(1);
 
 
 }
@@ -55,6 +55,7 @@ int main(int argc, char **argv)
     getchar();
 
     //pthread_exit(NULL);
-    */return 0;
+    */
+    return 0;
 }
 

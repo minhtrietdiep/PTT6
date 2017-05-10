@@ -11,23 +11,25 @@
 
 Control::Control()
 {
-    m_Order = new Order();
-    m_Config = new Config();
-    std::vector<Preset> *presets = new std::vector<Preset>();
+    /////////////////////////////////////TODO: VERVANGEN ALS HUBERT UITLEZEN GEREED HEEFT
+    m_Order = Order();
+    m_Config = Config();
+    std::vector<Preset> presets = std::vector<Preset>();
     std::vector<int> presetlist;
     presetlist.push_back(10);
     presetlist.push_back(25);
     presetlist.push_back(51);
-    Preset *p0 = new Preset(0,presetlist);
-    presets->push_back(*p0);
+    Preset p0 = Preset(0,presetlist);
+    presets.push_back(p0);
     presetlist.clear();
     presetlist.push_back(15);
     presetlist.push_back(20);
     presetlist.push_back(16);
-    Preset *p1 = new Preset(1,presetlist);
-    presets->push_back(*p1);
+    Preset p1 = Preset(1,presetlist);
+    presets.push_back(p1);
     m_Presets = presets;
 
+    //////////////////////////////////////TODO: VERVANGEN ALS HUBERT UITLEZEN GEREED HEEFT
     
     /*FILE* fp = fopen(m_FileName, "r"); // non-Windows use "r"
     char readBuffer[65536];
@@ -103,14 +105,14 @@ Control::~Control()
 std::vector<Preset> Control::GetPresets()
 {
     std::cout << "Control:Getting presets..." << std::endl;
-    return *m_Presets;
+    return m_Presets;
 }
 
 void Control::PlateToDrive(int plateid)
 {
     int driveID = -1;
-    std::vector<Plate> drivelist = m_Config->GetDrivelist();
-    std::vector<Plate> collimatorList = m_Config->GetCollimatorlist();
+    std::vector<Plate> drivelist = m_Config.GetDrivelist();
+    std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
 
     for(int i = 0; i < collimatorList.size(); i++)
     {
@@ -134,8 +136,8 @@ void Control::PlateToDrive(int plateid)
 
     if(driveID >= 0)
     {
-        Move *move = new Move(driveID,plateid);
-        m_Order->NewMove(*move);
+        Move move(driveID,plateid);
+        m_Order.NewMove(move);
         std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;    
     } 
     else
@@ -147,14 +149,14 @@ void Control::PlateToDrive(int plateid)
 
 void Control::PlateToCollimator(int plateid)
 {
-    Move *move = new Move(plateid,COLLIMATORPOS);
-    m_Order->NewMove(*move);
+    Move move(plateid,COLLIMATORPOS);
+    m_Order.NewMove(move);
     std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;
 }
 
 void Control::CancelCurrentOperation()
 {
-    m_Order->Stop();
+    m_Order.Stop();
     std::cout << "Control:Canceling current operation..." << std::endl;
 }
 
@@ -165,9 +167,8 @@ void Control::SetPreset(int presetid)
 
     ResetSystem();
 
-    for (auto preset : *m_Presets) {
+    for (auto preset : m_Presets) {
         if (preset.GetID() == presetid) {
-            std::cout << "yeey" << std::endl;
             status = 1;
 
             presetlist = preset.GetPlatelist();
@@ -189,29 +190,29 @@ void Control::SetPreset(int presetid)
 
 void Control::EmergencyStop()
 {
-    m_Order->Stop();
+    m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
 }
 
 void Control::ContinueSystem()
 {
-    m_Order->Start();
+    m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
 }
 
 void Control::ResetSystem()
 {
     std::cout << "Control:Resetting system..." << std::endl;
-    m_Order->Stop();
-    m_Order->Reset();
+    m_Order.Stop();
+    m_Order.Reset();
 
-    std::vector<Plate> collimatorList = m_Config->GetCollimatorlist();
+
+    std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
     for(int i = 0; i < collimatorList.size(); i++)
     {
-      
       PlateToDrive(collimatorList[i].GetID());
-
     }
+
 
 }
 

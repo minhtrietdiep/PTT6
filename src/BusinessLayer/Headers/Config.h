@@ -7,11 +7,12 @@
 class Config
 {
 	private:
-		std::vector<Plate> *m_DriveList;
-		std::vector<Plate> *m_CollimatorList;
+		std::vector<Plate> m_DriveList;
+		std::vector<Plate> m_CollimatorList;
 	
 	public:
 		Config();
+		~Config();
 		std::vector<Plate> GetDrivelist();
 		std::vector<Plate> GetCollimatorlist();
 		int DownloadConfig();

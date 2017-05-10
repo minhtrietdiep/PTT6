@@ -12,6 +12,7 @@ private:
 
 public:
     Move(int PlateID,int Destination);
+    ~Move();
 };
 
 #endif  //  MOVE_H_
