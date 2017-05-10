@@ -1,9 +1,9 @@
 CC=g++
 CFLAGS=-O2 -Wall -std=c++11
 TESTLDFLAGS=-lpthread -lgtest -lgtest_main -L/usr/lib -pthread
-SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp Step.cpp main.cpp
+SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp main.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-TESTSOURCES=$(wildcard Tests/*.cpp)
+TESTSOURCES=$(wildcard Tests/*.cpp) Move.cpp Order.cpp Plate.cpp Preset.cpp
 TESTOBJECTS=$(TESTSOURCES:.cpp=.o)
 LIBPATH=-L ../lib -I ../lib/include 
 LIBS=-lstdc++ -lrt -lpthread

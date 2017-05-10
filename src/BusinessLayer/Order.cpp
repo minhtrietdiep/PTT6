@@ -1,13 +1,23 @@
 #include "Order.h"
 
-Order::Order(std::vector<Move> moves)
+Order::Order()
 {
-	m_Moves = moves;
+    m_MoveList = std::vector<Move>();
+}
+Order::~Order()
+{
+
 }
 
 std::vector<Move> Order::GetMoves()
 {
-    return m_Moves;
+    return m_MoveList;
+}
+
+void Order::NewMove(Move newMove)
+{
+    m_MoveList.push_back(newMove);
+    std::cout << "Order:New Move..." << std::endl;
 }
 
 void Order::Start()
@@ -22,5 +32,6 @@ void Order::Stop()
 
 void Order::Reset()
 {
+    m_MoveList.clear();
 	std::cout << "Order:Resetting order..." << std::endl;
 }

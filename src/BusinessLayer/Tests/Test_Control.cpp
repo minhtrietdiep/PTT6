@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+//#include "../Control.h"
  
 TEST(Controltest, test1) 
 {

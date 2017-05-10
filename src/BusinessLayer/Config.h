@@ -11,7 +11,10 @@ class Config
 		std::vector<Plate> m_CollimatorList;
 	
 	public:
-		Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist);
+		Config();
+		~Config();
+		std::vector<Plate> GetDrivelist();
+		std::vector<Plate> GetCollimatorlist();
 		int DownloadConfig();
 		int UploadConfig();
 		int SaveConfig();

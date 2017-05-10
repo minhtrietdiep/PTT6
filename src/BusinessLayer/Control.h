@@ -6,16 +6,21 @@
 #include "Preset.h"
 #include "../../API/Interfaces/IUIControl.h"
 #include "../../API/Interfaces/IRemoteLog.h"
+#include "Order.h"
+#include "Move.h"
+#include "Config.h"
 
 class Control : public IUIControl, public IRemoteLog
 {
-	private:
+        private:
         std::vector<Preset> m_Presets;
-        const char* m_FileName = "Config/DriveList.json";
+        const char* m_FileName = "/Config/Preset.json";
+        Order m_Order;
+        Config m_Config;
         
 
-	public:
-        Control(std::vector<Preset> presets);
+        public:
+        Control();
         std::vector<Preset> GetPresets();
 
         //IUIControl functions
