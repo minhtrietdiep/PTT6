@@ -21,6 +21,7 @@
 #include <Logger.h>
 #include <JSONParser.h>
 #include <ClientMessage.h>
+#include <Error.h>
 
 #include "../API/Interfaces/IUIControl.h"
 #include "Control.h"
@@ -104,6 +105,7 @@ void generateSentMessage()
 
 void executeFunction(IUIControl *control, const std::string &functionName, const std::vector<Parameter> &params) 
 {
+
     if (functionName == "PlateToDrive") 
     {
         control->PlateToDrive(0);
