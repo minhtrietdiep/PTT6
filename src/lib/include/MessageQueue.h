@@ -14,6 +14,6 @@ class MessageQueue
         std::string Read(const char *mqName);
         long GetMessageCount(const char *mqName);
     private:
-        void m_Error(const char *message);
-        Logger *logger;
+        void Error(std::string message);
+        Logger m_Logger;
 };
