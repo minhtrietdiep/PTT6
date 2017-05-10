@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "./../Headers/Plate.h"
+#include "./../Plate.h"
  
  #define PLATEID 1
  #define PLATEDRIVEPOSITION 2

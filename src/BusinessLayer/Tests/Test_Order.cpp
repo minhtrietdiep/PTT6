@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <vector>
-#include "../Headers/Order.h"
-#include "../Headers/Move.h"
+#include "../Order.h"
+#include "../Move.h"
  
 #define MOVESOURCE 0
 #define MOVEDESTINATION 2

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../Headers/Config.h"
+#include "../Config.h"
 
 
 TEST(Configtest, test1) 

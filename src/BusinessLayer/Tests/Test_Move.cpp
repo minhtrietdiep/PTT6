@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../Headers/Move.h"
+#include "../Move.h"
  
 TEST(Movetest, test1) 
 {
