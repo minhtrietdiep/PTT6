@@ -13,7 +13,7 @@ class Arm
     public:
         Arm(Coordinates homeposition);
         int MoveToCoord(Coordinates coordinates);
-
+        int MoveHome();
 };
 
 #endif  //  ARM_H_

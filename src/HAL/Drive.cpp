@@ -21,3 +21,8 @@ int Drive::GetDriveID()
 {
     return m_DriveID;
 }
+
+Coordinates Drive::GetDriveCoordinates()
+{
+    return m_Positions;
+}

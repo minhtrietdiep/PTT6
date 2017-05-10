@@ -8,19 +8,34 @@ HAL::HAL(std::vector<Drive> drivelist, Vacuum vacuum, Arm arm) : m_Arm(arm)
 
 int HAL::Pickup(bool on)
 {
-    std::cout << "Activating vacuum" << std::endl;
+    if(on)
+    {
+        m_Vacuum.EnableVacuum();
+    }
+    else
+    {
+        m_Vacuum.DisableVacuum();
+    }
     return 1;
 }
 
 int HAL::MoveArm(int driveid)
 {
-    std::cout << "Moving arm to drive " << driveid << std::endl;
-    return 1;
+    int i = 0;
+    for(;i < m_DriveList.size(); i++)
+    {
+        if(m_DriveList[i].GetDriveID() == driveid)
+        {
+            m_Arm.MoveToCoord(m_DriveList[i].GetDriveCoordinates());
+            return 1;
+        }
+    }
+    return -1;
 }
 
 int HAL::MoveArmToHome()
 {
-    std::cout << "Moving arm to home position" << std::endl;
+    m_Arm.MoveHome();
     return 1;
 }
 

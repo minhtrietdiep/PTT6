@@ -16,6 +16,7 @@ class Drive
         int OpenDrive();
         int CloseDrive();
         int GetDriveID();
+        Coordinates GetDriveCoordinates();
 };
 
 #endif  //  DRIVE_H_
