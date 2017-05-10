@@ -21,8 +21,10 @@ public:
         Size // This is just a helper to make arrays.
     };
 
-    Logger(const std::string &systemVersion, Severity printLevel, std::string logFile);
-    ~Logger();
+    Logger(const std::string &systemVersion,
+           Severity printLevel,
+           const std::string &logPath);
+   ~Logger();
     void WriteHeader();
     void Write(Severity severity,
                const std::string &functionName,

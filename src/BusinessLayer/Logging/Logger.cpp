@@ -10,7 +10,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-Logger::Logger(const std::string &systemVersion, Severity printLevel, std::string logPath) :
+Logger::Logger(const std::string &systemVersion,
+               Severity printLevel,
+               const std::string &logPath) :
     m_systemVersion(systemVersion),
     m_printLevel(printLevel),
     m_logPath(logPath) 
