@@ -3,15 +3,16 @@
 
 #include <iostream>
 #include <vector>
+#include "Coordinates.h"
 
 class Drive
 {
     private:
         int m_DriveID;
-        //Coord m_Position;
+        Coordinates m_Positions;
 
     public:
-        Drive(int driveid);
+        Drive(int driveid, Coordinates positions);
         void OpenDrive();
         void CloseDrive();
         int GetDriveID();
