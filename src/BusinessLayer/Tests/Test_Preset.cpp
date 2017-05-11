@@ -7,16 +7,17 @@
 #define PRESETLISTVALUE0 10
 #define PRESETLISTVALUE1 20
 #define PRESETLISTVALUE2 99
-
+#define PRESETNAME "preset1"
 Preset *m_Preset;
 
 TEST(Presettest, NewPreset) 
 {
+    std::string name = PRESETNAME; 
     std::vector<int> presetlist;
     presetlist.push_back(PRESETLISTVALUE0);
     presetlist.push_back(PRESETLISTVALUE1);
     presetlist.push_back(PRESETLISTVALUE2);
-    m_Preset = new Preset(PRESETID,presetlist);
+    m_Preset = new Preset(PRESETID, name, presetlist);
 }    
 TEST(Presettest, GetPresetID) 
 {
@@ -29,4 +30,8 @@ TEST(Presettest, GetPlateList)
     EXPECT_EQ(presetlisttest[0], PRESETLISTVALUE0);
     EXPECT_EQ(presetlisttest[1], PRESETLISTVALUE1);
     EXPECT_EQ(presetlisttest[2], PRESETLISTVALUE2);
+}
+TEST(Presettest, GetPresetName) 
+{
+    EXPECT_EQ(m_Preset->GetPresetName(),PRESETNAME);
 }
