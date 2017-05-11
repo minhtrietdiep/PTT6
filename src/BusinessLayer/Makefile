@@ -5,7 +5,8 @@ SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp main.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 TESTSOURCES=$(wildcard Tests/*.cpp) Move.cpp Order.cpp Plate.cpp Preset.cpp
 TESTOBJECTS=$(TESTSOURCES:.cpp=.o)
-LIBPATH=-L ../lib -I ../lib/include -I ../../lib/include -I ../lib/include/rapidjson
+LIBPATH=-L../lib -I../lib/include -I ../lib/include/rapidjson
+
 LIBS=-lstdc++ -lrt -lpthread
 LIBSTARGET=-lcommunication -llogger -ljsonparser
 LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
@@ -31,12 +32,13 @@ host:
 	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out ${SOURCES} ${LIBSHOST} ${LIBS}
 
 .cpp.o:
-	$(CC) $(CFLAGS) -c $< -o $@
+
+	$(CC) $(CFLAGS) $(LIBPATH) -c $< -o $@
 
 test: $(TESTSOURCES) $(TESTEXECUTABLE)
 
 $(TESTEXECUTABLE):$(TESTOBJECTS)
-	$(CC) $(TESTOBJECTS) $(TESTLDFLAGS)  -o $@
+	$(CC) $(TESTOBJECTS) $(TESTLDFLAGS) -o $@
 
 all:
 	make lib-target

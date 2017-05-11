@@ -1,16 +1,16 @@
+#include <Const.h>
+#include <fstream>
+#include <vector>
 
 #include "Control.h"
+
 #include "document.h"
 #include "istreamwrapper.h"
 #include "writer.h"
 #include "stringbuffer.h"
 #include "filereadstream.h"
-#include "ErrorCode.h"
-#include "Config.h"
 #include "Logger.h"
-#include <Const.h>
-#include <fstream>
-#include <vector>
+
 
 #define COLLIMATORPOS 99
 
@@ -48,7 +48,7 @@ Control::~Control()
 std::vector<Preset> Control::GetPresets()
 {
     std::cout << "Control:Getting presets..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(0));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return m_Presets;
 }
 
@@ -102,7 +102,7 @@ void Control::CancelCurrentOperation()
 {
     m_Order.Stop();
     std::cout << "Control:Canceling current operation..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 void Control::SetPreset(int presetid)
@@ -131,21 +131,21 @@ void Control::SetPreset(int presetid)
 
     }
     std::cout << "Control:Setting preset " << presetid << "..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 }
 
 void Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(0));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
 }
 
 void Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 }
 
 void Control::ResetSystem()
@@ -187,7 +187,7 @@ ErrorCode Control::DownloadConfig()
     if(document.HasParseError()) 
     {
         logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
-        return ErrorCode::PARSE_ERROR;    
+        return ErrorCode::ERR_PARSE;    
     }
     
     int presetListSize = document["PresetList"].Size();
@@ -199,14 +199,14 @@ ErrorCode Control::DownloadConfig()
         if(!object.IsObject()) 
         {
             logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get PresetList object");
-            return ErrorCode::PARSE_ERROR;    
+            return ErrorCode::ERR_PARSE;    
         }
         int id = object["m_PresetID"].GetInt();
        // std::cout << object["m_PresetID"].GetInt() << "\n";
         if (!object["m_PlateIDs"].IsArray()) 
         {
             logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
-            return ErrorCode::PARSE_ERROR;
+            return ErrorCode::ERR_PARSE;
         }
         presetName = object["m_PresetName"].GetString();
         //std::cout << object["m_PresetName"].GetString() << "\n";

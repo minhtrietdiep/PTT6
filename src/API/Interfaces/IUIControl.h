@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include "ErrorCode.h"
+#include <Error.h>
 class IUIControl 
 {
     private:

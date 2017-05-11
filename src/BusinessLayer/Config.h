@@ -1,8 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <Error.h>
 #include "Plate.h"
-#include "ErrorCode.h"
 #include <vector>
 
 

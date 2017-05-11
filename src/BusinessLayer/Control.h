@@ -2,13 +2,14 @@
 
 #include <iostream>
 #include <vector>
+#include <Error.h>
 #include "../../API/Interfaces/IUIControl.h"
 #include "../../API/Interfaces/IRemoteLog.h"
 #include "Preset.h"
 #include "Order.h"
 #include "Move.h"
 #include "Config.h"
-#include "ErrorCode.h"
+
 
 class Control : public IUIControl, public IRemoteLog
 {
