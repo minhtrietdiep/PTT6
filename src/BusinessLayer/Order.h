@@ -7,15 +7,17 @@
 
 class Order 
 {
-	private:
-		std::vector<Move> m_Moves;
+    private:
+        std::vector<Move> m_MoveList;
 
-	public:
-		Order(std::vector<Move> moves);
+    public:
+        Order();
+        ~Order();
         std::vector<Move> GetMoves();
-		void Start();
-		void Stop();
-		void Reset();
+        void NewMove(Move newMove);
+        void Start();
+        void Stop();
+        void Reset();
 };
 
 #endif  //  ORDER_H_

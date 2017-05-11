@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include "ErrorCode.h"
 class IRemoteLog
 {
     private:
@@ -11,7 +11,7 @@ class IRemoteLog
 
     public:
         virtual ~IRemoteLog(){}
-        virtual void DownloadLog(int logfilenumber)=0;
+        virtual ErrorCode DownloadLog(int logfilenumber)=0;
 };
 
 #endif  //  IREMOTELOG_H_
