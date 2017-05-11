@@ -7,6 +7,11 @@ LIBS=
 LIBSTARGET=-ljsonparser
 LIBSHOST=-ljsonparserhost
 OUTPUT=jsonparser
+
+
+.PHONY: all test clean
+
+
 lib-target:
 	cp JSONError.h ../lib/include
 	cp $(SOURCES:.cpp=.h) ../lib/include
@@ -28,8 +33,17 @@ lib-host-g:
 all:
 	make lib-target
 	make lib-host
+test:	
+	cd test && make clean && make test
+test-run:
+	cd test && make test-run
+test-clean:
+	cd test && make clean
+
 clean:
 	rm -f *.out
 	rm -f *.o
 	rm -f ../lib/lib${OUTPUT}.a
 	rm -f ../lib/lib${OUTPUT}host.a
+
+

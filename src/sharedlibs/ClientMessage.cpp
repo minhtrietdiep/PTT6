@@ -8,13 +8,13 @@ ClientMessage::ClientMessage()
 }
 
 ClientMessage::ClientMessage(int p_MessageId, 
-                             std::string p_FuntionName, 
+                             std::string p_FunctionName, 
                              std::string p_Sender, 
                              int p_Priority,
                              std::vector<Parameter> p_Parameters)
 {
     m_messageId = p_MessageId;
-    m_functionName = p_FuntionName;
+    m_functionName = p_FunctionName;
     m_sender = p_Sender;
     m_priority = p_Priority;
     m_parameters = p_Parameters;
