@@ -2,6 +2,7 @@
 #define VACUUM_H_
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 class Vacuum

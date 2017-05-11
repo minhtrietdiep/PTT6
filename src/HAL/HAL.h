@@ -6,6 +6,7 @@
 #include "Drive.h"
 #include "Arm.h"
 #include "Vacuum.h"
+#include "Coordinates.h"
 
 class HAL
 {
@@ -15,7 +16,7 @@ class HAL
         Arm m_Arm;
 
     public:
-        HAL(std::vector<Drive> drivelist, Vacuum vacuum, Arm arm);
+        HAL();
         int Pickup(bool on);
         int MoveArm(int driveid);
         int MoveArmToHome();

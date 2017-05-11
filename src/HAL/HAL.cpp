@@ -1,9 +1,24 @@
 #include "HAL.h"
 
-HAL::HAL(std::vector<Drive> drivelist, Vacuum vacuum, Arm arm) : m_Arm(arm)
+HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
 {
+    Coordinates coords1 = Coordinates(1,2,3,4);
+    Drive d1 = Drive(1, coords1);
+    Coordinates coords2 = Coordinates(2,1,3,4);
+    Drive d2 = Drive(2, coords2);
+    Coordinates coords3 = Coordinates(1,2,5,4);
+    Drive d3 = Drive(3, coords3);
+    Coordinates coords4 = Coordinates(1,7,3,10);
+    Drive d4 = Drive(4, coords4);
+    Coordinates coords5 = Coordinates(124,2,3,22);
+    Drive d5 = Drive(5, coords5);
+    std::vector<Drive> drivelist;
+    drivelist.push_back(d5);
+    drivelist.push_back(d4);
+    drivelist.push_back(d3);
+    drivelist.push_back(d2);
+    drivelist.push_back(d1);
     m_DriveList = drivelist;
-    m_Vacuum = vacuum;
 }
 
 int HAL::Pickup(bool on)
