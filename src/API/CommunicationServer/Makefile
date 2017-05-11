@@ -19,6 +19,9 @@ lib-host:
 	ar rvs ../../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 
+copy:
+	scp communication.out ptt@192.168.0.10:~
+
 target:
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out main.cpp ${LIBSTARGET} ${LIBS}
 

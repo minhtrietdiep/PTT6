@@ -13,6 +13,9 @@ host:
 test: 
 	cd CommunicationServer; make test
 
+copy:
+	cd CommunicationServer; make copy
+
 all:
 	make lib-target
 	make lib-host

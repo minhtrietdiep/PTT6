@@ -20,6 +20,8 @@ lib-target:
 lib-host:
 	cd Logging; make lib-host
 	
+copy:
+	scp bl.out ptt@192.168.0.10:~
 
 target:
 	cd Logging; make target

@@ -23,6 +23,8 @@ target:
 
 host:
 
+copy:
+
 all:
 	make lib-target
 	make lib-host
@@ -30,6 +32,7 @@ all:
 	make host
 	make test-target
 	make test-host
+	make copy
 
 clean:
 	rm -f *.out
