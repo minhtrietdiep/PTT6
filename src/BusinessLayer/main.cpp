@@ -70,6 +70,7 @@ std::vector<std::string> knownOperations =
     "ResetSystem"           ,
     "UploadConfig"          ,
     "DownloadConfig"        ,
+    "InvalidStuff"          ,
 };
 
 // Generate a randomly numbered JSON message
@@ -103,48 +104,57 @@ void generateSentMessage()
 }
 
 
-void executeFunction(IUIControl *control, const std::string &functionName, const std::vector<Parameter> &params) 
+ErrorCode executeFunction(IUIControl *control, const std::string &functionName, const std::vector<Parameter> &params) 
 {
 
     if (functionName == "PlateToDrive") 
     {
         control->PlateToDrive(0);
+        return ErrorCode::OK;
     }
     else if (functionName == "PlateToCollimator") 
     {
         control->PlateToCollimator(0);
+        return ErrorCode::OK;
     }
     else if (functionName == "CancelCurrentOperation") 
     {
         control->CancelCurrentOperation();
+        return ErrorCode::OK;
     }
     else if (functionName == "SetPreset") 
     {
         control->SetPreset(0);
+        return ErrorCode::OK;
     }
     else if (functionName == "EmergencyStop") 
     {
         control->EmergencyStop();
+        return ErrorCode::OK;
     }
     else if (functionName == "ContinueSystem") 
     {
         control->ContinueSystem();
+        return ErrorCode::OK;
     }
     else if (functionName == "ResetSystem")
     {
         control->ResetSystem();
+        return ErrorCode::OK;
     } 
     else if (functionName == "UploadConfig")
     {
         control->UploadConfig();   
+        return ErrorCode::OK;
     }
     else if (functionName == "DownloadConfig")
     {
         control->DownloadConfig();
+        return ErrorCode::OK;
     } 
     else
     {
-        
+        return ErrorCode::ERR_UNKNOWN_FUNC;
     }
 }
 
@@ -167,14 +177,15 @@ ClientMessage slowFunc(ClientMessage cm)
                     << p.Type << "\n"
                     << p.Value << "\n";
     }    
-    executeFunction(&control, funcName, params);
+    ErrorCode err = executeFunction(&control, funcName, params);
 
     Parameter result = 
     {
         "ReturnValue",
         "String",
-        "OK",
+        ErrorCodeText[(int)err],
     };
+
     params.push_back(result);
     cm.SetParams(params);
     return cm;
@@ -263,15 +274,21 @@ int main(int argc, char **argv)
                 ClientMessage doneMessage = (*it).get();
 
                 MessageQueue mq;
-                mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));
-
-                //std::stringstream msg;
-                //msg << "Function's done! (" << 
-                //    doneMessage.GetFunctionName() << ")";
-
-                logger.Write(Logger::Severity::INFO,
+                if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) < MQ_MAX_MESSAGE) {
+                    mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));                    
+                    logger.Write(Logger::Severity::INFO,
                              __PRETTY_FUNCTION__,
                              jsparser.ClientMessageToJson(doneMessage));
+                }
+                else
+                {
+                    logger.Write(Logger::Severity::ERROR,
+                                 __PRETTY_FUNCTION__,
+                                 "MessageQueue is full, emptying...");
+                    while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) {
+                        mq.Read(MQ_NAME_SEND_MESSAGES);
+                    }
+                }
 
                 // We're done tracking it so we can erase the progress handle.
                 futures.erase(it);

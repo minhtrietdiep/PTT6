@@ -16,6 +16,7 @@ class Thread
         static void *SenderThread(void *args);
         struct MessageThreadArguments 
         {
+            std::vector<int*> *clientSockets;
             int *clientSocket;
             CommunicationServer *communication;
             Logger *logger;
