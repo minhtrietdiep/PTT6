@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PresetForm));
             this.lbPlates = new System.Windows.Forms.ListBox();
             this.lblPresetName = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -51,6 +52,7 @@
             this.ClientSize = new System.Drawing.Size(174, 232);
             this.Controls.Add(this.lblPresetName);
             this.Controls.Add(this.lbPlates);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PresetForm";
             this.Text = "Preset";
             this.ResumeLayout(false);

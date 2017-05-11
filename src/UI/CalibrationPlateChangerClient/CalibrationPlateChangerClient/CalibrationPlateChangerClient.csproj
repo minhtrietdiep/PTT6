@@ -49,12 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IPlateChangerAPI.cs" />
+    <Compile Include="ApiFunction.cs" />
+    <Compile Include="IPlateChanger.cs" />
     <Compile Include="CommunicationClient.cs" />
-    <Compile Include="FunctionRequest.cs" />
-    <Compile Include="FunctionRequestParameter.cs" />
+    <Compile Include="ApiFunctionProperties.cs" />
+    <Compile Include="ApiFunctionParameter.cs" />
     <Compile Include="JsonSerializer.cs" />
-    <Compile Include="PlateChangerAPI.cs" />
+    <Compile Include="PlateChanger.cs" />
+    <Compile Include="ApiFunctionBuilder.cs" />
     <Compile Include="PresetForm.cs">
       <SubType>Form</SubType>
     </Compile>

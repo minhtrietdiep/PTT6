@@ -23,19 +23,20 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.gbCurrentConfig = new System.Windows.Forms.GroupBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.lblDrive = new System.Windows.Forms.Label();
             this.lblCollimator = new System.Windows.Forms.Label();
-            this.lbDrivePlates = new System.Windows.Forms.ListBox();
             this.lbCollimatorPlates = new System.Windows.Forms.ListBox();
+            this.lbDrivePlates = new System.Windows.Forms.ListBox();
             this.gbChoosePreset = new System.Windows.Forms.GroupBox();
             this.btnShowPreset = new System.Windows.Forms.Button();
             this.btnLoadPreset = new System.Windows.Forms.Button();
             this.cbPresets = new System.Windows.Forms.ComboBox();
             this.gbActionLog = new System.Windows.Forms.GroupBox();
-            this.lbL = new System.Windows.Forms.ListBox();
+            this.lbLog = new System.Windows.Forms.ListBox();
             this.gbGeneralActions = new System.Windows.Forms.GroupBox();
             this.btnContinueSystem = new System.Windows.Forms.Button();
             this.btnEmergencyStop = new System.Windows.Forms.Button();
@@ -52,18 +53,18 @@
             this.gbCurrentConfig.Controls.Add(this.btnEdit);
             this.gbCurrentConfig.Controls.Add(this.lblDrive);
             this.gbCurrentConfig.Controls.Add(this.lblCollimator);
-            this.gbCurrentConfig.Controls.Add(this.lbDrivePlates);
             this.gbCurrentConfig.Controls.Add(this.lbCollimatorPlates);
+            this.gbCurrentConfig.Controls.Add(this.lbDrivePlates);
             this.gbCurrentConfig.Location = new System.Drawing.Point(12, 12);
             this.gbCurrentConfig.Name = "gbCurrentConfig";
-            this.gbCurrentConfig.Size = new System.Drawing.Size(387, 284);
+            this.gbCurrentConfig.Size = new System.Drawing.Size(445, 349);
             this.gbCurrentConfig.TabIndex = 0;
             this.gbCurrentConfig.TabStop = false;
             this.gbCurrentConfig.Text = "Current configuration";
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(194, 253);
+            this.btnReset.Location = new System.Drawing.Point(232, 300);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 5;
@@ -73,7 +74,7 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(113, 253);
+            this.btnEdit.Location = new System.Drawing.Point(136, 300);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(75, 23);
             this.btnEdit.TabIndex = 4;
@@ -84,7 +85,7 @@
             // lblDrive
             // 
             this.lblDrive.AutoSize = true;
-            this.lblDrive.Location = new System.Drawing.Point(272, 32);
+            this.lblDrive.Location = new System.Drawing.Point(313, 32);
             this.lblDrive.Name = "lblDrive";
             this.lblDrive.Size = new System.Drawing.Size(32, 13);
             this.lblDrive.TabIndex = 3;
@@ -93,34 +94,34 @@
             // lblCollimator
             // 
             this.lblCollimator.AutoSize = true;
-            this.lblCollimator.Location = new System.Drawing.Point(70, 32);
+            this.lblCollimator.Location = new System.Drawing.Point(87, 32);
             this.lblCollimator.Name = "lblCollimator";
             this.lblCollimator.Size = new System.Drawing.Size(52, 13);
             this.lblCollimator.TabIndex = 2;
             this.lblCollimator.Text = "Collimator";
             // 
-            // lbDrivePlates
-            // 
-            this.lbDrivePlates.FormattingEnabled = true;
-            this.lbDrivePlates.Location = new System.Drawing.Point(214, 48);
-            this.lbDrivePlates.Name = "lbDrivePlates";
-            this.lbDrivePlates.Size = new System.Drawing.Size(144, 199);
-            this.lbDrivePlates.TabIndex = 1;
-            // 
             // lbCollimatorPlates
             // 
             this.lbCollimatorPlates.FormattingEnabled = true;
-            this.lbCollimatorPlates.Location = new System.Drawing.Point(23, 48);
+            this.lbCollimatorPlates.Location = new System.Drawing.Point(17, 48);
             this.lbCollimatorPlates.Name = "lbCollimatorPlates";
-            this.lbCollimatorPlates.Size = new System.Drawing.Size(144, 199);
+            this.lbCollimatorPlates.Size = new System.Drawing.Size(194, 238);
             this.lbCollimatorPlates.TabIndex = 0;
+            // 
+            // lbDrivePlates
+            // 
+            this.lbDrivePlates.FormattingEnabled = true;
+            this.lbDrivePlates.Location = new System.Drawing.Point(232, 48);
+            this.lbDrivePlates.Name = "lbDrivePlates";
+            this.lbDrivePlates.Size = new System.Drawing.Size(194, 238);
+            this.lbDrivePlates.TabIndex = 1;
             // 
             // gbChoosePreset
             // 
             this.gbChoosePreset.Controls.Add(this.btnShowPreset);
             this.gbChoosePreset.Controls.Add(this.btnLoadPreset);
             this.gbChoosePreset.Controls.Add(this.cbPresets);
-            this.gbChoosePreset.Location = new System.Drawing.Point(415, 12);
+            this.gbChoosePreset.Location = new System.Drawing.Point(463, 12);
             this.gbChoosePreset.Name = "gbChoosePreset";
             this.gbChoosePreset.Size = new System.Drawing.Size(218, 123);
             this.gbChoosePreset.TabIndex = 1;
@@ -129,7 +130,7 @@
             // 
             // btnShowPreset
             // 
-            this.btnShowPreset.Location = new System.Drawing.Point(48, 56);
+            this.btnShowPreset.Location = new System.Drawing.Point(48, 57);
             this.btnShowPreset.Name = "btnShowPreset";
             this.btnShowPreset.Size = new System.Drawing.Size(121, 23);
             this.btnShowPreset.TabIndex = 2;
@@ -157,37 +158,37 @@
             // 
             // gbActionLog
             // 
-            this.gbActionLog.Controls.Add(this.lbL);
-            this.gbActionLog.Location = new System.Drawing.Point(415, 141);
+            this.gbActionLog.Controls.Add(this.lbLog);
+            this.gbActionLog.Location = new System.Drawing.Point(463, 141);
             this.gbActionLog.Name = "gbActionLog";
-            this.gbActionLog.Size = new System.Drawing.Size(218, 220);
+            this.gbActionLog.Size = new System.Drawing.Size(418, 220);
             this.gbActionLog.TabIndex = 2;
             this.gbActionLog.TabStop = false;
             this.gbActionLog.Text = "Action log";
             // 
-            // lbL
+            // lbLog
             // 
-            this.lbL.FormattingEnabled = true;
-            this.lbL.Location = new System.Drawing.Point(7, 20);
-            this.lbL.Name = "lbL";
-            this.lbL.Size = new System.Drawing.Size(205, 186);
-            this.lbL.TabIndex = 0;
+            this.lbLog.FormattingEnabled = true;
+            this.lbLog.Location = new System.Drawing.Point(6, 20);
+            this.lbLog.Name = "lbLog";
+            this.lbLog.Size = new System.Drawing.Size(406, 186);
+            this.lbLog.TabIndex = 0;
             // 
             // gbGeneralActions
             // 
             this.gbGeneralActions.Controls.Add(this.btnContinueSystem);
             this.gbGeneralActions.Controls.Add(this.btnEmergencyStop);
             this.gbGeneralActions.Controls.Add(this.btnCancelOperation);
-            this.gbGeneralActions.Location = new System.Drawing.Point(13, 302);
+            this.gbGeneralActions.Location = new System.Drawing.Point(687, 12);
             this.gbGeneralActions.Name = "gbGeneralActions";
-            this.gbGeneralActions.Size = new System.Drawing.Size(386, 59);
+            this.gbGeneralActions.Size = new System.Drawing.Size(194, 123);
             this.gbGeneralActions.TabIndex = 3;
             this.gbGeneralActions.TabStop = false;
             this.gbGeneralActions.Text = "General";
             // 
             // btnContinueSystem
             // 
-            this.btnContinueSystem.Location = new System.Drawing.Point(258, 22);
+            this.btnContinueSystem.Location = new System.Drawing.Point(46, 80);
             this.btnContinueSystem.Name = "btnContinueSystem";
             this.btnContinueSystem.Size = new System.Drawing.Size(99, 23);
             this.btnContinueSystem.TabIndex = 2;
@@ -197,7 +198,7 @@
             // 
             // btnEmergencyStop
             // 
-            this.btnEmergencyStop.Location = new System.Drawing.Point(139, 22);
+            this.btnEmergencyStop.Location = new System.Drawing.Point(46, 51);
             this.btnEmergencyStop.Name = "btnEmergencyStop";
             this.btnEmergencyStop.Size = new System.Drawing.Size(99, 23);
             this.btnEmergencyStop.TabIndex = 1;
@@ -207,7 +208,7 @@
             // 
             // btnCancelOperation
             // 
-            this.btnCancelOperation.Location = new System.Drawing.Point(22, 22);
+            this.btnCancelOperation.Location = new System.Drawing.Point(46, 22);
             this.btnCancelOperation.Name = "btnCancelOperation";
             this.btnCancelOperation.Size = new System.Drawing.Size(99, 23);
             this.btnCancelOperation.TabIndex = 0;
@@ -219,13 +220,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 374);
+            this.ClientSize = new System.Drawing.Size(901, 381);
             this.Controls.Add(this.gbGeneralActions);
             this.Controls.Add(this.gbActionLog);
             this.Controls.Add(this.gbChoosePreset);
             this.Controls.Add(this.gbCurrentConfig);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Plate veranderaar";
             this.gbCurrentConfig.ResumeLayout(false);
             this.gbCurrentConfig.PerformLayout();
             this.gbChoosePreset.ResumeLayout(false);
@@ -248,7 +250,7 @@
         private System.Windows.Forms.Button btnLoadPreset;
         private System.Windows.Forms.ComboBox cbPresets;
         private System.Windows.Forms.GroupBox gbActionLog;
-        private System.Windows.Forms.ListBox lbL;
+        private System.Windows.Forms.ListBox lbLog;
         private System.Windows.Forms.Button btnShowPreset;
         private System.Windows.Forms.GroupBox gbGeneralActions;
         private System.Windows.Forms.Button btnContinueSystem;
