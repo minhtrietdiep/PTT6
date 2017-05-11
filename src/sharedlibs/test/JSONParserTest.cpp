@@ -14,9 +14,9 @@ TEST(JSONParser_test, JsonMessage_empty)
     JSONParser parser;
     ClientMessage cm;
     std::string details;
-    Error res = parser.JsonToClientMessage(MESSAGE_EMPTY, &cm, details);
+    JSONError res = parser.JsonToClientMessage(MESSAGE_EMPTY, &cm, details);
     
-    EXPECT_EQ(res, Error::VAR_NULL);
+    EXPECT_EQ(res, JSONError::VAR_NULL);
     EXPECT_EQ(details, "Invalid source");
 }
 
@@ -26,9 +26,9 @@ TEST(JSONParser_test, JsonMessage_MissingMember)
     JSONParser parser;
     ClientMessage cm;
     std::string details;
-    Error res = parser.JsonToClientMessage(MESSAGE_MISSGING_MEMBER, &cm, details);
+    JSONError res = parser.JsonToClientMessage(MESSAGE_MISSGING_MEMBER, &cm, details);
     
-    EXPECT_EQ(res, Error::PARSE_ERROR);
+    EXPECT_EQ(res, JSONError::PARSE_ERROR);
     EXPECT_EQ(details, "\"Function\" misses or has corrupted members");
 }
 
@@ -38,9 +38,9 @@ TEST(JSONParser_test, JsonToClientMessage_valid)
     JSONParser parser;
     ClientMessage cm;
     std::string details;
-    Error res = parser.JsonToClientMessage(MESSAGE_VALID, &cm, details);
+    JSONError res = parser.JsonToClientMessage(MESSAGE_VALID, &cm, details);
     
-    EXPECT_EQ(res, Error::NONE);
+    EXPECT_EQ(res, JSONError::NONE);
     EXPECT_EQ(details, "");
 }
 

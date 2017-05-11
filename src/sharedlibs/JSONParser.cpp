@@ -10,30 +10,30 @@ JSONParser::JSONParser() { }
 JSONParser::~JSONParser() { }
 
 
-Error JSONParser::JsonToClientMessage(const std::string &src, ClientMessage* dest, std::string &details) 
+JSONError JSONParser::JsonToClientMessage(const std::string &src, ClientMessage* dest, std::string &details) 
 {
     if(src == "" || dest == NULL) 
     {
         details = "Invalid source";
-        return Error::VAR_NULL;
+        return JSONError::VAR_NULL;
     } 
-    Error ret = Error::NONE;
+    JSONError ret = JSONError::NONE;
     rapidjson::Document jsonObject;
     jsonObject.Parse(src.c_str());
     if(jsonObject.HasParseError()) 
     {
         details = "Can't parse string";
-        return Error::PARSE_ERROR;
+        return JSONError::PARSE_ERROR;
     }
     if (!jsonObject.HasMember("Function")) 
     {
         details = "JSON doesn't contain \"Function\" as root";
-        return Error::PARSE_ERROR;
+        return JSONError::PARSE_ERROR;
     }
     if(!jsonObject["Function"].IsObject()) 
     {
         details = "\"Function\" is not an object";
-        return Error::PARSE_ERROR;
+        return JSONError::PARSE_ERROR;
     }
     const rapidjson::Value& function = jsonObject["Function"].GetObject();
 
@@ -44,28 +44,28 @@ Error JSONParser::JsonToClientMessage(const std::string &src, ClientMessage* des
         !function.HasMember("Parameters")) 
     {
         details = "\"Function\" misses or has corrupted members";
-        return Error::PARSE_ERROR;
+        return JSONError::PARSE_ERROR;
     }
 
     if(!function["Priority"].IsString()) 
     {
         details = "Priority is not string";
-        return Error::PARSE_ERROR;
+        return JSONError::PARSE_ERROR;
     }
     else if(!function["Sender"].IsString()) 
     {
         details = "Sender is not string";
-        return Error::PARSE_ERROR;
+        return JSONError::PARSE_ERROR;
     }
     else if(!function["FunctionName"].IsString()) 
     {
         details = "FunctionName is not string";
-        return Error::PARSE_ERROR;
+        return JSONError::PARSE_ERROR;
     }
     else if(!function["Parameters"].IsArray()) 
     {
         details = "Parameters is not array";
-        return Error::PARSE_ERROR;    
+        return JSONError::PARSE_ERROR;    
     }
 
     dest->SetPriority(std::stoi(function["Priority"].GetString()));

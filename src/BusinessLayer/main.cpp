@@ -251,17 +251,16 @@ int main(int argc, char **argv)
 
             ClientMessage clientMessage;
             std::string parseInfo;
-            Error result = jsparser.JsonToClientMessage(rawMq, 
+            JSONError result = jsparser.JsonToClientMessage(rawMq, 
                                                         &clientMessage, 
                                                         parseInfo);
-            if (result == Error::NONE) 
+            if (result == JSONError::NONE) 
             {
                 std::packaged_task<ClientMessage(ClientMessage)> task(&slowFunc);
                 auto future = task.get_future();
                 std::thread thread(std::move(task), clientMessage);
                 futures.push_back(std::move(future));
                 threads.push_back(std::move(thread));
-                
             } 
             else 
             {
