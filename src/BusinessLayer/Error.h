@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 enum class ErrorCode {
     OK,
     ERR_UNKNOWN_FUNC,
@@ -7,6 +9,7 @@ enum class ErrorCode {
     ERR_PARSE,
     ERR_HW,
     ERR_TIMEOUT,
+    ERR_FILE_OPEN,
     Size // This is just a helper to make arrays.
 };
 // Please keep this equal with ErrorCode
@@ -18,6 +21,8 @@ const std::array<std::string, (int)ErrorCode::Size> ErrorCodeText =
         "ERR_UNKNOWN",
         "ERR_PARSE",
         "ERR_HW",
-        "ERR_TIMEOUT"
+        "ERR_TIMEOUT",
+        "ERR_FILE_OPEN",
+
     }
 };

@@ -23,7 +23,6 @@
 #include "../API/Interfaces/IUIControl.h"
 #include "Control.h"
 #include "Config.h"
-#include "ErrorCode.h"
 
 #define ESC 0x1B
 
@@ -31,20 +30,16 @@ Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 Control control({});
 
 
-// CTRL-C, CTRL-V because Linux doesn't have a kbhit
 void init()
 {
-
     //control = Control();
-
     //std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
     //std::cout << control->GetPresets()[0].GetPlatelist()[1].GetThickness() << std::endl; //just to test
     //control->ResetSystem();
-   // control.SetPreset(1);
-
-
+    // control.SetPreset(1);
 }
 
+// CTRL-C, CTRL-V because Linux doesn't have a kbhit
 int kbhit(void) 
 {
     struct termios oldt, newt;
