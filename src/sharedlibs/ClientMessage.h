@@ -29,6 +29,7 @@ public:
   void SetPriority(int p_Priority);
   int GetPriority();
   void SetParams(const std::vector<Parameter> &p_Parameters);
+  void AddParams(const std::vector<Parameter> &p_Parameters);
   std::vector<Parameter> GetParams();
   std::string GetString();
 

@@ -67,6 +67,11 @@ int ClientMessage::GetPriority()
 
 void ClientMessage::SetParams(const std::vector<Parameter> &p_Parameters)
 {
+    m_parameters = p_Parameters;
+}
+
+void ClientMessage::AddParams(const std::vector<Parameter> &p_Parameters)
+{
     for (auto p : p_Parameters) 
     {
         m_parameters.push_back(p);
