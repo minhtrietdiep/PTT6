@@ -134,6 +134,12 @@ void * Thread::SenderThread(void *args)
 
             delete [] cstring;
         }
+        else if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) >= MQ_MAX_MESSAGE)
+        {
+            // We need to consume the mq objects, 
+            // otherwise mq-using programs block.
+            mq.Read(MQ_NAME_SEND_MESSAGES);
+        }
     }
 
     return NULL;
