@@ -30,6 +30,10 @@ test:
 	cd HAL; make test
 	cd UI; make test
 
+copy:
+	cd BusinessLayer; make copy
+	cd API; make copy
+
 all:
 	make lib-host
 	make lib-target
