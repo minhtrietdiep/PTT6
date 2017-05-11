@@ -1,15 +1,23 @@
 #include "Headers/Preset.h"
-
-Preset::Preset(int id,std::vector<Plate> platelist)
+#include "Headers/Plate.h"
+Preset::Preset(int id, std::string presetName, std::vector<int> plateList)
 {
-    m_PlateList = platelist;
     m_ID = id;
+    m_PresetName = presetName;
+    m_PlateList = plateList;
 }
+
 int Preset::GetID()
 {
     return m_ID;
 }
-std::vector<Plate> Preset::GetPlatelist()
+
+std::string Preset::GetPresetName()
+{
+    return m_PresetName;
+}
+
+std::vector<int> Preset::GetPlatelist()
 {
     return m_PlateList;
 }

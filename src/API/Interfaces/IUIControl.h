@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include "../../lib/ErrorCode.h"
 class IUIControl 
 {
     private:
@@ -18,8 +18,8 @@ class IUIControl
         virtual void EmergencyStop()=0;
         virtual void ContinueSystem()=0;
         virtual void ResetSystem()=0;
-        virtual void UploadConfig()=0;
-        virtual void DownloadConfig()=0;
+        virtual ErrorCode UploadConfig()=0;
+        virtual ErrorCode DownloadConfig()=0;
 };
 
 #endif  //  IUICONTROL_H_

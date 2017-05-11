@@ -6,15 +6,17 @@
 #include "Preset.h"
 #include "../../API/Interfaces/IUIControl.h"
 #include "../../API/Interfaces/IRemoteLog.h"
+#include "../../lib/ErrorCode.h"
 
 class Control : public IUIControl, public IRemoteLog
 {
 	private:
         std::vector<Preset> m_Presets;
-        const char* m_FileName = "Config/DriveList.json";
+        const char* m_FileName = "Config/Presets.json";
         
 
 	public:
+
         Control(std::vector<Preset> presets);
         std::vector<Preset> GetPresets();
 
@@ -27,11 +29,12 @@ class Control : public IUIControl, public IRemoteLog
         virtual void EmergencyStop();
         virtual void ContinueSystem();
         virtual void ResetSystem();
-        virtual void UploadConfig();
-        virtual void DownloadConfig();
+        virtual ErrorCode UploadConfig();
+        virtual ErrorCode DownloadConfig();
+        
 
         //IRemoteLog functions
-        virtual void DownloadLog(int logfilenumber);
+        virtual ErrorCode DownloadLog(int logfilenumber);
 };
 
 #endif  //  CONTROL_H_
