@@ -7,20 +7,25 @@ LIBS=
 LIBSTARGET=-ljsonparser
 LIBSHOST=-ljsonparserhost
 OUTPUT=jsonparser
+
+
+.PHONY: all test clean
+
+
 lib-target:
-	cp Error.h ../lib/include
+	cp JSONError.h ../lib/include
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 lib-host:
-	cp Error.h ../lib/include
+	cp JSONError.h ../lib/include
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
 	rm -f $(OBJECTS)
 lib-host-g:
-	cp Error.h ../lib/include
+	cp JSONError.h ../lib/include
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	g++ ${GFLAGS}  ${LIBPATH} -c ${SOURCES} ${LIBS}
 	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
@@ -28,8 +33,17 @@ lib-host-g:
 all:
 	make lib-target
 	make lib-host
+test:	
+	cd test && make clean && make test
+test-run:
+	cd test && make test-run
+test-clean:
+	cd test && make clean
+
 clean:
 	rm -f *.out
 	rm -f *.o
 	rm -f ../lib/lib${OUTPUT}.a
 	rm -f ../lib/lib${OUTPUT}host.a
+
+
