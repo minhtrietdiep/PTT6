@@ -23,5 +23,12 @@ unit-test:
     - make test
     - ./BusinessLayer/Tests/bl-RunTests.out
     #todo: ./ into api en de rest
+code-coverage:
+    stage: code-coverage
+    script:
+    - make lib-host
+    - make host
+    - ./BusinessLayer/bl-host.out
+    - gcovr -r .
 after_script:
   #  - make clean
