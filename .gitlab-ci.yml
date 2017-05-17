@@ -12,7 +12,7 @@ stages:
 lint:
   stage: lint
   script:
-    -  echo student | sudo -S ./scripts/lint.sh
+    -  sudo  ./scripts/lint.sh
 compile:
   stage: compile
   script:
