@@ -80,7 +80,7 @@ void Control::PlateToDrive(int plateid)
 
     if(driveID >= 0)
     {
-        Move move(driveID,plateid);
+        Move move(plateid,driveID);
         m_Order.NewMove(move);
         std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;    
     } 

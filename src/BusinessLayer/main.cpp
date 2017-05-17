@@ -32,6 +32,7 @@ Control control({});
 
 void init()
 {
+
     //control = Control();
     //std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
     //std::cout << control->GetPresets()[0].GetPlatelist()[1].GetThickness() << std::endl; //just to test
@@ -202,6 +203,7 @@ ClientMessage slowFunc(ClientMessage cm)
 
 int main(int argc, char **argv) 
 {
+    init();
     srand (time(NULL));
     logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Program started");
     JSONParser jsparser;
