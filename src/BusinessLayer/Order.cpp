@@ -22,51 +22,54 @@ enum ErrorCode Order::NewMove(Move newMove)
     return ErrorCode::OK;
 }
 
-enum ErrorCode Order::Start()   ///TODO: int to enum 
+enum ErrorCode Order::Start() 
 {
 	std::cout << "Order:Starting order..." << std::endl;
-    int state = 0;
+    m_States state = OPEN_DRIVE;
     int ID = m_MoveList[0].GetPlateID();
     int Destination = m_MoveList[0].GetDestination();
 
-    while (state < 7 )
+    while (state != COMPLETED )
     {
         switch(state) 
-        {
-          case 0 :
+        { 
+          case OPEN_DRIVE :
                 std::cout<<"Open Drive"<<std::endl;
                 if(m_Hal.OpenDrive(ID) == 1)
-                state ++;
+                state = MOVE_ARM_SOURCE;
                 break;
-            case 1 :
+            case MOVE_ARM_SOURCE :
                 std::cout<<"Move Arm"<<std::endl;
                 if(m_Hal.MoveArm(ID) == 1)
-                state ++;
+                state = ENABLE_VACUUM;
                 break;
-            case 2 :
+            case ENABLE_VACUUM :
                 std::cout<<"EnableVacuum"<<std::endl;
                 if(m_Hal.Pickup(true) == 1)
-                state ++;
+                state = MOVE_ARM_DESTINATION;
                 break;
-            case 3 :
+            case MOVE_ARM_DESTINATION :
                 std::cout<<"Move Arm"<<std::endl;
                 if(m_Hal.MoveArm(Destination) == 1)
-                state ++;
+                state = DISABLE_VACUUM;
                 break;
-            case 4 :
+            case DISABLE_VACUUM :
                 std::cout<<"DisableVacuum"<<std::endl;
                 if(m_Hal.Pickup(false) == 1)
-                state ++;
+                state = MOVE_ARM_HOME;
                 break;
-            case 5 :
+            case MOVE_ARM_HOME :
                 std::cout<<"MoveToHome"<<std::endl;
                 if(m_Hal.MoveArmToHome() == 1)
-                state ++;
+                state = CLOSE_DRIVE;
                 break;
-            case 6 :
+            case CLOSE_DRIVE :
                 std::cout<<"CloseDrive"<<std::endl;
                 if(m_Hal.CloseDrive(ID) == 1)
-                state ++;
+                state = COMPLETED;
+                break;
+            default:
+                return ErrorCode::ERR_TIMEOUT;  //////////////////////goede????
                 break;
         }
     }

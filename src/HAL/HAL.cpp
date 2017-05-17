@@ -37,7 +37,7 @@ int HAL::Pickup(bool on)
 
 int HAL::MoveArm(int driveid)
 {
-    for(int i = 0;i < m_DriveList.size(); i++)
+    for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
@@ -57,7 +57,7 @@ int HAL::MoveArmToHome()
 int HAL::OpenDrive(int driveid)
 {
     int i = 0;
-    for(;i < m_DriveList.size(); i++)
+    for(;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
@@ -71,7 +71,7 @@ int HAL::OpenDrive(int driveid)
 int HAL::CloseDrive(int driveid)
 {
     int i = 0;
-    for(;i < m_DriveList.size(); i++)
+    for(;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
