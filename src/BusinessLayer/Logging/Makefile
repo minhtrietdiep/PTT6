@@ -23,6 +23,8 @@ target:
 
 host:
 
+copy:
+
 all:
 	make lib-target
 	make lib-host

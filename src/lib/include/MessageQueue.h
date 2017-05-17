@@ -8,12 +8,12 @@ class MessageQueue
     public:
         MessageQueue();
         ~MessageQueue();
-        void Create(const char *mqName);
-        void Close(const char *mqName);
-        void Write(const char *mqName, std::string data);
-        std::string Read(const char *mqName);
-        long GetMessageCount(const char *mqName);
+        void Create(std::string mqName);
+        void Close(std::string mqName);
+        void Write(std::string mqName, std::string data);
+        std::string Read(std::string mqName);
+        long GetMessageCount(std::string mqName);
     private:
-        void m_Error(const char *message);
-        Logger *logger;
+        void Error(std::string message);
+        Logger m_Logger;
 };

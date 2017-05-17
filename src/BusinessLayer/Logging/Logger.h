@@ -8,6 +8,7 @@
 
 #include <string>
 #include <array>
+#include <mutex>
 
 class Logger 
 {
@@ -45,4 +46,5 @@ private:
     std::string m_systemVersion;
     Severity m_printLevel;
     std::string m_logPath;
+    static std::mutex loggerMutex;  
 };

@@ -15,7 +15,7 @@ class ClientMessage
 public:
   ClientMessage();
   ClientMessage(int p_MessageId, 
-                std::string p_FuntionName, 
+                std::string p_FunctionName, 
                 std::string p_Sender, 
                 int p_Priority,
                 std::vector<Parameter> p_Parameters);
@@ -29,6 +29,7 @@ public:
   void SetPriority(int p_Priority);
   int GetPriority();
   void SetParams(const std::vector<Parameter> &p_Parameters);
+  void AddParams(const std::vector<Parameter> &p_Parameters);
   std::vector<Parameter> GetParams();
   std::string GetString();
 

@@ -1,9 +1,12 @@
 #include "Move.h"
 
-Move::Move(int Source,int Destination,std::vector<Step> Steplist)
+Move::Move(int PlateID,int Destination)
 {
-    std::cout << "Move:Moving from " << Source << " to " << Destination << std::endl;
-	m_Source = Source;
+    m_PlateID = PlateID;
     m_Destination = Destination;
-    m_Steplist = Steplist;
+    std::cout<<"new move set "<<PlateID<<" " <<Destination<<std::endl;
+}
+Move::~Move()
+{
+    
 }
