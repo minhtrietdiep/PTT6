@@ -1,0 +1,42 @@
+{
+    "PlateList" : "m_DriveList",
+    "Plates" : 
+    [
+        {
+            "m_ID" : 0,
+            "m_DrivePosition" : 0,
+            "m_ColimatorPostion" : 1,
+            "m_Property" : "copper",
+            "m_Thickness" : 6.0
+        },
+        {
+            "m_ID" : 1,
+            "m_DrivePosition" : 1,
+            "m_ColimatorPostion" : 2,
+            "m_Property" : "copper",
+            "m_Thickness" : 10.0
+        },
+        {
+            "ID" : 2,
+            "DriveIndex" : 2,
+            "m_ColimatorPostion" : 0,
+            "Property" : "lead",
+            "Thickness" : 4.0
+        },
+        {
+            "ID" : 3,
+            "DriveIndex" : 3,
+            "m_ColimatorPostion" : 3,
+            "Property" : "lead",
+            "Thickness" : 10.0
+        },
+        {
+            "ID" : 4,
+            "DriveIndex" : 3,
+            "m_ColimatorPostion" : 0,
+            "Property" : "aluminium",
+            "Thickness" : 15.0
+        }
+    ]
+}
+   

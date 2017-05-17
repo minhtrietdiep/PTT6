@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Error.h"
+#include "JSONError.h"
 #include "ClientMessage.h"
 #include <rapidjson/document.h>
 
@@ -13,7 +13,7 @@ class JSONParser
 public:
   JSONParser();
   ~JSONParser();
-  Error JsonToClientMessage(const std::string &src,
+  JSONError JsonToClientMessage(const std::string &src,
                             ClientMessage* dest,
                             std::string &details);
   std::string ClientMessageToJson(ClientMessage &task);

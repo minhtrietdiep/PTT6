@@ -1,0 +1,8 @@
+before_script:
+    - cd ./test
+stages:
+    - test
+test:
+    stage: test
+    script:
+    - make test-run

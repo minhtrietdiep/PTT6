@@ -14,55 +14,55 @@
 
 #include <cstring>
 #include <iostream>
+#include <sstream>
 
 CommunicationServer::CommunicationServer(int port)
 {
-    logger = new Logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
+    m_Logger = new Logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 
+    m_MainThread = new Thread;
+    m_MainThread->my_args.serverSocket = CreateServerSocket(port);
+    m_MainThread->my_args.communication = this;
+    m_MainThread->my_args.logger = m_Logger;
+    m_MainThread->my_args.clientSockets = new std::vector<int*>;
     
-    m_mainThread = new Thread;
-    m_mainThread->my_args.serverSocket = m_CreateServerSocket(port);
-    m_mainThread->my_args.communication = this;
-    m_mainThread->my_args.logger = logger;
-    m_mainThread->my_args.clientSockets = new std::vector<int*>;
-
-    pthread_create(&m_thread, NULL, m_mainThread->ListenerThread, &m_mainThread->my_args);
-    pthread_detach(m_thread);
+    pthread_create(&m_Thread, NULL, m_MainThread->ListenerThread, &m_MainThread->my_args);
+    pthread_detach(m_Thread);
 }
 
 CommunicationServer::~CommunicationServer()
 {
-    for(unsigned int i = 0; i < m_mainThread->my_args.clientSockets->size(); i++)
+    for(unsigned int i = 0; i < m_MainThread->my_args.clientSockets->size(); i++)
     {
-        close(*m_mainThread->my_args.clientSockets->at(i));
+        close(*m_MainThread->my_args.clientSockets->at(i));
     }
 
-    for(unsigned int i=0; i < m_mainThread->my_args.receiveThreads.size(); i++)
+    for(unsigned int i=0; i < m_MainThread->my_args.receiveThreads.size(); i++)
     {
-        pthread_cancel(m_mainThread->my_args.receiveThreads.at(i));
+        pthread_cancel(m_MainThread->my_args.receiveThreads.at(i));
     }
     
-    pthread_cancel(m_thread);
-    shutdown(m_mainThread->my_args.serverSocket, SHUT_RDWR);
-    close(m_mainThread->my_args.serverSocket);
+    pthread_cancel(m_Thread);
+    shutdown(m_MainThread->my_args.serverSocket, SHUT_RDWR);
+    close(m_MainThread->my_args.serverSocket);
 
-    delete m_mainThread->my_args.clientSockets;
-    delete m_mainThread;
+    delete m_MainThread->my_args.clientSockets;
+    delete m_MainThread;
 
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "killed threads and closed sockets");
-
-    delete logger;
+    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "killed threads and closed sockets");
+ 
+    delete m_Logger;
 }
 
-void CommunicationServer::m_Error(const char *message)
+void CommunicationServer::Error(std::string message)
 {
-    char stringt[256];
-    sprintf(stringt, "%s -> %s", message, strerror(errno));
-    logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, std::string(stringt));
+    std::ostringstream logOutput;
+    logOutput << message << " -> " << strerror(errno);
+    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, logOutput.str());
     exit(-1);
 }
 
-int CommunicationServer::m_CreateServerSocket(int port)
+int CommunicationServer::CreateServerSocket(int port)
 {
     int value = 1;
     struct sockaddr_in serverAddress;
@@ -74,31 +74,31 @@ int CommunicationServer::m_CreateServerSocket(int port)
 
     int serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "server socket created");
+    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "server socket created");
     
     if(serverSocket < 0)
     {
-        m_Error("socket() failed");
+        Error("socket() failed");
     }
 
     if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value)) < 0)
     {
-        m_Error("setsockopt() failed");
+        Error("setsockopt() failed");
     }
 
     if(bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0)
     {
-        m_Error("bind() failed");
+        Error("bind() failed");
     }
 
     if(listen(serverSocket, 5) < 0)
     {
-        m_Error("listen() failed");
+        Error("listen() failed");
     }
 
-    char stringt[256];
-    sprintf(stringt, "listening on %d", port);
-    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
+    std::ostringstream logOutput;
+    logOutput << "listening on " << port;
+    m_Logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, logOutput.str());
 
     return serverSocket;
 }
@@ -112,12 +112,12 @@ int CommunicationServer::AcceptTCPConnection(int serverSocket)
 
     if(clientSocket < 0)
     {
-        m_Error("accept() failed");
+        Error("accept() failed");
     }
 
-    char stringt[256];
-    sprintf(stringt, "accepted new connection from %s", inet_ntoa(clientAddress.sin_addr));
-    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, std::string(stringt));
+    std::ostringstream logOutput;
+    logOutput << "accepted new connection from " << inet_ntoa(clientAddress.sin_addr);
+    m_Logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, logOutput.str());
 
     return clientSocket;
 }
@@ -130,10 +130,11 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
 
     if(receiveMessageSize < 0)
     {
-        m_Error("recv() failed");
+        //Error("recv() failed");
+        // Don't exit program, just close socket and kill tread
     }
 
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message received");
+    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message received");
 
     message[receiveMessageSize] = '\0';
 
@@ -146,10 +147,10 @@ int CommunicationServer::SendMessage(int socket, char *message, int bufferSize)
 
     if(sendMessageSize < 0)
     {
-        m_Error("send() failed");
+        Error("send() failed");
     }
 
-    logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message sent");
+    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message sent");
 
     return sendMessageSize;
 }
