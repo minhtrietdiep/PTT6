@@ -279,7 +279,6 @@ void checkMessages(MessageQueue &mq,
 
 int main(int argc, char **argv) 
 {
-    init();
     srand (time(NULL));
     logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Program started");
     MessageQueue mq;
