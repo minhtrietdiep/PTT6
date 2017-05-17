@@ -12,7 +12,7 @@ stages:
 lint:
   stage: lint
   script:
-    -  echo student | sudo -S -u student  ./scripts/lint.sh
+    -  ./scripts/codecoverage.sh#lint.sh
 compile:
   stage: compile
   script:
@@ -32,7 +32,7 @@ unit-test:
 code-coverage:
     stage: code-coverage
     script:
-    -  echo student | sudo -S ./scripts/codecoverage.sh
+    -  ./scripts/codecoverage.sh
     #- make lib-host
     #- make host
     #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
