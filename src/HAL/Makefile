@@ -19,11 +19,14 @@ host:
 
 test:
 
+copy:
+
 all:
 	make lib-target
 	make lib-host
 	make target
 	make host
+	make copy
 
 clean:
 	rm -f *.out
