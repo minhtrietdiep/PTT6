@@ -1,6 +1,6 @@
 #include "Drive.h"
 
-#define FILEPATH "/dev/Drives.txt"
+#define FILEPATH "/home/student/Desktop/Drives.txt"
 
 Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
 {
