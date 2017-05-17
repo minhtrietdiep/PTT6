@@ -4,10 +4,16 @@ after_script:
     - cd ./src
     - make clean
 stages:
+  - lint
   - compile
   - cross-compile
   - unit-test
   - code-coverage
+lint:
+  stage: lint
+  script:
+    - ./workspace/scripts/lint.sh
+
 compile:
   stage: compile
   script:
