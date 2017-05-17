@@ -25,18 +25,18 @@ class Control : public IUIControl, public IRemoteLog
         //IUIControl functions
         std::vector<Preset> GetPresets();
         virtual ~Control();
-        virtual void PlateToDrive(int plateid);
-        virtual void PlateToCollimator(int plateid);
-        virtual void CancelCurrentOperation();
-        virtual void SetPreset(int presetid);
-        virtual void EmergencyStop();
-        virtual void ContinueSystem();
-        virtual void ResetSystem();
-        virtual void StartSystem();
-        virtual ErrorCode UploadConfig();
-        virtual ErrorCode DownloadConfig();
+        virtual enum ErrorCode PlateToDrive(int plateid);
+        virtual enum ErrorCode PlateToCollimator(int plateid);
+        virtual enum ErrorCode CancelCurrentOperation();
+        virtual enum ErrorCode SetPreset(int presetid);
+        virtual enum ErrorCode EmergencyStop();
+        virtual enum ErrorCode ContinueSystem();
+        virtual enum ErrorCode ResetSystem();
+        virtual enum ErrorCode StartSystem();
+        virtual enum ErrorCode UploadConfig();
+        virtual enum ErrorCode DownloadConfig();
         
 
         //IRemoteLog functions
-        virtual ErrorCode DownloadLog(int logfilenumber);
+        virtual enum ErrorCode DownloadLog(int logfilenumber);
 };

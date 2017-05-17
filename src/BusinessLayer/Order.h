@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <Error.h>
 #include "Move.h"
 #include "../HAL/HAL.h"
 
@@ -16,10 +17,10 @@ class Order
         Order();
         ~Order();
         std::vector<Move> GetMoves();
-        void NewMove(Move newMove);
-        void Start();
-        void Stop();
-        void Reset();
+        ErrorCode NewMove(Move newMove);
+        ErrorCode Start();
+        ErrorCode Stop();
+        ErrorCode Reset();
 };
 
 #endif  //  ORDER_H_

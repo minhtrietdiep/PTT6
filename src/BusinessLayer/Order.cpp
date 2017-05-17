@@ -15,13 +15,14 @@ std::vector<Move> Order::GetMoves()
     return m_MoveList;
 }
 
-void Order::NewMove(Move newMove)
+enum ErrorCode Order::NewMove(Move newMove)
 {
     m_MoveList.push_back(newMove);
     std::cout << "Order:New Move..." << std::endl;
+    return ErrorCode::OK;
 }
 
-void Order::Start()
+enum ErrorCode Order::Start()   ///TODO: int to enum 
 {
 	std::cout << "Order:Starting order..." << std::endl;
     int state = 0;
@@ -35,8 +36,7 @@ void Order::Start()
           case 0 :
                 std::cout<<"Open Drive"<<std::endl;
                 if(m_Hal.OpenDrive(ID) == 1)
-                    {state++;}
-                //state ++;
+                state ++;
                 break;
             case 1 :
                 std::cout<<"Move Arm"<<std::endl;
@@ -72,15 +72,18 @@ void Order::Start()
     }
 
     m_MoveList.erase(m_MoveList.begin());
+    return ErrorCode::OK;
 }
 
-void Order::Stop()
+enum ErrorCode Order::Stop()
 {
 	std::cout << "Order:Stopping order..." << std::endl;
+    return ErrorCode::OK;
 }
 
-void Order::Reset()
+enum ErrorCode Order::Reset()
 {
     m_MoveList.clear();
 	std::cout << "Order:Resetting order..." << std::endl;
+    return ErrorCode::OK;
 }
