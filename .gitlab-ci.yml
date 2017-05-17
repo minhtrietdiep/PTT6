@@ -12,7 +12,8 @@ stages:
 lint:
   stage: lint
   script:
-    -  ./scripts/codecoverage.sh#lint.sh
+    -  ./scripts/codecoverage.sh 
+    #lint.sh
 compile:
   stage: compile
   script:
