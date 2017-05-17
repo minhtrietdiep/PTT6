@@ -29,7 +29,9 @@ code-coverage:
     script:
     - make lib-host
     - make host
+    - ./API/CommunicationServer/communication-host.out
     - ./BusinessLayer/bl-host.out
+    - q
     - gcovr -r .
 after_script:
   #  - make clean
