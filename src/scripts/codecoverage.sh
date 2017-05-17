@@ -7,7 +7,7 @@ suffix='.gcda'
 
 file_percentage_accept=100
 
-cd workspace/
+cd src/
 
 gcda_files=()
 cpp_files_with_gcda=()
