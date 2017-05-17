@@ -11,4 +11,5 @@ for FOLDER in ${FOLDERS_TO_LINT}; do
                 -regextype posix-extended
                 -regex '^.*\.(c|h|cpp|hpp)$'
         ) nofile
+        echo hallo
 done
