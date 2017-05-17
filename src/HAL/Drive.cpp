@@ -10,10 +10,10 @@ Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
 int Drive::OpenDrive()
 {
     std::cout << "Opening drive " << m_DriveID << std::endl;
-    std::ofstream myfile;
-    myfile.open (FILEPATH);
-    myfile << 1 << " " << m_DriveID;
-    myfile.close();
+    //std::ofstream myfile;
+   // myfile.open (FILEPATH);
+   // myfile << 1 << " " << m_DriveID;
+   // myfile.close();
     return 1;
 }
 

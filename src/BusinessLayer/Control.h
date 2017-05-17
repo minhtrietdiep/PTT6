@@ -32,6 +32,7 @@ class Control : public IUIControl, public IRemoteLog
         virtual void EmergencyStop();
         virtual void ContinueSystem();
         virtual void ResetSystem();
+        virtual void StartSystem();
         virtual ErrorCode UploadConfig();
         virtual ErrorCode DownloadConfig();
         

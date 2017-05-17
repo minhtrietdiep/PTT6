@@ -36,8 +36,9 @@ void init()
     //control = Control();
     //std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
     //std::cout << control->GetPresets()[0].GetPlatelist()[1].GetThickness() << std::endl; //just to test
-    //control->ResetSystem();
-    // control.SetPreset(1);
+    control.ResetSystem();
+    control.SetPreset(1);
+    control.StartSystem();
 }
 
 // CTRL-C, CTRL-V because Linux doesn't have a kbhit

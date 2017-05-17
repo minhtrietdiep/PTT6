@@ -64,7 +64,7 @@ int HAL::OpenDrive(int driveid)
             m_DriveList[i].OpenDrive();
             return 1;
         }
-    }
+    } 
     return -1;
 }
 

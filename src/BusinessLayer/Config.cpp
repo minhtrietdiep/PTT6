@@ -15,6 +15,8 @@ Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 {
     m_DriveList = drivelist;
     m_CollimatorList = collimatorlist;
+    DownloadConfig(PlateList::COLLIMATORLIST);
+    DownloadConfig(PlateList::DRIVELIST);
 
 }
 Config::~Config()
@@ -32,7 +34,7 @@ std::vector<Plate> Config::GetCollimatorlist()
     return m_CollimatorList;
 }
 
-int Config::DownloadConfig(enum PlateList plate)
+enum ErrorCode Config::DownloadConfig(enum PlateList plate)
 {
     const char* filename;
     if(plate == PlateList::DRIVELIST)
@@ -49,8 +51,7 @@ int Config::DownloadConfig(enum PlateList plate)
     if(!fp)
     {
         logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open logfile");
-        //return ErrorCode::ERR_FILE_OPEN;    
-        return -1;
+        return ErrorCode::ERR_FILE_OPEN;    
     }
     char readBuffer[65536];
     rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
@@ -60,8 +61,7 @@ int Config::DownloadConfig(enum PlateList plate)
     if(document.HasParseError()) 
     {
         logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
-        //return ErrorCode::PARSE_ERROR;    
-        return -1;    
+        return ErrorCode::ERR_PARSE;    
     }
     
     int presetListSize = document["Plates"].Size();
@@ -80,7 +80,7 @@ int Config::DownloadConfig(enum PlateList plate)
         int id = object["m_ID"].GetInt();
         int drivePosition = object["m_DrivePosition"].GetInt();
         int collimatorPosition = object["m_ColimatorPostion"].GetInt();
-        int property = object["m_Property"].GetInt();
+        std::string property = object["m_Property"].GetString();
         double thickness = object["m_Thickness"].GetDouble();
 
         std::cout << "ID: "<<id << "drivepos: " << drivePosition << "collpos: "<< collimatorPosition << "prop: " << property << "thickness: " << thickness << "\n";
@@ -101,8 +101,7 @@ int Config::DownloadConfig(enum PlateList plate)
     fclose(fp);
     
     std::cout << "Control:Downloading config..." << std::endl;
-    //return ErrorCode::OK;
-	return 0;
+    return ErrorCode::OK;
 }
 
 int Config::UploadConfig(enum PlateList plate)

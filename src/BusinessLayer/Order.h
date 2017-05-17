@@ -4,11 +4,13 @@
 #include <iostream>
 #include <vector>
 #include "Move.h"
+#include "../HAL/HAL.h"
 
 class Order 
 {
     private:
         std::vector<Move> m_MoveList;
+        HAL m_Hal;
 
     public:
         Order();

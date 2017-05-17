@@ -13,29 +13,29 @@
             "m_ID" : 1,
             "m_DrivePosition" : 1,
             "m_ColimatorPostion" : 2,
-            "m_Property" : "copper",
+            "m_Property" : "Lead",
             "m_Thickness" : 10.0
         },
         {
-            "ID" : 2,
-            "DriveIndex" : 2,
-            "m_ColimatorPostion" : 0,
-            "Property" : "lead",
-            "Thickness" : 4.0
+            "m_ID" : 2,
+            "m_DrivePosition" : 2,
+            "m_ColimatorPostion" : 1,
+            "m_Property" : "rens",
+            "m_Thickness" : 6.0
         },
         {
-            "ID" : 3,
-            "DriveIndex" : 3,
-            "m_ColimatorPostion" : 3,
-            "Property" : "lead",
-            "Thickness" : 10.0
+            "m_ID" : 3,
+            "m_DrivePosition" : 3,
+            "m_ColimatorPostion" : 2,
+            "m_Property" : "koen",
+            "m_Thickness" : 11.0
         },
         {
-            "ID" : 4,
-            "DriveIndex" : 3,
-            "m_ColimatorPostion" : 0,
-            "Property" : "aluminium",
-            "Thickness" : 15.0
+            "m_ID" : 4,
+            "m_DrivePosition" : 4,
+            "m_ColimatorPostion" : 2,
+            "m_Property" : "Hubert",
+            "m_Thickness" : 8.0
         }
     ]
 }

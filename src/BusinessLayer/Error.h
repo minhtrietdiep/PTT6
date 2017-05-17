@@ -23,6 +23,7 @@ const std::array<std::string, (int)ErrorCode::Size> ErrorCodeText =
         "ERR_HW",
         "ERR_TIMEOUT",
         "ERR_FILE_OPEN",
+        
 
     }
 };

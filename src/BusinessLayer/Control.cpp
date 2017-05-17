@@ -17,27 +17,9 @@
 Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
-    //TODO: VERVANGEN ALS HUBERT UITLEZEN GEREED HEEFT
-    /*std::vector<Preset> presets = std::vector<Preset>();
-    std::vector<int> presetlist;
-    presetlist.push_back(10);
-    presetlist.push_back(25);
-    presetlist.push_back(51);
-    Preset p0 = Preset(0,presetlist);
-    presets.push_back(p0);
-    presetlist.clear();
-    presetlist.push_back(15);
-    presetlist.push_back(20);
-    presetlist.push_back(16);
-    Preset p1 = Preset(1,presetlist);
-    presets.push_back(p1);*/
-    // driveList;
-    //std::vector<Plate> collimatorList;
-    // m_Order = Order();
-    //m_Config = Config(driveList, collimatorList);
-    //m_Presets = ;
-    
-    
+
+    DownloadConfig();
+
 }
 
 Control::~Control()
@@ -163,6 +145,13 @@ void Control::ResetSystem()
 
 
 }
+void Control::StartSystem()
+{
+    std::cout << "Order start moving" << std::endl;
+    m_Order.Start();
+
+}
+
 
 ErrorCode Control::UploadConfig()
 {
