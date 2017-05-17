@@ -82,26 +82,59 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
 
     if (functionName == "PlateToDrive") 
     {
-        //for (Parameter p : params)
-        //{
-        //    if (p.Name != "")
-        //}
-        control->PlateToDrive(0);
+        if (params.size() != 1)
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+
+        Parameter param = params[0];
+
+        if (param.Name != "plateID") 
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+
+        control->PlateToDrive(std::stoi(param.Value));
         return ErrorCode::OK;
     }
     else if (functionName == "PlateToCollimator") 
     {
-        control->PlateToCollimator(0);
+        if (params.size() != 1)
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+
+        Parameter param = params[0];
+
+        if (param.Name != "plateID") 
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+
+        control->PlateToCollimator(std::stoi(param.Value));
         return ErrorCode::OK;
     }
     else if (functionName == "CancelCurrentOperation") 
     {
+        // No params needed
         control->CancelCurrentOperation();
         return ErrorCode::OK;
     }
     else if (functionName == "SetPreset") 
     {
-        control->SetPreset(0);
+        if (params.size() != 1)
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+
+        Parameter param = params[0];
+
+        if (param.Name != "presetID") 
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+
+        control->SetPreset(std::stoi(param.Value));
         return ErrorCode::OK;
     }
     else if (functionName == "EmergencyStop") 
