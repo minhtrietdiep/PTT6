@@ -1,6 +1,6 @@
 #pragma once
 
-enum class Error 
+enum class JSONError 
 {
 	NONE = 0,
 	VAR_NULL = -1,

@@ -1,22 +1,24 @@
 {
-  "function": 
+  "Function": 
   {
-    "priority": 1,
-    "sender": "id",
-    "functionName": "myFunction1",
-    "returnType": "int",
-    "parameters": 
+    "Priority": "1",
+    "Sender": "id",
+    "FunctionName": "GETSYSTEMLOG",
+    "ReturnType": "int",
+    "Parameters": 
     [
       {
-        "name": "param_1",
-        "dataType": "int",
-        "value": "123"
+        "Name": "param_1",
+        "DataType": "int",
+        "Value": "123"
       },
       {
-        "name": "param_2",
-        "dataType": "string",
-        "value":"Hello World"
+        "Name": "param_2",
+        "DataType": "string",
+        "Value":"Hello World"
       }
     ]
   }
 }
+
+

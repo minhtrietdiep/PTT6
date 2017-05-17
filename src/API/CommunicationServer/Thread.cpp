@@ -65,6 +65,14 @@ void * Thread::MessageThread(void *args)
     close(*messageThreadArgs->clientSocket);
     delete messageThreadArgs->clientSocket;
 
+    for(unsigned int i = 0; i < messageThreadArgs->clientSockets->size(); i++)
+    {
+        if (messageThreadArgs->clientSockets->at(i) == messageThreadArgs->clientSocket)
+        {
+            messageThreadArgs->clientSockets->erase(messageThreadArgs->clientSockets->begin() + i);
+        }
+    }
+
     messageThreadArgs->logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "closed client sockets");
 
     return NULL;
@@ -95,6 +103,7 @@ void * Thread::ListenerThread(void *args)
         messageThreadArguments.clientSocket = new int (listenerThreadArgs->communication->AcceptTCPConnection(listenerThreadArgs->serverSocket));
         messageThreadArguments.communication = listenerThreadArgs->communication;
         messageThreadArguments.logger = listenerThreadArgs->logger;
+        messageThreadArguments.clientSockets = listenerThreadArgs->clientSockets;
         
         pthread_create(&subThread, NULL, thread.MessageThread, &messageThreadArguments); 
         pthread_detach(subThread);

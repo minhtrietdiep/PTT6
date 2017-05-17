@@ -25,7 +25,7 @@ CommunicationServer::CommunicationServer(int port)
     m_MainThread->my_args.communication = this;
     m_MainThread->my_args.logger = m_Logger;
     m_MainThread->my_args.clientSockets = new std::vector<int*>;
-
+    
     pthread_create(&m_Thread, NULL, m_MainThread->ListenerThread, &m_MainThread->my_args);
     pthread_detach(m_Thread);
 }
@@ -130,7 +130,7 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
 
     if(receiveMessageSize < 0)
     {
-        // Error("recv() failed");
+        //Error("recv() failed");
         // Don't exit program, just close socket and kill tread
     }
 
