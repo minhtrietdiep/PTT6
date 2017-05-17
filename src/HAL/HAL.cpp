@@ -12,17 +12,20 @@ HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
     Drive d4 = Drive(3, coords4);
     Coordinates coords5 = Coordinates(124,2,3,22);
     Drive d5 = Drive(4, coords5);
+    Coordinates coords99 = Coordinates(999,99,999,99);
+    Drive d99 = Drive(99, coords99);
     std::vector<Drive> drivelist;
     drivelist.push_back(d5);
     drivelist.push_back(d4);
     drivelist.push_back(d3);
     drivelist.push_back(d2);
     drivelist.push_back(d1);
+    drivelist.push_back(d99);
     m_DriveList = drivelist;
     //////TODO: Hubert -> to config file
 }
 
-int HAL::Pickup(bool on)
+enum ErrorCode HAL::Pickup(bool on)
 {
     if(on)
     {
@@ -32,29 +35,29 @@ int HAL::Pickup(bool on)
     {
         m_Vacuum.DisableVacuum();
     }
-    return 1;
+    return ErrorCode::OK;
 }
 
-int HAL::MoveArm(int driveid)
+enum ErrorCode HAL::MoveArm(int driveid)
 {
     for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
             m_Arm.MoveToCoord(m_DriveList[i].GetDriveCoordinates());
-            return 1;
+            return ErrorCode::OK;
         }
     }
-    return -1;
+    return ErrorCode::ERR_UNKNOWN;
 }
 
-int HAL::MoveArmToHome()
+enum ErrorCode HAL::MoveArmToHome()
 {
     m_Arm.MoveHome();
-    return 1;
+    return ErrorCode::OK;
 }
 
-int HAL::OpenDrive(int driveid)
+enum ErrorCode HAL::OpenDrive(int driveid)
 {
     int i = 0;
     for(;i < (int)m_DriveList.size(); i++)
@@ -62,13 +65,13 @@ int HAL::OpenDrive(int driveid)
         if(m_DriveList[i].GetDriveID() == driveid)
         {
             m_DriveList[i].OpenDrive();
-            return 1;
+            return ErrorCode::OK;
         }
     } 
-    return -1;
+    return ErrorCode::ERR_UNKNOWN;
 }
 
-int HAL::CloseDrive(int driveid)
+enum ErrorCode HAL::CloseDrive(int driveid)
 {
     int i = 0;
     for(;i < (int)m_DriveList.size(); i++)
@@ -76,8 +79,8 @@ int HAL::CloseDrive(int driveid)
         if(m_DriveList[i].GetDriveID() == driveid)
         {
             m_DriveList[i].CloseDrive();
-            return 1;
+            return ErrorCode::OK;
         }
     }
-    return -1;
+    return ErrorCode::ERR_UNKNOWN;
 }
