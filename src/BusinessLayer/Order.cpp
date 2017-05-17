@@ -24,12 +24,12 @@ void Order::Start()
 {
 	std::cout << "Order:Starting order..." << std::endl;
     int state = 0;
-    int ID = m_MoveList[0].GetPlateID();
-    int Destination = m_MoveList[0].GetDestination();
+   // int ID = m_MoveList[0].GetPlateID();
+   // int Destination = m_MoveList[0].GetDestination();
                         ///////////////////////////todo: PlateID == de drive locatie van de plaat.
     while (state < 7 )
     {
-        switch(state) 
+       /* switch(state) 
         {
           case 0 :
                 std::cout<<"Open Drive"<<std::endl;
@@ -66,7 +66,7 @@ void Order::Start()
                 if(hal.CloseDrive(ID) == 1)
                 state ++;
                 break;
-        }
+        }*/
     }
 
     m_MoveList.erase(m_MoveList.begin());
