@@ -18,21 +18,21 @@
         },
         {
             "m_ID" : 2,
-            "m_DrivePosition" : 0,
+            "m_DrivePosition" : 2,
             "m_ColimatorPostion" : 0,
             "m_Property" : "hallo",
             "m_Thickness" : 2.0
         },
         {
             "m_ID" : 3,
-            "m_DrivePosition" : 1,
+            "m_DrivePosition" : 3,
             "m_ColimatorPostion" : 0,
             "m_Property" : "hallo",
             "m_Thickness" : 16.0
         },
                 {
             "m_ID" : 4,
-            "m_DrivePosition" : 1,
+            "m_DrivePosition" : 4,
             "m_ColimatorPostion" : 0,
             "m_Property" : "hallo",
             "m_Thickness" : 12.0

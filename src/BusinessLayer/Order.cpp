@@ -24,13 +24,10 @@ void Order::NewMove(Move newMove)
 void Order::Start()
 {
 	std::cout << "Order:Starting order..." << std::endl;
-    int state = 8;
+    int state = 0;
     int ID = m_MoveList[0].GetPlateID();
     int Destination = m_MoveList[0].GetDestination();
-    
-                        ///////////////////////////todo: PlateID == de drive locatie van de plaat.
 
-    std::cout<<m_Hal.OpenDrive(ID)<<std::endl;
     while (state < 7 )
     {
         switch(state) 
