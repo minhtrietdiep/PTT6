@@ -1,7 +1,7 @@
 #include "Plate.h"
 
 
-Plate::Plate(int id, int drivePos, int colimatorPosition, int properties, double thickness)
+Plate::Plate(int id, int drivePos, int colimatorPosition, std::string properties, double thickness)
 {
 	m_ID = id;
 	m_DrivePosition = drivePos;
@@ -13,7 +13,7 @@ double Plate::GetThickness()
 {
 	return m_Thickness;
 }
-int Plate::GetProperties()
+std::string Plate::GetProperties()
 {
 	return m_Properties;
 }

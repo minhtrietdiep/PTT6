@@ -17,27 +17,9 @@
 Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
-    //TODO: VERVANGEN ALS HUBERT UITLEZEN GEREED HEEFT
-    /*std::vector<Preset> presets = std::vector<Preset>();
-    std::vector<int> presetlist;
-    presetlist.push_back(10);
-    presetlist.push_back(25);
-    presetlist.push_back(51);
-    Preset p0 = Preset(0,presetlist);
-    presets.push_back(p0);
-    presetlist.clear();
-    presetlist.push_back(15);
-    presetlist.push_back(20);
-    presetlist.push_back(16);
-    Preset p1 = Preset(1,presetlist);
-    presets.push_back(p1);*/
-    // driveList;
-    //std::vector<Plate> collimatorList;
-    // m_Order = Order();
-    //m_Config = Config(driveList, collimatorList);
-    //m_Presets = ;
-    
-    
+
+    DownloadConfig();
+
 }
 
 Control::~Control()
@@ -52,7 +34,7 @@ std::vector<Preset> Control::GetPresets()
     return m_Presets;
 }
 
-void Control::PlateToDrive(int plateid)
+enum ErrorCode Control::PlateToDrive(int plateid)
 {
     int driveID = -1;
     std::vector<Plate> drivelist = m_Config.GetDrivelist();
@@ -88,24 +70,27 @@ void Control::PlateToDrive(int plateid)
     {
         std::cout << "Drive niet gevonden!" << std::endl;  
     }
+    return ErrorCode::OK;
 
 }
 
-void Control::PlateToCollimator(int plateid)
+enum ErrorCode Control::PlateToCollimator(int plateid)
 {
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
     std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;
+    return ErrorCode::OK;
 }
 
-void Control::CancelCurrentOperation()
+enum ErrorCode Control::CancelCurrentOperation()
 {
     m_Order.Stop();
     std::cout << "Control:Canceling current operation..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    return ErrorCode::OK;
 }
 
-void Control::SetPreset(int presetid)
+enum ErrorCode Control::SetPreset(int presetid)
 {
     int status = -1;
     std::vector<int> presetlist;
@@ -132,23 +117,26 @@ void Control::SetPreset(int presetid)
     }
     std::cout << "Control:Setting preset " << presetid << "..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    return ErrorCode::OK;
 }
 
-void Control::EmergencyStop()
+enum ErrorCode Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(0));
+    return ErrorCode::OK;
 }
 
-void Control::ContinueSystem()
+enum ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    return ErrorCode::OK;
 }
 
-void Control::ResetSystem()
+enum ErrorCode Control::ResetSystem()
 {
     std::cout << "Control:Resetting system..." << std::endl;
     m_Order.Stop();
@@ -160,9 +148,16 @@ void Control::ResetSystem()
     {
       PlateToDrive(collimatorList[i].GetID());
     }
-
+    return ErrorCode::OK;
 
 }
+enum ErrorCode Control::StartSystem()
+{
+    std::cout << "Order start moving" << std::endl;
+    m_Order.Start();
+    return ErrorCode::OK;
+}
+
 
 ErrorCode Control::UploadConfig()
 {
