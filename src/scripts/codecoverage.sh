@@ -5,6 +5,9 @@ BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 suffix='.gcda'
 
+#Run the code
+./bl-host.out
+
 file_percentage_accept=100
 
 #cd src/
@@ -59,5 +62,4 @@ echo -e "${NC}${BOLD}GCov results:${NORMAL}"
 
 cd BusinessLayer/
 
-./bl-host.out
 gcovr -r . --exclude=".*\.h" --exclude=".*/test/.*"
