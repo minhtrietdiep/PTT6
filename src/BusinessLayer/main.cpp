@@ -25,6 +25,7 @@
 #include "Control.h"
 #include "Config.h"
 #include "CommandUtils.h"
+#include "PresetUtils.h"
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 Control control({});
@@ -139,10 +140,11 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
     } 
     else if (functionName == "UploadPresets")
     {
-        auto result = control->UploadPresets();
-        std::cout << result;
+        //auto result = control->UploadPresets();
+        //std::cout << result << "\n";
 
-        // do send stuff
+        //auto result2 = PlateListToJSONString(control->GetConfig()->GetDrivelist(), PlateList::DRIVELIST);
+        //std::cout << result2 << "\n";
 
         return ErrorCode::ERR_UNKNOWN;
     }
@@ -314,7 +316,7 @@ int main(int argc, char **argv)
             {
                 std::cout << "\n";
                 executeFunction(&control, "UploadPresets", {});
-                
+
             }
         }
 
