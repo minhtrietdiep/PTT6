@@ -7,7 +7,7 @@ suffix='.gcda'
 
 file_percentage_accept=100
 
-cd src/
+#cd src/
 
 gcda_files=()
 cpp_files_with_gcda=()
@@ -15,7 +15,7 @@ cpp_files=()
 
 while IFS=  read -r -d $'\0'; do
     gcda_files+=("$REPLY")
-done < <(find build/ -not -iname "*test*" -iname "*.gcda" -print0)
+done < <(find -not -iname "*test*" -iname "*.gcda" -print0)
 
 for i in "${gcda_files[@]}"
 do
@@ -27,7 +27,7 @@ done
 
 while IFS=  read -r -d $'\0'; do
     cpp_files+=("$REPLY")
-done < <(find src/ -not -iname "*test*" -iname "*.cpp" -print0)
+done < <(find -not -iname "*test*" -iname "*.cpp" -print0)
 
 items=${#cpp_files_with_gcda[@]}
 total=${#cpp_files[@]}
@@ -57,4 +57,7 @@ done
 echo ""
 echo -e "${NC}${BOLD}GCov results:${NORMAL}"
 
+cd BusinessLayer/
+
+./bl-host.out
 gcovr -r . --exclude=".*\.h" --exclude=".*/test/.*"

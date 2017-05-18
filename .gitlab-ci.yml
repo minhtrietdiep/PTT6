@@ -33,9 +33,9 @@ unit-test:
 code-coverage:
     stage: code-coverage
     script:
+    - make lib-host
+    - make host
     - bash  ./scripts/codecoverage.sh
-    #- make lib-host
-    #- make host
     #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
     #- q
     #- gcovr -r .

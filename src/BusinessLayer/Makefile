@@ -57,4 +57,6 @@ clean:
 	cd Logging; make clean
 	rm -f *.out
 	rm -f *.o
+	rm -f *.gcno
+	rm -f *.gcda
 	$(RM) $(TESTOBJECTS) $(TESTEXECUTABLE)
