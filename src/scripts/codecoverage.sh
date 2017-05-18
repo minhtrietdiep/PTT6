@@ -6,7 +6,9 @@ NORMAL=$(tput sgr0)
 suffix='.gcda'
 
 #Run the code
+cd BusinessLayer/
 ./bl-host.out
+cd ../
 
 file_percentage_accept=100
 
