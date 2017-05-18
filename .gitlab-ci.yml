@@ -4,22 +4,16 @@ after_script:
     - cd ./src
     - make clean
 stages:
-  #- lint
-  - statictest
+  - lint
   - compile
   - cross-compile
   - unit-test
   - code-coverage
-#lint:
-  #stage: lint
-  #script:
-    #-  ./scripts/lint.sh 
-    #lint.sh
-statictest:
-  stage: statictest
+lint:
+  stage: lint
   script:
-    - cppcheck --quiet --xml --inline-suppr --enable=all --error-exitcode=0
-
+    -  ./scripts/lint.sh 
+    #lint.sh
 compile:
   stage: compile
   script:
