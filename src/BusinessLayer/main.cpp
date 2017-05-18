@@ -171,7 +171,7 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
 
 // Consume the clientMessage. This can be blocking. 
 // We can return a ClientMessage we got, but also a new one if desired?
-ClientMessage slowFunc(ClientMessage cm) 
+ClientMessage asyncConsumeMessage(ClientMessage cm) 
 {
     // We only have one Control for now...
     int priority = cm.GetPriority();
@@ -289,7 +289,7 @@ void parseSingleJSONString(std::string rawString,
         logger.Write(Logger::Severity::DEBUG, 
                  __PRETTY_FUNCTION__, 
                  "Parse success");
-        std::packaged_task<ClientMessage(ClientMessage)> task(&slowFunc);
+        std::packaged_task<ClientMessage(ClientMessage)> task(&asyncConsumeMessage);
         auto future = task.get_future();
         std::thread thread(std::move(task), clientMessage);
         futures.push_back(std::move(future));
@@ -404,7 +404,7 @@ int main(int argc, char **argv)
     {
         thread.join();
     }
-    std::cout << "Halted program\n";    
+    std::cout << "Halted program\n";
     return 0;
 
 }
