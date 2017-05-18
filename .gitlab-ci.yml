@@ -12,7 +12,7 @@ stages:
 lint:
   stage: lint
   script:
-    -  ./scripts/lint.sh 
+    - bash ./scripts/lint.sh
     #lint.sh
 compile:
   stage: compile
@@ -33,7 +33,7 @@ unit-test:
 code-coverage:
     stage: code-coverage
     script:
-    -  ./scripts/codecoverage.sh
+    - bash  ./scripts/codecoverage.sh
     #- make lib-host
     #- make host
     #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
