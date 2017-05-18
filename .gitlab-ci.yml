@@ -4,15 +4,15 @@ after_script:
     - cd ./src
     - make clean
 stages:
-  - lint
+  #- lint
   - statictest
   - compile
   - cross-compile
   - unit-test
   - code-coverage
-lint:
-  stage: lint
-  script:
+#lint:
+  #stage: lint
+  #script:
     #-  ./scripts/lint.sh 
     #lint.sh
 statictest:
