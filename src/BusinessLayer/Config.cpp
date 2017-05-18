@@ -15,8 +15,8 @@ Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 {
     m_DriveList = drivelist;
     m_CollimatorList = collimatorlist;
-    DownloadConfig(PlateList::COLLIMATORLIST);
-    DownloadConfig(PlateList::DRIVELIST);
+    SaveConfig(PlateList::COLLIMATORLIST);
+    SaveConfig(PlateList::DRIVELIST);
 
 }
 Config::~Config()
@@ -34,7 +34,7 @@ std::vector<Plate> Config::GetCollimatorlist()
     return m_CollimatorList;
 }
 
-enum ErrorCode Config::DownloadConfig(enum PlateList plate)
+enum ErrorCode Config::SaveConfig(enum PlateList plate)
 {
     const char* filename;
     if(plate == PlateList::DRIVELIST)
@@ -102,13 +102,6 @@ enum ErrorCode Config::DownloadConfig(enum PlateList plate)
 enum ErrorCode Config::UploadConfig(enum PlateList plate)
 {
     std::cout << "Config:Uploading config..." << std::endl;
-	return ErrorCode::ERR_OK;
-
-}
-
-enum ErrorCode Config::SaveConfig(enum PlateList plate)
-{
-    std::cout << "Config:Saving config..." << std::endl;
 	return ErrorCode::ERR_OK;
 
 }

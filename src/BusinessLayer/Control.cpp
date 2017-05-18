@@ -19,7 +19,7 @@ Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
 
-    DownloadConfig();
+    LoadPresets();
 
 }
 
@@ -165,7 +165,7 @@ std::string Control::UploadPresets()
     return PresetToJSONString(m_Presets);
 }
 
-ErrorCode Control::DownloadConfig()
+ErrorCode Control::LoadPresets()
 {
     
     Logger logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
