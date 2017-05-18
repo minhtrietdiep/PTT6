@@ -20,18 +20,6 @@ Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
     LoadConfig(PlateList::COLLIMATORLIST);
     LoadConfig(PlateList::DRIVELIST);
 
-    //std::ofstream ofs (m_DriveFileName, std::ios_base::out|std::ios_base::trunc);
-    
-    
-    Plate p(6,9,0,"dldldld", 0.1);
-    m_DriveList.erase(m_DriveList.begin());
-    m_DriveList.push_back(p);
-    
-    SaveConfig(PlateList::DRIVELIST);
-
-//_CollimatorList.erase(m_CollimatorList.begin());
-    m_CollimatorList.push_back(p);
-    SaveConfig(PlateList::COLLIMATORLIST);
 }
 Config::~Config()
 {
