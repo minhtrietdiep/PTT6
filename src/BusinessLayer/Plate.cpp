@@ -1,11 +1,11 @@
 #include "Plate.h"
 
 
-Plate::Plate(int id, int drivePos, int colimatorPosition, std::string properties, double thickness)
+Plate::Plate(int id, int drivePos, int collimatorPosition, std::string properties, double thickness)
 {
 	m_ID = id;
 	m_DrivePosition = drivePos;
-	m_ColimatorPosition = colimatorPosition;
+	m_CollimatorPosition = collimatorPosition;
 	m_Properties = properties;
 	m_Thickness = thickness;
 }
@@ -19,7 +19,7 @@ std::string Plate::GetProperties()
 }
 int Plate::GetCollimatorPosition()
 {
-	return m_ColimatorPosition;
+	return m_CollimatorPosition;
 }
 int Plate::GetDrivePosition()
 {
