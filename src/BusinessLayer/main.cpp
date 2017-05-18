@@ -42,7 +42,7 @@ std::vector<std::string> knownOperations =
     // Embedded -> Client
     "UploadPresets"         ,
     "UploadDriveState"      ,
-    "UploadColliState"      ,
+    "UploadCollimatorState" ,
     "InvalidOperationTest"  ,
 };
 
@@ -152,7 +152,7 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
     }
     else if (functionName == "UploadDriveState")
     {
-        auto result = control->UploadPresets();
+        auto result = control->UploadDriveState();
         MessageQueue mq;
         mq.Write(MQ_NAME_SEND_MESSAGES, result);
 
@@ -163,9 +163,9 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         return ErrorCode::ERR_OK;
         //return ErrorCode::ERR_UNKNOWN;//control->UploadDriveState();
     }
-    else if (functionName == "UploadColliState")
+    else if (functionName == "UploadCollimatorState")
     {
-        auto result = control->UploadPresets();
+        auto result = control->UploadCollimatorState();
         MessageQueue mq;
         mq.Write(MQ_NAME_SEND_MESSAGES, result);
 
@@ -174,7 +174,7 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
                      "Sent Payload: " + result);
 
         return ErrorCode::ERR_OK;
-        //return ErrorCode::ERR_UNKNOWN;//control->UploadColliState();
+        //return ErrorCode::ERR_UNKNOWN;//control->UploadCollimatorState();
     }
     else    // This shouldn't happen tho
     {
