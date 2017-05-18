@@ -14,7 +14,7 @@ enum ErrorCode Drive::OpenDrive()
     myfile.open (FILEPATH);
     myfile << 1 << " " << m_DriveID;
     myfile.close();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Drive::CloseDrive()
@@ -24,7 +24,7 @@ enum ErrorCode Drive::CloseDrive()
     myfile.open (FILEPATH);
     myfile << 0 << " " << m_DriveID;
     myfile.close();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 int Drive::GetDriveID()

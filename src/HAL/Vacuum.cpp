@@ -9,7 +9,7 @@ enum ErrorCode Vacuum::EnableVacuum()
     myfile.open (FILEPATH);
     myfile << 1;
     myfile.close();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Vacuum::DisableVacuum()
@@ -19,5 +19,5 @@ enum ErrorCode Vacuum::DisableVacuum()
     myfile.open (FILEPATH);
     myfile << 0;
     myfile.close();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }

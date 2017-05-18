@@ -14,7 +14,7 @@ enum ErrorCode Arm::MoveToCoord(Coordinates coordinates)
     myfile.open (FILEPATH);
     myfile << coordinates.GetCoordinates()[0] << " " << coordinates.GetCoordinates()[1] << " " << coordinates.GetCoordinates()[2] << " " << coordinates.GetCoordinates()[3] << std::endl;
     myfile.close();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Arm::MoveHome()
@@ -24,5 +24,5 @@ enum ErrorCode Arm::MoveHome()
     myfile.open (FILEPATH);
     myfile << m_HomePosition.GetCoordinates()[0] << " " << m_HomePosition.GetCoordinates()[1] << " " << m_HomePosition.GetCoordinates()[2] << " " << m_HomePosition.GetCoordinates()[3] << std::endl;
     myfile.close();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
