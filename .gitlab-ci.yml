@@ -12,6 +12,7 @@ stages:
 lint:
   stage: lint
   script:
+  - echo student | su student -S
     -  ./scripts/lint.sh 
     #lint.sh
 compile:
