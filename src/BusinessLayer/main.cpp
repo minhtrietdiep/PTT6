@@ -25,6 +25,7 @@
 #include "Control.h"
 #include "Config.h"
 #include "CommandUtils.h"
+#include "PresetUtils.h"
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 Control control({});
@@ -38,9 +39,11 @@ std::vector<std::string> knownOperations =
     "EmergencyStop"         ,
     "ContinueSystem"        ,
     "ResetSystem"           ,
-    "UploadConfig"          ,
-    "DownloadConfig"        ,
-    "InvalidStuff"          ,
+    // Embedded -> Client
+    "UploadPresets"         ,
+    "UploadDriveState"      ,
+    "UploadColliState"      ,
+    "InvalidOperationTest"  ,
 };
 
 // Generate a randomly numbered JSON message
@@ -86,16 +89,12 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
         Parameter param = params[0];
-
         if (param.Name != "plateID") 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
-        control->PlateToDrive(std::stoi(param.Value));
-        return ErrorCode::OK;
+        return control->PlateToDrive(std::stoi(param.Value));
     }
     else if (functionName == "PlateToCollimator") 
     {
@@ -103,22 +102,12 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
         Parameter param = params[0];
-
         if (param.Name != "plateID") 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
-        control->PlateToCollimator(std::stoi(param.Value));
-        return ErrorCode::OK;
-    }
-    else if (functionName == "CancelCurrentOperation") 
-    {
-        // No params needed
-        control->CancelCurrentOperation();
-        return ErrorCode::OK;
+        return control->PlateToCollimator(std::stoi(param.Value));
     }
     else if (functionName == "SetPreset") 
     {
@@ -126,45 +115,54 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
         Parameter param = params[0];
-
         if (param.Name != "presetID") 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
-        control->SetPreset(std::stoi(param.Value));
-        return ErrorCode::OK;
+        return control->SetPreset(std::stoi(param.Value));
+    }
+    else if (functionName == "CancelCurrentOperation") 
+    {
+        return control->CancelCurrentOperation();
     }
     else if (functionName == "EmergencyStop") 
     {
-        control->EmergencyStop();
-        return ErrorCode::OK;
+        return control->EmergencyStop();
     }
     else if (functionName == "ContinueSystem") 
     {
-        control->ContinueSystem();
-        return ErrorCode::OK;
+        return control->ContinueSystem();
     }
     else if (functionName == "ResetSystem")
     {
-        control->ResetSystem();
-        return ErrorCode::OK;
+        return control->ResetSystem();
     } 
-    else if (functionName == "UploadConfig")
+    else if (functionName == "UploadPresets")
     {
-        control->UploadConfig();   
-        return ErrorCode::OK;
+        //auto result = control->UploadPresets();
+        //std::cout << result << "\n";
+
+        //auto result2 = PlateListToJSONString(control->GetConfig()->GetDrivelist(), PlateList::DRIVELIST);
+        //std::cout << result2 << "\n";
+
+        return ErrorCode::ERR_UNKNOWN;
     }
-    else if (functionName == "DownloadConfig")
+    else if (functionName == "UploadDriveState")
     {
-        control->DownloadConfig();
-        return ErrorCode::OK;
-    } 
-    else
+
+        return ErrorCode::ERR_UNKNOWN;//control->UploadDriveState();
+    }
+    else if (functionName == "UploadColliState")
     {
-        return ErrorCode::ERR_UNKNOWN_FUNC;
+        return ErrorCode::ERR_UNKNOWN;//control->UploadColliState();
+    }
+    else    // This shouldn't happen tho
+    {
+        logger.Write(Logger::Severity::ERROR,
+            __PRETTY_FUNCTION__,
+            "Function not implemented somehow????");
+        return ErrorCode::ERR_UNKNOWN;
     }
 }
 
@@ -320,6 +318,12 @@ int main(int argc, char **argv)
             {
                 std::cout << "\n";
                 generateSentMessage();
+            }
+            if (c == '3') 
+            {
+                std::cout << "\n";
+                executeFunction(&control, "UploadPresets", {});
+
             }
         }
 

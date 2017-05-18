@@ -10,6 +10,7 @@
 #include "stringbuffer.h"
 #include "filereadstream.h"
 #include "Logger.h"
+#include "PresetUtils.h"
 
 
 #define COLLIMATORPOS 99
@@ -159,9 +160,9 @@ enum ErrorCode Control::StartSystem()
 }
 
 
-ErrorCode Control::UploadConfig()
+std::string Control::UploadPresets()
 {
-    std::cout << "Control:Uploading config..." << std::endl;
+    return PresetToJSONString(m_Presets);
 }
 
 ErrorCode Control::DownloadConfig()

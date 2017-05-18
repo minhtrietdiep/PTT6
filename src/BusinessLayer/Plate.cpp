@@ -17,7 +17,7 @@ std::string Plate::GetProperties()
 {
 	return m_Properties;
 }
-int Plate::GetColimatorPosition()
+int Plate::GetCollimatorPosition()
 {
 	return m_ColimatorPosition;
 }

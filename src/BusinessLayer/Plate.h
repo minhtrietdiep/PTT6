@@ -18,7 +18,7 @@ class Plate
 		Plate(int id, int drivePos, int colimatorPosition, std::string properties, double tickness);
 		double GetThickness();
 		std::string GetProperties();
-		int GetColimatorPosition();
+		int GetCollimatorPosition();
 		int GetDrivePosition();
 		int GetID();
 
