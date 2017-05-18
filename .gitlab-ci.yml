@@ -11,6 +11,7 @@ stages:
   - code-coverage
 lint:
   stage: lint
+  script:
     - bash ./scripts/lint.sh
     #lint.sh
 compile:
