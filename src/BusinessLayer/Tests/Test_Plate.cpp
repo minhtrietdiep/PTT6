@@ -20,7 +20,7 @@ TEST(NewPlate, GetDrivePosition)
 }
 TEST(NewPlate, GetColimatorPosition) 
 {
-    EXPECT_EQ(PLATECOLIMATORPOSITION, m_Plate.GetCollimatorPosition());
+    EXPECT_EQ(PLATECOLLIMATORPOSITION, m_Plate.GetCollimatorPosition());
 }
 TEST(NewPlate, GetProperties) 
 {
