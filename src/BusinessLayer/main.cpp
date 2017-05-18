@@ -148,17 +148,33 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
                      __PRETTY_FUNCTION__,
                      "Sent Payload: " + result);
 
-
         return ErrorCode::ERR_OK;
     }
     else if (functionName == "UploadDriveState")
     {
+        auto result = control->UploadPresets();
+        MessageQueue mq;
+        mq.Write(MQ_NAME_SEND_MESSAGES, result);
 
-        return ErrorCode::ERR_UNKNOWN;//control->UploadDriveState();
+        logger.Write(Logger::Severity::DEBUG,
+                     __PRETTY_FUNCTION__,
+                     "Sent Payload: " + result);
+
+        return ErrorCode::ERR_OK;
+        //return ErrorCode::ERR_UNKNOWN;//control->UploadDriveState();
     }
     else if (functionName == "UploadColliState")
     {
-        return ErrorCode::ERR_UNKNOWN;//control->UploadColliState();
+        auto result = control->UploadPresets();
+        MessageQueue mq;
+        mq.Write(MQ_NAME_SEND_MESSAGES, result);
+
+        logger.Write(Logger::Severity::DEBUG,
+                     __PRETTY_FUNCTION__,
+                     "Sent Payload: " + result);
+
+        return ErrorCode::ERR_OK;
+        //return ErrorCode::ERR_UNKNOWN;//control->UploadColliState();
     }
     else    // This shouldn't happen tho
     {
