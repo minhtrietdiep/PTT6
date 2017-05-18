@@ -140,13 +140,16 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
     } 
     else if (functionName == "UploadPresets")
     {
-        //auto result = control->UploadPresets();
-        //std::cout << result << "\n";
+        auto result = control->UploadPresets();
+        MessageQueue mq;
+        mq.Write(MQ_NAME_SEND_MESSAGES, result);
 
-        //auto result2 = PlateListToJSONString(control->GetConfig()->GetDrivelist(), PlateList::DRIVELIST);
-        //std::cout << result2 << "\n";
+        logger.Write(Logger::Severity::DEBUG,
+                     __PRETTY_FUNCTION__,
+                     "Sent Payload: " + result);
 
-        return ErrorCode::ERR_UNKNOWN;
+
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "UploadDriveState")
     {
@@ -176,9 +179,9 @@ ClientMessage slowFunc(ClientMessage cm)
     std::string funcName = cm.GetFunctionName();
     std::vector<Parameter> params = cm.GetParams();
     int timeout = rand() % 5000;
-    std::cout << "Priority:      " << priority << "\n";
-    std::cout << "Sender:        " <<  sender << "\n";
-    std::cout << "Function Name: " << funcName << "\n";
+    //std::cout << "Priority:      " << priority << "\n";
+    //std::cout << "Sender:        " <<  sender << "\n";
+    //std::cout << "Function Name: " << funcName << "\n";
     for (auto p : params) 
     {
         std::cout   << p.Name << "\n"
@@ -217,7 +220,7 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
                 mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));                    
                 logger.Write(Logger::Severity::INFO,
                          __PRETTY_FUNCTION__,
-                         jsparser.ClientMessageToJson(doneMessage));
+                         "Response: " + jsparser.ClientMessageToJson(doneMessage));
             }
             else
             {
@@ -231,12 +234,88 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
 
             // We're done tracking it so we can erase the progress handle.
             futures.erase(it);
-            std::cout << "Threads left: " << futures.size() << "\n";
+            logger.Write(Logger::Severity::INFO,
+                         __PRETTY_FUNCTION__,
+                         "Threads left: " + std::to_string(futures.size()));
         }
         else 
         {
             ++it;
         }
+    }
+}
+
+// Due to TCP appending multiple messages in one message, we can get an MQ
+// message that's not a valid JSON message. Hence needing to split up.
+// Due to our networking person being absent today this hack was needed.
+std::vector<std::string> splitRawMq(std::string rawMq) {
+    std::vector<std::string> results;
+    
+    int leftBracketCount = 0;
+    int rightBracketCount = 0;
+    int start = 0;
+    for(int pos = 0; pos < rawMq.size(); pos++) {
+        char c = rawMq[pos];
+        if (c == '{') {
+            leftBracketCount++;
+        }
+        if (c == '}') {
+            rightBracketCount++;
+        }
+        if (rightBracketCount == leftBracketCount && leftBracketCount != 0 || pos == rawMq.size() - 1) {
+            std::string singleMessage = rawMq.substr(start, pos - start + 1);
+            leftBracketCount = 0;
+            rightBracketCount = 0;
+            start = pos + 1;
+            results.push_back(singleMessage);
+        }
+    }
+    return results;
+}
+
+void parseSingleJSONString(std::string rawString, 
+    MessageQueue &mq, 
+    std::vector<std::future<ClientMessage>> &futures,
+    std::vector<std::thread> &threads) {
+
+    JSONParser jsparser;
+    ClientMessage clientMessage;
+    std::string parseInfo;
+    JSONError result = jsparser.JsonToClientMessage(rawString, 
+                                                &clientMessage, 
+                                                parseInfo);
+    if (result == JSONError::NONE) 
+    {
+        logger.Write(Logger::Severity::DEBUG, 
+                 __PRETTY_FUNCTION__, 
+                 "Parse success");
+        std::packaged_task<ClientMessage(ClientMessage)> task(&slowFunc);
+        auto future = task.get_future();
+        std::thread thread(std::move(task), clientMessage);
+        futures.push_back(std::move(future));
+        threads.push_back(std::move(thread));
+    } 
+    else 
+    {
+        std::string jsError = GetJSONErrorString(result);
+
+        Parameter result = 
+        {
+            "ReturnValue",
+            "String",
+            jsError,
+        };
+        ClientMessage tempMsg(0, "JsonToClientMessage", "embedded", 999, {result}); // for json formatted stuff response
+
+        std::string returnMessage = jsparser.ClientMessageToJson(tempMsg);
+
+        mq.Write(MQ_NAME_SEND_MESSAGES, returnMessage);
+        logger.Write(Logger::Severity::ERROR, 
+                     __PRETTY_FUNCTION__, 
+                     "Parsing failed: " + parseInfo + " (" + jsError + ")");
+        logger.Write(Logger::Severity::ERROR,
+                     __PRETTY_FUNCTION__,
+                     "Response: " + returnMessage);
     }
 }
 
@@ -247,30 +326,16 @@ void checkMessages(MessageQueue &mq,
     // ClientMessage. This is done in a new thread to make this async.
     if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) 
     {
-        JSONParser jsparser;
         std::string rawMq;
         rawMq = mq.Read(MQ_NAME_RECEIVED_MESSAGES);
 
-        std::cout << rawMq << "\n";
+        logger.Write(Logger::Severity::DEBUG, 
+                     __PRETTY_FUNCTION__, 
+                     "Received message: " + rawMq);
 
-        ClientMessage clientMessage;
-        std::string parseInfo;
-        JSONError result = jsparser.JsonToClientMessage(rawMq, 
-                                                    &clientMessage, 
-                                                    parseInfo);
-        if (result == JSONError::NONE) 
-        {
-            std::packaged_task<ClientMessage(ClientMessage)> task(&slowFunc);
-            auto future = task.get_future();
-            std::thread thread(std::move(task), clientMessage);
-            futures.push_back(std::move(future));
-            threads.push_back(std::move(thread));
-        } 
-        else 
-        {
-            logger.Write(Logger::Severity::ERROR, 
-                         __PRETTY_FUNCTION__, 
-                         "Parsing failed: " + parseInfo);
+        std::vector<std::string> splitMessages = splitRawMq(rawMq);
+        for (auto message : splitMessages) {
+            parseSingleJSONString(message, mq, futures, threads);
         }
     }
 }
