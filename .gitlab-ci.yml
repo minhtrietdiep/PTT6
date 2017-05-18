@@ -12,7 +12,7 @@ stages:
 lint:
   stage: lint
   script:
-    -  ./scripts/lint.sh 
+    -  ../gitlab-runner/script.sh
     #lint.sh
 compile:
   stage: compile
