@@ -1,7 +1,9 @@
 ﻿
 namespace CalibrationPlateChangerClient {
-    /*Everything must be public for JSON serializer*/
-
+    /// <summary>
+    /// Can be used as a function request parameter
+    /// This class must be public, otherwise serialization won't work
+    /// </summary>
     public class ApiFunctionParameter
     {
         public string Name;

@@ -1,6 +1,9 @@
 ﻿
 namespace CalibrationPlateChangerClient
 {
+    /// <summary>
+    /// These functions are provided by the server
+    /// </summary>
     interface IPlateChanger
     {
         ApiFunction PlateToDrive(int plateID);
@@ -10,7 +13,8 @@ namespace CalibrationPlateChangerClient
         ApiFunction EmergencyStop();
         ApiFunction ContinueSystem();
         ApiFunction ResetSystem();
-        ApiFunction UploadConfig(/*TBD*/);
-        ApiFunction DownloadConfig();
+        ApiFunction UploadPresets();
+        ApiFunction UploadDriveState();
+        ApiFunction UploadColliState();
     }
 }

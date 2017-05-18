@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Net.Sockets;
 using System.IO;
+using System.Security;
 
 namespace CalibrationPlateChangerClient
 {
@@ -33,13 +34,34 @@ namespace CalibrationPlateChangerClient
                 bool success = result.AsyncWaitHandle.WaitOne(1000);
                 if (!success)
                 {
-                    throw new SocketException();
+                    throw new TimeoutException();
                 }
                 m_IsConnected = true;
             }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex + "\nHost parameter is null");
+                return -2;
+            }
             catch (SocketException ex)
             {
-                return -2;
+                Console.WriteLine(ex + "\nAn error occured when attempting to access the socket");
+                return -3;
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Console.WriteLine(ex + "\nThe socket has been closed");
+                return -4;
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine(ex + "\nInvalid port");
+                return -5;
+            }
+            catch (TimeoutException ex)
+            {
+                Console.WriteLine(ex + "\nServer is not responding");
+                return -6;
             }
             return 0;
         }
@@ -55,21 +77,20 @@ namespace CalibrationPlateChangerClient
                     m_ReceiveThread.Abort();
                     m_ReceiveThread = null;
                 }
-                catch (ThreadAbortException ex)
+                catch (SecurityException ex)
                 {
+                    Console.WriteLine(ex + "\nNo permissions");
+                    return -2;
+                }
+                catch (ThreadStateException ex)
+                {
+                    Console.WriteLine(ex + "\nThe thread that is being aborted is currently suspended");
                     return -3;
                 }
             }
-            try
-            {  
-                m_TcpClient.Close();
-                m_IsConnected = false;
-                m_TcpClient = new TcpClient();
-            }
-            catch (SocketException ex)
-            {
-                return -2;
-            }
+            m_TcpClient.Close();
+            m_IsConnected = false;
+            m_TcpClient = new TcpClient();
             return 0;
         }
 
@@ -83,24 +104,61 @@ namespace CalibrationPlateChangerClient
             if (ConnectionState() != 0)
             {
                 Disconnect();
+                return -2;
+            }
+
+            NetworkStream dataStream = null;
+            byte[] dataBuffer = null;
+
+            try
+            {
+                dataStream = m_TcpClient.GetStream();
+                dataBuffer = System.Text.Encoding.ASCII.GetBytes(dataToSend);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Console.WriteLine(ex + "\ntcpClient has been closed");
+                return -3;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex + "\ntcpClient is not connected to a remote host");
                 return -4;
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex + "\ndataToSend is null");
+                return -5;
+            }
+            catch (System.Text.EncoderFallbackException ex)
+            {
+                Console.WriteLine(ex + "\nA fallback occurred");
+                return -6;
             }
             try
             {
-                NetworkStream dataStream = m_TcpClient.GetStream();
-                byte[] dataBuffer = System.Text.Encoding.ASCII.GetBytes(dataToSend);
                 dataStream.Write(dataBuffer, 0, dataBuffer.Length);
                 dataStream.Flush();
             }
-            catch (SocketException ex)
+            catch (ArgumentNullException ex)
             {
-                Disconnect();
-                return -2;
+                Console.WriteLine(ex + "\ndataBuffer is null");
+                return -7;
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine(ex + "\none or more arguments are invalid");
+                return -8;
             }
             catch (IOException ex)
             {
-                Disconnect();
-                return -3;
+                Console.WriteLine(ex + "\nThere was a failure when writing to the network");
+                return -9;
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Console.WriteLine(ex + "\nThe networkstream is closed");
+                return -10;
             }
             return 0;
         }
@@ -119,9 +177,20 @@ namespace CalibrationPlateChangerClient
                 m_ReceiveThread = new Thread(() => ReceiveListener(receiveMessageHandler));
                 m_ReceiveThread.Start();
             }
-            catch (ThreadStartException ex)
+            catch (ArgumentNullException ex)
             {
+                Console.WriteLine(ex + "\nnew Thread() parameter is null");
                 return -3;
+            }
+            catch (ThreadStateException ex)
+            {
+                Console.WriteLine(ex + "\nThread has already been started");
+                return -4;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                Console.WriteLine(ex + "\nNot enough memory available to start thread");
+                return -5;
             }
             return 0;
         }
@@ -145,7 +214,6 @@ namespace CalibrationPlateChangerClient
                 catch (SocketException ex)
                 {
                     Console.WriteLine("Exception in ReceiveListener: " + ex);
-                    //Disconnect();
                     return;
                 }
                 string receivedData = System.Text.Encoding.ASCII.GetString(inStream);

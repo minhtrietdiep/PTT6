@@ -216,5 +216,16 @@ namespace CalibrationPlateChangerClient
             }
             MessageBox.Show("Preset not available");
         }
+
+        private void btnDownloadConfig_Click(object sender, EventArgs e)
+        {
+            ApiFunction getPresetRequest = m_Api.UploadPresets();
+            ApiFunction getDriveStateRequest = m_Api.UploadDriveState();
+            ApiFunction getColliStateRequest = m_Api.UploadColliState();
+            m_sendRequestFunction(getPresetRequest);
+            m_sendRequestFunction(getDriveStateRequest);
+            m_sendRequestFunction(getColliStateRequest);
+            return;
+        }
     }
 }

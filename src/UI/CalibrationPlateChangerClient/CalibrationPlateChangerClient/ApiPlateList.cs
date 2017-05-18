@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 namespace CalibrationPlateChangerClient
 {
     /// <summary>
-    /// Can be used as a function request
     /// This class must be public, otherwise serialization won't work
     /// </summary>
-    public class ApiFunction
+    public class ApiPlateList
     {
+        public string PlateList;
+        public List<Plate> Plates;
 
-        public ApiFunctionProperties Function;
-
-        public ApiFunction(ApiFunctionProperties request)
+        public ApiPlateList(string plateList, List<Plate> plates)
         {
-            Function = request;
+            this.PlateList = plateList;
+            this.Plates = plates;
         }
 
-        public ApiFunction()
+        public ApiPlateList()
         {
-
+            
         }
     }
 }

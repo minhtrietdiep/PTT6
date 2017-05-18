@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CalibrationPlateChangerClient
 {
+    /// <summary>
+    /// This class can be used for generating function requests
+    /// </summary>
     class ApiFunctionBuilder : IPlateChanger
     {
 
@@ -27,11 +30,6 @@ namespace CalibrationPlateChangerClient
             string ipAddress = GetLocalIPAddress();
             ApiFunction function = new ApiFunction(new ApiFunctionProperties("1", ipAddress, "ContinueSystem", "Request", parameters));
             return function;
-        }
-
-        public ApiFunction DownloadConfig()
-        {
-            throw new NotImplementedException();
         }
 
         public ApiFunction EmergencyStop()
@@ -77,12 +75,37 @@ namespace CalibrationPlateChangerClient
             return function;
         }
 
-        public ApiFunction UploadConfig()
+        /*public ApiFunction UploadConfig()
         {
-            throw new NotImplementedException();
+            ApiFunctionParameter[] parameters = new ApiFunctionParameter[0];
+            string ipAddress = GetLocalIPAddress();
+            ApiFunction function = new ApiFunction(new ApiFunctionProperties("0", ipAddress, "UploadConfig", "Request", parameters));
+            return function;
+        }*/
+
+        public ApiFunction UploadPresets()
+        {
+            ApiFunctionParameter[] parameters = new ApiFunctionParameter[0];
+            string ipAddress = GetLocalIPAddress();
+            ApiFunction function = new ApiFunction(new ApiFunctionProperties("0", ipAddress, "UploadPresets", "Request", parameters));
+            return function;
         }
 
+        public ApiFunction UploadDriveState()
+        {
+            ApiFunctionParameter[] parameters = new ApiFunctionParameter[0];
+            string ipAddress = GetLocalIPAddress();
+            ApiFunction function = new ApiFunction(new ApiFunctionProperties("0", ipAddress, "UploadDriveState", "Request", parameters));
+            return function;
+        }
 
+        public ApiFunction UploadColliState()
+        {
+            ApiFunctionParameter[] parameters = new ApiFunctionParameter[0];
+            string ipAddress = GetLocalIPAddress();
+            ApiFunction function = new ApiFunction(new ApiFunctionProperties("0", ipAddress, "UploadColliState", "Request", parameters));
+            return function;
+        }
 
         private string GetLocalIPAddress()
         {

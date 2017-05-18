@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiFunction.cs" />
+    <Compile Include="ApiPlateList.cs" />
     <Compile Include="IPlateChanger.cs" />
     <Compile Include="CommunicationClient.cs" />
     <Compile Include="ApiFunctionProperties.cs" />
