@@ -5,6 +5,7 @@ after_script:
     - make clean
 stages:
   - lint
+  - statictest
   - compile
   - cross-compile
   - unit-test
@@ -14,6 +15,11 @@ lint:
   script:
     -  ./scripts/lint.sh 
     #lint.sh
+statictest:
+  stage: statictest
+  script:
+    - cppcheck --quiet --xml --inline-suppr --enable=all --error-exitcode=0
+
 compile:
   stage: compile
   script:
