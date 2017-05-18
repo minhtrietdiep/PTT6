@@ -22,7 +22,7 @@ HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
     //////TODO: Hubert -> to config file
 }
 
-int HAL::Pickup(bool on)
+enum ErrorCode HAL::Pickup(bool on)
 {
     if(on)
     {
@@ -32,29 +32,29 @@ int HAL::Pickup(bool on)
     {
         m_Vacuum.DisableVacuum();
     }
-    return 1;
+    return ErrorCode::OK;
 }
 
-int HAL::MoveArm(int driveid)
+enum ErrorCode HAL::MoveArm(int driveid)
 {
     for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
             m_Arm.MoveToCoord(m_DriveList[i].GetDriveCoordinates());
-            return 1;
+            return ErrorCode::OK;
         }
     }
-    return -1;
+    return ErrorCode::ERR_UNKNOWN;
 }
 
-int HAL::MoveArmToHome()
+enum ErrorCode HAL::MoveArmToHome()
 {
     m_Arm.MoveHome();
-    return 1;
+    return ErrorCode::OK;
 }
 
-int HAL::OpenDrive(int driveid)
+enum ErrorCode HAL::OpenDrive(int driveid)
 {
     int i = 0;
     for(;i < (int)m_DriveList.size(); i++)
@@ -62,13 +62,13 @@ int HAL::OpenDrive(int driveid)
         if(m_DriveList[i].GetDriveID() == driveid)
         {
             m_DriveList[i].OpenDrive();
-            return 1;
+            return ErrorCode::OK;
         }
     } 
-    return -1;
+    return ErrorCode::ERR_UNKNOWN;
 }
 
-int HAL::CloseDrive(int driveid)
+enum ErrorCode HAL::CloseDrive(int driveid)
 {
     int i = 0;
     for(;i < (int)m_DriveList.size(); i++)
@@ -76,8 +76,8 @@ int HAL::CloseDrive(int driveid)
         if(m_DriveList[i].GetDriveID() == driveid)
         {
             m_DriveList[i].CloseDrive();
-            return 1;
+            return ErrorCode::OK;
         }
     }
-    return -1;
+    return ErrorCode::ERR_UNKNOWN;
 }

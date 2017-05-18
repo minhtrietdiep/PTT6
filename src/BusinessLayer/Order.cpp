@@ -35,37 +35,37 @@ enum ErrorCode Order::Start()
         { 
           case OPEN_DRIVE :
                 std::cout<<"Open Drive"<<std::endl;
-                if(m_Hal.OpenDrive(ID) == 1)
+                if(m_Hal.OpenDrive(ID) == ErrorCode::OK)
                 state = MOVE_ARM_SOURCE;
                 break;
             case MOVE_ARM_SOURCE :
                 std::cout<<"Move Arm"<<std::endl;
-                if(m_Hal.MoveArm(ID) == 1)
+                if(m_Hal.MoveArm(ID) == ErrorCode::OK)
                 state = ENABLE_VACUUM;
                 break;
             case ENABLE_VACUUM :
                 std::cout<<"EnableVacuum"<<std::endl;
-                if(m_Hal.Pickup(true) == 1)
+                if(m_Hal.Pickup(true) == ErrorCode::OK)
                 state = MOVE_ARM_DESTINATION;
                 break;
             case MOVE_ARM_DESTINATION :
                 std::cout<<"Move Arm"<<std::endl;
-                if(m_Hal.MoveArm(Destination) == 1)
+                if(m_Hal.MoveArm(Destination) == ErrorCode::OK)
                 state = DISABLE_VACUUM;
                 break;
             case DISABLE_VACUUM :
                 std::cout<<"DisableVacuum"<<std::endl;
-                if(m_Hal.Pickup(false) == 1)
+                if(m_Hal.Pickup(false) == ErrorCode::OK)
                 state = MOVE_ARM_HOME;
                 break;
             case MOVE_ARM_HOME :
                 std::cout<<"MoveToHome"<<std::endl;
-                if(m_Hal.MoveArmToHome() == 1)
+                if(m_Hal.MoveArmToHome() == ErrorCode::OK)
                 state = CLOSE_DRIVE;
                 break;
             case CLOSE_DRIVE :
                 std::cout<<"CloseDrive"<<std::endl;
-                if(m_Hal.CloseDrive(ID) == 1)
+                if(m_Hal.CloseDrive(ID) == ErrorCode::OK)
                 state = COMPLETED;
                 break;
             default:
