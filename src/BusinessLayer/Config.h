@@ -27,7 +27,7 @@ class Config
         ~Config();
         std::vector<Plate> GetDrivelist();
         std::vector<Plate> GetCollimatorlist();
-        enum ErrorCode UploadConfig(enum PlateList plate);
+        enum ErrorCode LoadConfig(enum PlateList plate);
         enum ErrorCode SaveConfig(enum PlateList plate);
         
 };
