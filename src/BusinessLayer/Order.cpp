@@ -24,8 +24,12 @@ enum ErrorCode Order::NewMove(Move newMove)
 
 enum ErrorCode Order::Start() 
 {
-	std::cout << "Order:Starting order..." << std::endl;
+	
     m_States state = OPEN_DRIVE;
+    if ((int)m_MoveList.size() <= 0)
+    {
+        return ErrorCode::ERR_NO_ITEM;
+    }
     int ID = m_MoveList[0].GetPlateID();
     int Destination = m_MoveList[0].GetDestination();
 
@@ -34,42 +38,65 @@ enum ErrorCode Order::Start()
         switch(state) 
         { 
           case OPEN_DRIVE :
-                std::cout<<"Open Drive"<<std::endl;
                 if(m_Hal.OpenDrive(ID) == ErrorCode::OK)
                 state = MOVE_ARM_SOURCE;
+                else
+                {
+                    return ErrorCode::ERR_UNKNOWN;
+                }
                 break;
             case MOVE_ARM_SOURCE :
-                std::cout<<"Move Arm"<<std::endl;
                 if(m_Hal.MoveArm(ID) == ErrorCode::OK)
                 state = ENABLE_VACUUM;
+                else
+                {
+                    return ErrorCode::ERR_UNKNOWN;
+                }
                 break;
             case ENABLE_VACUUM :
-                std::cout<<"EnableVacuum"<<std::endl;
                 if(m_Hal.Pickup(true) == ErrorCode::OK)
                 state = MOVE_ARM_DESTINATION;
+                else
+                {
+                    return ErrorCode::ERR_UNKNOWN;
+                }
                 break;
             case MOVE_ARM_DESTINATION :
-                std::cout<<"Move Arm"<<std::endl;
                 if(m_Hal.MoveArm(Destination) == ErrorCode::OK)
                 state = DISABLE_VACUUM;
+                else
+                    {
+                        return ErrorCode::ERR_UNKNOWN;
+                    }
                 break;
             case DISABLE_VACUUM :
-                std::cout<<"DisableVacuum"<<std::endl;
                 if(m_Hal.Pickup(false) == ErrorCode::OK)
                 state = MOVE_ARM_HOME;
+                else
+                    {
+                        return ErrorCode::ERR_UNKNOWN;
+                    }
                 break;
             case MOVE_ARM_HOME :
-                std::cout<<"MoveToHome"<<std::endl;
                 if(m_Hal.MoveArmToHome() == ErrorCode::OK)
                 state = CLOSE_DRIVE;
+                else
+                {
+                    return ErrorCode::ERR_UNKNOWN;
+                }
                 break;
             case CLOSE_DRIVE :
-                std::cout<<"CloseDrive"<<std::endl;
                 if(m_Hal.CloseDrive(ID) == ErrorCode::OK)
                 state = COMPLETED;
+                else
+                {
+                    return ErrorCode::ERR_UNKNOWN;
+                }
+
+
                 break;
             default:
-                return ErrorCode::ERR_TIMEOUT;  //////////////////////goede????
+                return ErrorCode::ERR_UNKNOWN;
                 break;
         }
     }

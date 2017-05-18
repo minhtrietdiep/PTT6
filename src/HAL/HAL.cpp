@@ -12,12 +12,15 @@ HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
     Drive d4 = Drive(3, coords4);
     Coordinates coords5 = Coordinates(124,2,3,22);
     Drive d5 = Drive(4, coords5);
+    Coordinates coords99 = Coordinates(999,99,999,99);
+    Drive d99 = Drive(99, coords99);
     std::vector<Drive> drivelist;
     drivelist.push_back(d5);
     drivelist.push_back(d4);
     drivelist.push_back(d3);
     drivelist.push_back(d2);
     drivelist.push_back(d1);
+    drivelist.push_back(d99);
     m_DriveList = drivelist;
     //////TODO: Hubert -> to config file
 }
