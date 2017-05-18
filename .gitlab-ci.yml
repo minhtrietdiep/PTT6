@@ -13,7 +13,7 @@ stages:
 lint:
   stage: lint
   script:
-    -  ./scripts/lint.sh 
+    #-  ./scripts/lint.sh 
     #lint.sh
 statictest:
   stage: statictest
