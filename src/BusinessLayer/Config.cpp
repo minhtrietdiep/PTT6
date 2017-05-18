@@ -82,10 +82,7 @@ enum ErrorCode Config::DownloadConfig(enum PlateList plate)
         int collimatorPosition = object["m_ColimatorPostion"].GetInt();
         std::string property = object["m_Property"].GetString();
         double thickness = object["m_Thickness"].GetDouble();
-
-        std::cout << "ID: "<<id << "drivepos: " << drivePosition << "collpos: "<< collimatorPosition << "prop: " << property << "thickness: " << thickness << "\n";
-        
-
+       
         Plate newPlate(id, drivePosition, collimatorPosition, property, thickness);
         if(plate == PlateList::DRIVELIST)
         {
@@ -99,22 +96,20 @@ enum ErrorCode Config::DownloadConfig(enum PlateList plate)
     }
 
     fclose(fp);
-    
-    std::cout << "Control:Downloading config..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Config::UploadConfig(enum PlateList plate)
 {
     std::cout << "Config:Uploading config..." << std::endl;
-	return ErrorCode::OK;
+	return ErrorCode::ERR_OK;
 
 }
 
 enum ErrorCode Config::SaveConfig(enum PlateList plate)
 {
     std::cout << "Config:Saving config..." << std::endl;
-	return ErrorCode::OK;
+	return ErrorCode::ERR_OK;
 
 }
 

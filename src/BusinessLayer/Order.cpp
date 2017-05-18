@@ -19,7 +19,7 @@ enum ErrorCode Order::NewMove(Move newMove)
 {
     m_MoveList.push_back(newMove);
     std::cout << "Order:New Move..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Order::Start() 
@@ -38,7 +38,7 @@ enum ErrorCode Order::Start()
         switch(state) 
         { 
           case OPEN_DRIVE :
-                if(m_Hal.OpenDrive(ID) == ErrorCode::OK)
+                if(m_Hal.OpenDrive(ID) == ErrorCode::ERR_OK)
                 state = MOVE_ARM_SOURCE;
                 else
                 {
@@ -46,7 +46,7 @@ enum ErrorCode Order::Start()
                 }
                 break;
             case MOVE_ARM_SOURCE :
-                if(m_Hal.MoveArm(ID) == ErrorCode::OK)
+                if(m_Hal.MoveArm(ID) == ErrorCode::ERR_OK)
                 state = ENABLE_VACUUM;
                 else
                 {
@@ -54,7 +54,7 @@ enum ErrorCode Order::Start()
                 }
                 break;
             case ENABLE_VACUUM :
-                if(m_Hal.Pickup(true) == ErrorCode::OK)
+                if(m_Hal.Pickup(true) == ErrorCode::ERR_OK)
                 state = MOVE_ARM_DESTINATION;
                 else
                 {
@@ -62,7 +62,7 @@ enum ErrorCode Order::Start()
                 }
                 break;
             case MOVE_ARM_DESTINATION :
-                if(m_Hal.MoveArm(Destination) == ErrorCode::OK)
+                if(m_Hal.MoveArm(Destination) == ErrorCode::ERR_OK)
                 state = DISABLE_VACUUM;
                 else
                     {
@@ -70,7 +70,7 @@ enum ErrorCode Order::Start()
                     }
                 break;
             case DISABLE_VACUUM :
-                if(m_Hal.Pickup(false) == ErrorCode::OK)
+                if(m_Hal.Pickup(false) == ErrorCode::ERR_OK)
                 state = MOVE_ARM_HOME;
                 else
                     {
@@ -78,7 +78,7 @@ enum ErrorCode Order::Start()
                     }
                 break;
             case MOVE_ARM_HOME :
-                if(m_Hal.MoveArmToHome() == ErrorCode::OK)
+                if(m_Hal.MoveArmToHome() == ErrorCode::ERR_OK)
                 state = CLOSE_DRIVE;
                 else
                 {
@@ -86,7 +86,7 @@ enum ErrorCode Order::Start()
                 }
                 break;
             case CLOSE_DRIVE :
-                if(m_Hal.CloseDrive(ID) == ErrorCode::OK)
+                if(m_Hal.CloseDrive(ID) == ErrorCode::ERR_OK)
                 state = COMPLETED;
                 else
                 {
@@ -102,18 +102,18 @@ enum ErrorCode Order::Start()
     }
 
     m_MoveList.erase(m_MoveList.begin());
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Order::Stop()
 {
 	std::cout << "Order:Stopping order..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Order::Reset()
 {
     m_MoveList.clear();
 	std::cout << "Order:Resetting order..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }

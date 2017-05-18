@@ -71,7 +71,7 @@ enum ErrorCode Control::PlateToDrive(int plateid)
     {
         std::cout << "Drive niet gevonden!" << std::endl;  
     }
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 
 }
 
@@ -80,7 +80,7 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
     std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::CancelCurrentOperation()
@@ -88,7 +88,7 @@ enum ErrorCode Control::CancelCurrentOperation()
     m_Order.Stop();
     std::cout << "Control:Canceling current operation..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::SetPreset(int presetid)
@@ -118,7 +118,7 @@ enum ErrorCode Control::SetPreset(int presetid)
     }
     std::cout << "Control:Setting preset " << presetid << "..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::EmergencyStop()
@@ -126,7 +126,7 @@ enum ErrorCode Control::EmergencyStop()
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(0));
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::ContinueSystem()
@@ -134,7 +134,7 @@ enum ErrorCode Control::ContinueSystem()
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::ResetSystem()
@@ -149,14 +149,14 @@ enum ErrorCode Control::ResetSystem()
     {
       PlateToDrive(collimatorList[i].GetID());
     }
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 
 }
 enum ErrorCode Control::StartSystem()
 {
     std::cout << "Order start moving" << std::endl;
     m_Order.Start();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 
@@ -220,7 +220,7 @@ ErrorCode Control::DownloadConfig()
     
     std::cout << "Control:Downloading config..." << std::endl;
 
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 ErrorCode Control::DownloadLog(int logfilenumber)
