@@ -38,9 +38,11 @@ std::vector<std::string> knownOperations =
     "EmergencyStop"         ,
     "ContinueSystem"        ,
     "ResetSystem"           ,
-    "UploadConfig"          ,
-    "DownloadConfig"        ,
-    "InvalidStuff"          ,
+    // Embedded -> Client
+    "UploadPresets"         ,
+    "UploadDriveState"      ,
+    "UploadColliState"      ,
+    "InvalidOperationTest"  ,
 };
 
 // Generate a randomly numbered JSON message
@@ -135,14 +137,24 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
     {
         return control->ResetSystem();
     } 
-    else if (functionName == "UploadConfig")
+    else if (functionName == "UploadPresets")
     {
-        return control->UploadConfig();   
+        auto result = control->UploadPresets();
+        std::cout << result;
+
+        // do send stuff
+
+        return ErrorCode::ERR_UNKNOWN;
     }
-    else if (functionName == "DownloadConfig")
+    else if (functionName == "UploadDriveState")
     {
-        return control->DownloadConfig();
-    } 
+
+        return ErrorCode::ERR_UNKNOWN;//control->UploadDriveState();
+    }
+    else if (functionName == "UploadColliState")
+    {
+        return ErrorCode::ERR_UNKNOWN;//control->UploadColliState();
+    }
     else    // This shouldn't happen tho
     {
         logger.Write(Logger::Severity::ERROR,
@@ -297,6 +309,12 @@ int main(int argc, char **argv)
             {
                 std::cout << "\n";
                 generateSentMessage();
+            }
+            if (c == '3') 
+            {
+                std::cout << "\n";
+                executeFunction(&control, "UploadPresets", {});
+                
             }
         }
 

@@ -10,7 +10,6 @@
 #include "Move.h"
 #include "Config.h"
 
-
 class Control : public IUIControl, public IRemoteLog
 {
         private:
@@ -33,7 +32,7 @@ class Control : public IUIControl, public IRemoteLog
         virtual enum ErrorCode ContinueSystem();
         virtual enum ErrorCode ResetSystem();
         virtual enum ErrorCode StartSystem();
-        virtual enum ErrorCode UploadConfig();
+        virtual std::string UploadPresets();
         virtual enum ErrorCode DownloadConfig();
         
 
