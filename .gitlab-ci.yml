@@ -12,7 +12,6 @@ stages:
 lint:
   stage: lint
   script:
-  - whoaim
     -  ./scripts/lint.sh 
     #lint.sh
 compile:
