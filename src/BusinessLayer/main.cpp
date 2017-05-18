@@ -76,7 +76,10 @@ void generateSentMessage()
     mq.Write(MQ_NAME_SEND_MESSAGES, generateJson());
 }
 
-ErrorCode executeFunction(IUIControl *control, const std::string &functionName, const std::vector<Parameter> &params) 
+ErrorCode executeFunction(IUIControl *control, 
+    const std::string &functionName, 
+    const std::vector<Parameter> &params,
+    std::string &payload) 
 {
     if (std::find(knownOperations.begin(), knownOperations.end(), functionName) == knownOperations.end())
     {
@@ -140,41 +143,18 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
     } 
     else if (functionName == "UploadPresets")
     {
-        auto result = control->UploadPresets();
-        MessageQueue mq;
-        mq.Write(MQ_NAME_SEND_MESSAGES, result);
-
-        logger.Write(Logger::Severity::DEBUG,
-                     __PRETTY_FUNCTION__,
-                     "Sent Payload: " + result);
-
+        payload = control->UploadPresets();
         return ErrorCode::ERR_OK;
     }
     else if (functionName == "UploadDriveState")
     {
-        auto result = control->UploadDriveState();
-        MessageQueue mq;
-        mq.Write(MQ_NAME_SEND_MESSAGES, result);
-
-        logger.Write(Logger::Severity::DEBUG,
-                     __PRETTY_FUNCTION__,
-                     "Sent Payload: " + result);
-
+        payload = control->UploadDriveState();
         return ErrorCode::ERR_OK;
-        //return ErrorCode::ERR_UNKNOWN;//control->UploadDriveState();
     }
     else if (functionName == "UploadCollimatorState")
     {
-        auto result = control->UploadCollimatorState();
-        MessageQueue mq;
-        mq.Write(MQ_NAME_SEND_MESSAGES, result);
-
-        logger.Write(Logger::Severity::DEBUG,
-                     __PRETTY_FUNCTION__,
-                     "Sent Payload: " + result);
-
+        payload = control->UploadCollimatorState();
         return ErrorCode::ERR_OK;
-        //return ErrorCode::ERR_UNKNOWN;//control->UploadCollimatorState();
     }
     else    // This shouldn't happen tho
     {
@@ -203,8 +183,9 @@ ClientMessage asyncConsumeMessage(ClientMessage cm)
         std::cout   << p.Name << "\n"
                     << p.Type << "\n"
                     << p.Value << "\n";
-    }    
-    ErrorCode err = executeFunction(&control, funcName, params);
+    }
+    std::string payloadData = "";    
+    ErrorCode err = executeFunction(&control, funcName, params, payloadData);
 
     Parameter result = 
     {
@@ -213,12 +194,30 @@ ClientMessage asyncConsumeMessage(ClientMessage cm)
         ErrorCodeText[(int)err],
     };
 
+
+
+
     params.push_back(result);
+
+    if (payloadData != "") {
+        Parameter payload = 
+        {
+            "JSONData",
+            "String",
+            payloadData,
+        };
+        params.push_back(payload);
+        logger.Write(Logger::Severity::DEBUG,
+                     __PRETTY_FUNCTION__,
+                     "Payload: " + payloadData);
+    }
+
     cm.SetParams(params);
     return cm;
 }
 
-void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
+void checkThreads(std::vector<std::future<ClientMessage>> &futures) 
+{
     // We check the threads here, using C++11/STL threading. We also know
     // which thread (ClientMessage) is done.
     // Also don't use a ranged for, because we can remove the current
@@ -231,7 +230,8 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
             ClientMessage doneMessage = (*it).get();
 
             MessageQueue mq;
-            if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) < MQ_MAX_MESSAGE) {
+            if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) < MQ_MAX_MESSAGE) 
+            {
                 JSONParser jsparser;
                 mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));                    
                 logger.Write(Logger::Severity::INFO,
@@ -243,7 +243,8 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
                 logger.Write(Logger::Severity::ERROR,
                              __PRETTY_FUNCTION__,
                              "MessageQueue is full, emptying...");
-                while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) {
+                while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) 
+                {
                     mq.Read(MQ_NAME_SEND_MESSAGES);
                 }
             }
@@ -264,21 +265,26 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
 // Due to TCP appending multiple messages in one message, we can get an MQ
 // message that's not a valid JSON message. Hence needing to split up.
 // Due to our networking person being absent today this hack was needed.
-std::vector<std::string> splitRawMq(std::string rawMq) {
+std::vector<std::string> splitRawMq(std::string rawMq) 
+{
     std::vector<std::string> results;
     
     int leftBracketCount = 0;
     int rightBracketCount = 0;
     int start = 0;
-    for(int pos = 0; pos < rawMq.size(); pos++) {
+    for(int pos = 0; pos < rawMq.size(); pos++) 
+    {
         char c = rawMq[pos];
-        if (c == '{') {
+        if (c == '{') 
+        {
             leftBracketCount++;
         }
-        if (c == '}') {
+        if (c == '}') 
+        {
             rightBracketCount++;
         }
-        if (rightBracketCount == leftBracketCount && leftBracketCount != 0 || pos == rawMq.size() - 1) {
+        if (rightBracketCount == leftBracketCount && leftBracketCount != 0 || pos == rawMq.size() - 1) 
+        {
             std::string singleMessage = rawMq.substr(start, pos - start + 1);
             leftBracketCount = 0;
             rightBracketCount = 0;
@@ -292,7 +298,8 @@ std::vector<std::string> splitRawMq(std::string rawMq) {
 void parseSingleJSONString(std::string rawString, 
     MessageQueue &mq, 
     std::vector<std::future<ClientMessage>> &futures,
-    std::vector<std::thread> &threads) {
+    std::vector<std::thread> &threads) 
+{
 
     JSONParser jsparser;
     ClientMessage clientMessage;
@@ -337,7 +344,8 @@ void parseSingleJSONString(std::string rawString,
 
 void checkMessages(MessageQueue &mq, 
     std::vector<std::future<ClientMessage>> &futures,
-    std::vector<std::thread> &threads) {
+    std::vector<std::thread> &threads) 
+{
     // After parsing, launch a function that executes whatever is in the
     // ClientMessage. This is done in a new thread to make this async.
     if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) 
@@ -350,7 +358,8 @@ void checkMessages(MessageQueue &mq,
                      "Received message: " + rawMq);
 
         std::vector<std::string> splitMessages = splitRawMq(rawMq);
-        for (auto message : splitMessages) {
+        for (auto message : splitMessages) 
+        {
             parseSingleJSONString(message, mq, futures, threads);
         }
     }
@@ -399,12 +408,6 @@ int main(int argc, char **argv)
             {
                 std::cout << "\n";
                 generateSentMessage();
-            }
-            if (c == '3') 
-            {
-                std::cout << "\n";
-                executeFunction(&control, "UploadPresets", {});
-
             }
         }
 
