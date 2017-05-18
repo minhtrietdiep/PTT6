@@ -21,6 +21,8 @@ class IUIControl
         virtual ErrorCode ContinueSystem()=0;
         virtual ErrorCode ResetSystem()=0;
         virtual std::string UploadPresets()=0;
+        virtual std::string UploadDriveState()=0;
+        virtual std::string UploadCollimatorState()=0;
         virtual ErrorCode LoadPresets()=0;
 };
 

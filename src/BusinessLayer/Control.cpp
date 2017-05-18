@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Control.h"
-
+#include "Config.h"
 #include "document.h"
 #include "istreamwrapper.h"
 #include "writer.h"
@@ -18,9 +18,7 @@
 Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
-
     LoadPresets();
-
 }
 
 Control::~Control()
@@ -163,6 +161,15 @@ enum ErrorCode Control::StartSystem()
 std::string Control::UploadPresets()
 {
     return PresetToJSONString(m_Presets);
+}
+
+std::string Control::UploadDriveState()
+{
+    return PlateListToJSONString(m_Config.GetDrivelist(),PlateList::DRIVELIST);
+}
+std::string Control::UploadCollimatorState()
+{
+    return PlateListToJSONString(m_Config.GetCollimatorlist(), PlateList::COLLIMATORLIST);
 }
 
 ErrorCode Control::LoadPresets()

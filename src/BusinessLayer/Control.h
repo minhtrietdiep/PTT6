@@ -33,6 +33,8 @@ class Control : public IUIControl, public IRemoteLog
         virtual enum ErrorCode ResetSystem();
         virtual enum ErrorCode StartSystem();
         virtual std::string UploadPresets();
+        virtual std::string UploadDriveState();
+        virtual std::string UploadCollimatorState();
         virtual enum ErrorCode LoadPresets();
         
 
