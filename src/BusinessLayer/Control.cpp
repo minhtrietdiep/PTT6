@@ -29,7 +29,6 @@ Control::~Control()
 
 std::vector<Preset> Control::GetPresets()
 {
-    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return m_Presets;
 }
 
@@ -68,6 +67,7 @@ enum ErrorCode Control::PlateToDrive(int plateid)
     else
     {
         //////////////////////////////////////////////////////Logboek!
+        return ErrorCode::ERR_INVALID_ARG;
     }
     return ErrorCode::OK;
 
@@ -83,7 +83,6 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
 enum ErrorCode Control::CancelCurrentOperation()
 {
     m_Order.Stop();
-    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
     return ErrorCode::OK;
 }
 
@@ -112,7 +111,6 @@ enum ErrorCode Control::SetPreset(int presetid)
         return ErrorCode::ERR_UNKNOWN;
 
     }
-    //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     return ErrorCode::OK;
 }
 
@@ -120,7 +118,6 @@ enum ErrorCode Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
-    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return ErrorCode::OK;
 }
 
@@ -128,7 +125,6 @@ enum ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
-    //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     return ErrorCode::OK;
 }
 
