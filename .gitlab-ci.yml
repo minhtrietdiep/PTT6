@@ -12,10 +12,9 @@ stages:
 lint:
   stage: lint
   script:
-    #- pwd
-    - cd /scripts
+    - pwd
+    - cd scripts/
     - bash lint.sh
-    #lint.sh
 compile:
   stage: compile
   script:
