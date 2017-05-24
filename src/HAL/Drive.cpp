@@ -13,9 +13,8 @@ Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
     m_DriveID = driveid;
 }
 
-enum ErrorCode Drive::OpenDrive()
+enum ErrorCode Drive::ToggleDrive()
 {
-    std::cout << "Opening drive " << m_DriveID << std::endl;
     std::ofstream myfile;
     switch(m_DriveID)
     {
@@ -39,45 +38,23 @@ enum ErrorCode Drive::OpenDrive()
             break;
     }
     myfile << 1;
+    usleep(424242);
+    myfile << 0;
     myfile.close();
 
-    usleep(5000000);
-
     return ErrorCode::ERR_OK;
+}
+
+enum ErrorCode Drive::OpenDrive()
+{
+    std::cout << "Opening drive " << m_DriveID << std::endl;
+    return ToggleDrive();
 }
 
 enum ErrorCode Drive::CloseDrive()
 {
     std::cout << "Closing drive " << m_DriveID << std::endl;
-    std::ofstream myfile;
-    switch(m_DriveID)
-    {
-        case 0:
-            myfile.open (DRIVE0);
-            break;
-        case 1:
-            myfile.open (DRIVE1);
-            break;
-        case 2:
-            myfile.open (DRIVE2);
-            break;
-        case 3:
-            myfile.open (DRIVE3);
-            break;
-        case 4:
-            myfile.open (DRIVE4);
-            break;
-        default:
-
-            break;
-    }
-    
-    myfile << 0;
-    myfile.close();
-
-    usleep(5000000);
-
-    return ErrorCode::ERR_OK;
+    return ToggleDrive();;
 }
 
 int Drive::GetDriveID()
@@ -89,3 +66,4 @@ Coordinates Drive::GetDriveCoordinates()
 {
     return m_Positions;
 }
+

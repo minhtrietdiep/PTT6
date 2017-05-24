@@ -13,6 +13,7 @@ class Drive
     private:
         int m_DriveID;
         Coordinates m_Positions;
+        enum ErrorCode ToggleDrive();
 
     public:
         Drive(int driveid, Coordinates positions);
