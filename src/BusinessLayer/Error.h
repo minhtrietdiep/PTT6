@@ -18,7 +18,7 @@ enum class ErrorCode {
 const std::array<std::string, (int)ErrorCode::Size> ErrorCodeText = 
 {
     { 
-        "OK",
+        "ERR_OK",
         "ERR_UNKNOWN_FUNC",
         "ERR_UNKNOWN",
         "ERR_PARSE",

@@ -130,4 +130,3 @@ enum ErrorCode Config::SaveConfig(enum PlateList plate)
 
 }
 
-
