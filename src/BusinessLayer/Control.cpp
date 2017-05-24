@@ -109,7 +109,7 @@ enum ErrorCode Control::SetPreset(int presetid)
 
     if (status < 0)
     {
-        return ERR_UNKNOWN;
+        return ErrorCode::ERR_UNKNOWN;
 
     }
     //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
