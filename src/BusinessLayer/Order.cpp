@@ -18,7 +18,6 @@ std::vector<Move> Order::GetMoves()
 enum ErrorCode Order::NewMove(Move newMove)
 {
     m_MoveList.push_back(newMove);
-    std::cout << "Order:New Move..." << std::endl;
     return ErrorCode::OK;
 }
 
@@ -105,7 +104,7 @@ enum ErrorCode Order::Start()
     return ErrorCode::OK;
 }
 
-enum ErrorCode Order::Stop()
+enum ErrorCode Order::Stop() 
 {
 	std::cout << "Order:Stopping order..." << std::endl;
     return ErrorCode::OK;
