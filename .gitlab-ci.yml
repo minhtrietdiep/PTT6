@@ -12,7 +12,6 @@ stages:
 lint:
   stage: lint
   script:
-    - pwd
     - cd scripts/
     - bash lint.sh
 compile:
