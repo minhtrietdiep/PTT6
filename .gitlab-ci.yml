@@ -12,8 +12,8 @@ stages:
 lint:
   stage: lint
   script:
-    - bash ./scripts/lint.sh
-    #lint.sh
+    - cd scripts/
+    - bash lint.sh
 compile:
   stage: compile
   script:
