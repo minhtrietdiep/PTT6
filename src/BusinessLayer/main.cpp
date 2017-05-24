@@ -95,7 +95,7 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         }
 
         control->PlateToDrive(std::stoi(param.Value));
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "PlateToCollimator") 
     {
@@ -112,13 +112,13 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         }
 
         control->PlateToCollimator(std::stoi(param.Value));
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "CancelCurrentOperation") 
     {
         // No params needed
         control->CancelCurrentOperation();
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "SetPreset") 
     {
@@ -135,32 +135,32 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         }
 
         control->SetPreset(std::stoi(param.Value));
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "EmergencyStop") 
     {
         control->EmergencyStop();
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "ContinueSystem") 
     {
         control->ContinueSystem();
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "ResetSystem")
     {
         control->ResetSystem();
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     } 
     else if (functionName == "UploadConfig")
     {
         control->UploadConfig();   
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     }
     else if (functionName == "DownloadConfig")
     {
         control->DownloadConfig();
-        return ErrorCode::OK;
+        return ErrorCode::ERR_OK;
     } 
     else
     {

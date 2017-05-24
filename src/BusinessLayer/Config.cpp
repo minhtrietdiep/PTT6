@@ -101,20 +101,20 @@ enum ErrorCode Config::DownloadConfig(enum PlateList plate)
     fclose(fp);
     
     std::cout << "Control:Downloading config..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Config::UploadConfig(enum PlateList plate)
 {
     std::cout << "Config:Uploading config..." << std::endl;
-	return ErrorCode::OK;
+	return ErrorCode::ERR_OK;
 
 }
 
 enum ErrorCode Config::SaveConfig(enum PlateList plate)
 {
     std::cout << "Config:Saving config..." << std::endl;
-	return ErrorCode::OK;
+	return ErrorCode::ERR_OK;
 
 }
 

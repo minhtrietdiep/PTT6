@@ -69,7 +69,7 @@ enum ErrorCode Control::PlateToDrive(int plateid)
         //////////////////////////////////////////////////////Logboek!
         return ErrorCode::ERR_INVALID_ARG;
     }
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 
 }
 
@@ -77,13 +77,13 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
 {
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::CancelCurrentOperation()
 {
     m_Order.Stop();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::SetPreset(int presetid)
@@ -111,21 +111,21 @@ enum ErrorCode Control::SetPreset(int presetid)
         return ErrorCode::ERR_UNKNOWN;
 
     }
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::ResetSystem()
@@ -140,14 +140,14 @@ enum ErrorCode Control::ResetSystem()
     {
       PlateToDrive(collimatorList[i].GetID());
     }
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 
 }
 enum ErrorCode Control::StartSystem()
 {
     std::cout << "Order start moving" << std::endl;
     m_Order.Start();
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 
@@ -211,7 +211,7 @@ ErrorCode Control::DownloadConfig()
     
     std::cout << "Control:Downloading config..." << std::endl;
 
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 ErrorCode Control::DownloadLog(int logfilenumber)
