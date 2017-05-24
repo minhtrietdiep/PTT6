@@ -28,7 +28,6 @@ Control::~Control()
 
 std::vector<Preset> Control::GetPresets()
 {
-    std::cout << "Control:Getting presets..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return m_Presets;
 }
@@ -63,11 +62,11 @@ enum ErrorCode Control::PlateToDrive(int plateid)
     {
         Move move(plateid,driveID);
         m_Order.NewMove(move);
-        std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;    
+  
     } 
     else
     {
-        std::cout << "Drive niet gevonden!" << std::endl;  
+        //////////////////////////////////////////////////////Logboek!
     }
     return ErrorCode::ERR_OK;
 
@@ -77,14 +76,12 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
 {
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
-    std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;
-    return ErrorCode::ERR_OK;
+    return ErrorCode::OK;
 }
 
 enum ErrorCode Control::CancelCurrentOperation()
 {
     m_Order.Stop();
-    std::cout << "Control:Canceling current operation..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(100));
     return ErrorCode::ERR_OK;
 }
@@ -111,10 +108,9 @@ enum ErrorCode Control::SetPreset(int presetid)
 
     if (status < 0)
     {
-        std::cout << "ERROR -> Preset not found." << std::endl;
+        return ErrorCode::ERR_UNKNOWN;
 
     }
-    std::cout << "Control:Setting preset " << presetid << "..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     return ErrorCode::ERR_OK;
 }
