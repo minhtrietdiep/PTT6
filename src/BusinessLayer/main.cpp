@@ -370,13 +370,6 @@ void checkMessages(MessageQueue &mq,
 
 int main(int argc, char **argv) 
 {
-    control.StartSystem();
-    control.SetPreset(1);
-    control.StartSystem();
-    control.StartSystem();
-    control.StartSystem();
-    control.StartSystem();
-    control.StartSystem();
     srand (time(NULL));
     logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Program started");
     MessageQueue mq;
@@ -388,6 +381,8 @@ int main(int argc, char **argv)
     std::cout << "Press 2 to generate ClientMessage->MessageQueue item\n";
     while (true) 
     {
+
+        control.StartSystem();
         // User input, because we want to create fake messages to test too
         if (kbhit()) 
         {
