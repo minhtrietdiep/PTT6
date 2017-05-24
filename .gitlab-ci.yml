@@ -13,7 +13,7 @@ lint:
   stage: lint
   script:
     #- pwd
-    - cd /scripts/
+    - cd /scripts
     - bash lint.sh
     #lint.sh
 compile:
