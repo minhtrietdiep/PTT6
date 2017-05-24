@@ -12,7 +12,7 @@ stages:
 lint:
   stage: lint
   script:
-    - cd /scripts
+    - cd src/scripts
     - bash lint.sh
     #lint.sh
 compile:
