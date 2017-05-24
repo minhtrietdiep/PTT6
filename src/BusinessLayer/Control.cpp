@@ -28,7 +28,6 @@ Control::~Control()
 
 std::vector<Preset> Control::GetPresets()
 {
-    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return m_Presets;
 }
 
@@ -67,6 +66,7 @@ enum ErrorCode Control::PlateToDrive(int plateid)
     else
     {
         //////////////////////////////////////////////////////Logboek!
+        return ErrorCode::ERR_INVALID_ARG;
     }
     return ErrorCode::ERR_OK;
 
@@ -76,7 +76,7 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
 {
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::CancelCurrentOperation()
