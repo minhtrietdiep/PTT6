@@ -83,6 +83,9 @@ ErrorCode executeFunction(IUIControl *control,
 {
     if (std::find(knownOperations.begin(), knownOperations.end(), functionName) == knownOperations.end())
     {
+        logger.Write(Logger::Severity::ERROR,
+            __PRETTY_FUNCTION__,
+            "Function not in known operations");
         return ErrorCode::ERR_UNKNOWN_FUNC;
     }
 
@@ -156,11 +159,11 @@ ErrorCode executeFunction(IUIControl *control,
         payload = control->UploadCollimatorState();
         return ErrorCode::ERR_OK;
     }
-    else    // This shouldn't happen tho
+    else
     {
         logger.Write(Logger::Severity::ERROR,
             __PRETTY_FUNCTION__,
-            "Function not implemented somehow????");
+            "Function in list but not implemented");
         return ErrorCode::ERR_UNKNOWN;
     }
 }
