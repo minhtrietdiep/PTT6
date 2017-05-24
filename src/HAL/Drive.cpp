@@ -1,11 +1,11 @@
 #include "Drive.h"
+#include <unistd.h>
 
-
-#define DRIVE0 "/sys/class/gpio/gpioGPIO7/value"
-#define DRIVE1 "/sys/class/gpio/gpioGPIO20/value"
-#define DRIVE2 "/sys/class/gpio/gpioGPIO112/value"
-#define DRIVE3 "/sys/class/gpio/gpioGPIO60/value"
-#define DRIVE4 "/sys/class/gpio/gpioGPIO50/value"
+#define DRIVE0 "/sys/class/gpio/gpio07/value"
+#define DRIVE1 "/sys/class/gpio/gpio20/value"
+#define DRIVE2 "/sys/class/gpio/gpio112/value"
+#define DRIVE3 "/sys/class/gpio/gpio60/value"
+#define DRIVE4 "/sys/class/gpio/gpio50/value"
 
 
 Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
@@ -41,6 +41,8 @@ enum ErrorCode Drive::OpenDrive()
     myfile << 1;
     myfile.close();
 
+    usleep(5000000);
+
     return ErrorCode::ERR_OK;
 }
 
@@ -72,6 +74,8 @@ enum ErrorCode Drive::CloseDrive()
     
     myfile << 0;
     myfile.close();
+
+    usleep(5000000);
 
     return ErrorCode::ERR_OK;
 }

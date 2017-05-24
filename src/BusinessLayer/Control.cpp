@@ -148,7 +148,7 @@ enum ErrorCode Control::ResetSystem()
 }
 enum ErrorCode Control::StartSystem()
 {
-    std::cout << "Order start moving" << std::endl;
+    //std::cout << "Order start moving" << std::endl;
     m_Order.Start();
     return ErrorCode::ERR_OK;
 }
