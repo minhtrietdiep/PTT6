@@ -12,6 +12,7 @@ stages:
 lint:
   stage: lint
   script:
+    - pwd
     - cd src/scripts
     - bash lint.sh
     #lint.sh
