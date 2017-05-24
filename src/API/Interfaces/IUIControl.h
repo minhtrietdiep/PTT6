@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <Error.h>
+#include <string>
+
 class IUIControl 
 {
     private:
@@ -18,8 +20,10 @@ class IUIControl
         virtual ErrorCode EmergencyStop()=0;
         virtual ErrorCode ContinueSystem()=0;
         virtual ErrorCode ResetSystem()=0;
-        virtual ErrorCode UploadConfig()=0;
-        virtual ErrorCode DownloadConfig()=0;
+        virtual std::string UploadPresets()=0;
+        virtual std::string UploadDriveState()=0;
+        virtual std::string UploadCollimatorState()=0;
+        virtual ErrorCode LoadPresets()=0;
 };
 
 #endif  //  IUICONTROL_H_

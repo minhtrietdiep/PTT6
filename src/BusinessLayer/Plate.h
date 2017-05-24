@@ -10,15 +10,15 @@ class Plate
 	private:
 		int m_ID;
 		int m_DrivePosition;
-		int m_ColimatorPosition;
+		int m_CollimatorPosition;
 		std::string m_Properties;
 		double m_Thickness;
 
 	public:
-		Plate(int id, int drivePos, int colimatorPosition, std::string properties, double tickness);
+		Plate(int id, int drivePos, int collimatorPosition, std::string properties, double tickness);
 		double GetThickness();
 		std::string GetProperties();
-		int GetColimatorPosition();
+		int GetCollimatorPosition();
 		int GetDrivePosition();
 		int GetID();
 

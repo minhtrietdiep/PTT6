@@ -3,13 +3,14 @@
 #include <vector>
 
 #include "Control.h"
-
+#include "Config.h"
 #include "document.h"
 #include "istreamwrapper.h"
 #include "writer.h"
 #include "stringbuffer.h"
 #include "filereadstream.h"
 #include "Logger.h"
+#include "JSONUtils.h"
 
 
 #define COLLIMATORPOS 99
@@ -17,9 +18,7 @@
 Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
-
-    DownloadConfig();
-
+    LoadPresets();
 }
 
 Control::~Control()
@@ -83,6 +82,7 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
 enum ErrorCode Control::CancelCurrentOperation()
 {
     m_Order.Stop();
+    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
     return ErrorCode::ERR_OK;
 }
 
@@ -111,6 +111,7 @@ enum ErrorCode Control::SetPreset(int presetid)
         return ErrorCode::ERR_UNKNOWN;
 
     }
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     return ErrorCode::ERR_OK;
 }
 
@@ -118,6 +119,7 @@ enum ErrorCode Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
+    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return ErrorCode::ERR_OK;
 }
 
@@ -125,6 +127,7 @@ enum ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
+    //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     return ErrorCode::ERR_OK;
 }
 
@@ -151,12 +154,21 @@ enum ErrorCode Control::StartSystem()
 }
 
 
-ErrorCode Control::UploadConfig()
+std::string Control::UploadPresets()
 {
-    std::cout << "Control:Uploading config..." << std::endl;
+    return PresetToJSONString(m_Presets);
 }
 
-ErrorCode Control::DownloadConfig()
+std::string Control::UploadDriveState()
+{
+    return PlateListToJSONString(m_Config.GetDrivelist(),PlateList::DRIVELIST);
+}
+std::string Control::UploadCollimatorState()
+{
+    return PlateListToJSONString(m_Config.GetCollimatorlist(), PlateList::COLLIMATORLIST);
+}
+
+ErrorCode Control::LoadPresets()
 {
     
     Logger logger(VERSION,Logger::Severity::ERROR,LOG_PATH);

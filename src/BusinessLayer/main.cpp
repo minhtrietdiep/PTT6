@@ -25,6 +25,7 @@
 #include "Control.h"
 #include "Config.h"
 #include "CommandUtils.h"
+#include "JSONUtils.h"
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 Control control({});
@@ -38,9 +39,11 @@ std::vector<std::string> knownOperations =
     "EmergencyStop"         ,
     "ContinueSystem"        ,
     "ResetSystem"           ,
-    "UploadConfig"          ,
-    "DownloadConfig"        ,
-    "InvalidStuff"          ,
+    // Embedded -> Client
+    "UploadPresets"         ,
+    "UploadDriveState"      ,
+    "UploadCollimatorState" ,
+    "InvalidOperationTest"  ,
 };
 
 // Generate a randomly numbered JSON message
@@ -73,7 +76,10 @@ void generateSentMessage()
     mq.Write(MQ_NAME_SEND_MESSAGES, generateJson());
 }
 
-ErrorCode executeFunction(IUIControl *control, const std::string &functionName, const std::vector<Parameter> &params) 
+ErrorCode executeFunction(IUIControl *control, 
+    const std::string &functionName, 
+    const std::vector<Parameter> &params,
+    std::string &payload) 
 {
     if (std::find(knownOperations.begin(), knownOperations.end(), functionName) == knownOperations.end())
     {
@@ -86,16 +92,12 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
         Parameter param = params[0];
-
         if (param.Name != "plateID") 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
-        control->PlateToDrive(std::stoi(param.Value));
-        return ErrorCode::ERR_OK;
+        return control->PlateToDrive(std::stoi(param.Value));
     }
     else if (functionName == "PlateToCollimator") 
     {
@@ -103,22 +105,12 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
         Parameter param = params[0];
-
         if (param.Name != "plateID") 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
-        control->PlateToCollimator(std::stoi(param.Value));
-        return ErrorCode::ERR_OK;
-    }
-    else if (functionName == "CancelCurrentOperation") 
-    {
-        // No params needed
-        control->CancelCurrentOperation();
-        return ErrorCode::ERR_OK;
+        return control->PlateToCollimator(std::stoi(param.Value));
     }
     else if (functionName == "SetPreset") 
     {
@@ -126,51 +118,56 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName, 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
         Parameter param = params[0];
-
         if (param.Name != "presetID") 
         {
             return ErrorCode::ERR_INVALID_ARG;
         }
-
-        control->SetPreset(std::stoi(param.Value));
-        return ErrorCode::ERR_OK;
+        return control->SetPreset(std::stoi(param.Value));
+    }
+    else if (functionName == "CancelCurrentOperation") 
+    {
+        return control->CancelCurrentOperation();
     }
     else if (functionName == "EmergencyStop") 
     {
-        control->EmergencyStop();
-        return ErrorCode::ERR_OK;
+        return control->EmergencyStop();
     }
     else if (functionName == "ContinueSystem") 
     {
-        control->ContinueSystem();
-        return ErrorCode::ERR_OK;
+        return control->ContinueSystem();
     }
     else if (functionName == "ResetSystem")
     {
-        control->ResetSystem();
-        return ErrorCode::ERR_OK;
+        return control->ResetSystem();
     } 
-    else if (functionName == "UploadConfig")
+    else if (functionName == "UploadPresets")
     {
-        control->UploadConfig();   
+        payload = control->UploadPresets();
         return ErrorCode::ERR_OK;
     }
-    else if (functionName == "DownloadConfig")
+    else if (functionName == "UploadDriveState")
     {
-        control->DownloadConfig();
+        payload = control->UploadDriveState();
         return ErrorCode::ERR_OK;
-    } 
-    else
+    }
+    else if (functionName == "UploadCollimatorState")
     {
-        return ErrorCode::ERR_UNKNOWN_FUNC;
+        payload = control->UploadCollimatorState();
+        return ErrorCode::ERR_OK;
+    }
+    else    // This shouldn't happen tho
+    {
+        logger.Write(Logger::Severity::ERROR,
+            __PRETTY_FUNCTION__,
+            "Function not implemented somehow????");
+        return ErrorCode::ERR_UNKNOWN;
     }
 }
 
 // Consume the clientMessage. This can be blocking. 
 // We can return a ClientMessage we got, but also a new one if desired?
-ClientMessage slowFunc(ClientMessage cm) 
+ClientMessage asyncConsumeMessage(ClientMessage cm) 
 {
     // We only have one Control for now...
     int priority = cm.GetPriority();
@@ -178,16 +175,17 @@ ClientMessage slowFunc(ClientMessage cm)
     std::string funcName = cm.GetFunctionName();
     std::vector<Parameter> params = cm.GetParams();
     int timeout = rand() % 5000;
-    std::cout << "Priority:      " << priority << "\n";
-    std::cout << "Sender:        " <<  sender << "\n";
-    std::cout << "Function Name: " << funcName << "\n";
+    //std::cout << "Priority:      " << priority << "\n";
+    //std::cout << "Sender:        " <<  sender << "\n";
+    //std::cout << "Function Name: " << funcName << "\n";
     for (auto p : params) 
     {
         std::cout   << p.Name << "\n"
                     << p.Type << "\n"
                     << p.Value << "\n";
-    }    
-    ErrorCode err = executeFunction(&control, funcName, params);
+    }
+    std::string payloadData = "";    
+    ErrorCode err = executeFunction(&control, funcName, params, payloadData);
 
     Parameter result = 
     {
@@ -196,12 +194,30 @@ ClientMessage slowFunc(ClientMessage cm)
         ErrorCodeText[(int)err],
     };
 
+
+
+
     params.push_back(result);
+
+    if (payloadData != "") {
+        Parameter payload = 
+        {
+            "JSONData",
+            "String",
+            payloadData,
+        };
+        params.push_back(payload);
+        logger.Write(Logger::Severity::DEBUG,
+                     __PRETTY_FUNCTION__,
+                     "Payload: " + payloadData);
+    }
+
     cm.SetParams(params);
     return cm;
 }
 
-void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
+void checkThreads(std::vector<std::future<ClientMessage>> &futures) 
+{
     // We check the threads here, using C++11/STL threading. We also know
     // which thread (ClientMessage) is done.
     // Also don't use a ranged for, because we can remove the current
@@ -214,26 +230,30 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
             ClientMessage doneMessage = (*it).get();
 
             MessageQueue mq;
-            if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) < MQ_MAX_MESSAGE) {
+            if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) < MQ_MAX_MESSAGE) 
+            {
                 JSONParser jsparser;
                 mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));                    
                 logger.Write(Logger::Severity::INFO,
                          __PRETTY_FUNCTION__,
-                         jsparser.ClientMessageToJson(doneMessage));
+                         "Response: " + jsparser.ClientMessageToJson(doneMessage));
             }
             else
             {
                 logger.Write(Logger::Severity::ERROR,
                              __PRETTY_FUNCTION__,
                              "MessageQueue is full, emptying...");
-                while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) {
+                while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) 
+                {
                     mq.Read(MQ_NAME_SEND_MESSAGES);
                 }
             }
 
             // We're done tracking it so we can erase the progress handle.
             futures.erase(it);
-            std::cout << "Threads left: " << futures.size() << "\n";
+            logger.Write(Logger::Severity::INFO,
+                         __PRETTY_FUNCTION__,
+                         "Threads left: " + std::to_string(futures.size()));
         }
         else 
         {
@@ -242,37 +262,105 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures) {
     }
 }
 
+// Due to TCP appending multiple messages in one message, we can get an MQ
+// message that's not a valid JSON message. Hence needing to split up.
+// Due to our networking person being absent today this hack was needed.
+std::vector<std::string> splitRawMq(std::string rawMq) 
+{
+    std::vector<std::string> results;
+    
+    int leftBracketCount = 0;
+    int rightBracketCount = 0;
+    int start = 0;
+    for(int pos = 0; pos < rawMq.size(); pos++) 
+    {
+        char c = rawMq[pos];
+        if (c == '{') 
+        {
+            leftBracketCount++;
+        }
+        if (c == '}') 
+        {
+            rightBracketCount++;
+        }
+        if (rightBracketCount == leftBracketCount && leftBracketCount != 0 || pos == rawMq.size() - 1) 
+        {
+            std::string singleMessage = rawMq.substr(start, pos - start + 1);
+            leftBracketCount = 0;
+            rightBracketCount = 0;
+            start = pos + 1;
+            results.push_back(singleMessage);
+        }
+    }
+    return results;
+}
+
+void parseSingleJSONString(std::string rawString, 
+    MessageQueue &mq, 
+    std::vector<std::future<ClientMessage>> &futures,
+    std::vector<std::thread> &threads) 
+{
+
+    JSONParser jsparser;
+    ClientMessage clientMessage;
+    std::string parseInfo;
+    JSONError result = jsparser.JsonToClientMessage(rawString, 
+                                                &clientMessage, 
+                                                parseInfo);
+    if (result == JSONError::NONE) 
+    {
+        logger.Write(Logger::Severity::DEBUG, 
+                 __PRETTY_FUNCTION__, 
+                 "Parse success");
+        std::packaged_task<ClientMessage(ClientMessage)> task(&asyncConsumeMessage);
+        auto future = task.get_future();
+        std::thread thread(std::move(task), clientMessage);
+        futures.push_back(std::move(future));
+        threads.push_back(std::move(thread));
+    } 
+    else 
+    {
+        std::string jsError = GetJSONErrorString(result);
+
+        Parameter result = 
+        {
+            "ReturnValue",
+            "String",
+            jsError,
+        };
+        ClientMessage tempMsg(0, "JsonToClientMessage", "embedded", 999, {result}); // for json formatted stuff response
+
+        std::string returnMessage = jsparser.ClientMessageToJson(tempMsg);
+
+        mq.Write(MQ_NAME_SEND_MESSAGES, returnMessage);
+        logger.Write(Logger::Severity::ERROR, 
+                     __PRETTY_FUNCTION__, 
+                     "Parsing failed: " + parseInfo + " (" + jsError + ")");
+        logger.Write(Logger::Severity::ERROR,
+                     __PRETTY_FUNCTION__,
+                     "Response: " + returnMessage);
+    }
+}
+
 void checkMessages(MessageQueue &mq, 
     std::vector<std::future<ClientMessage>> &futures,
-    std::vector<std::thread> &threads) {
+    std::vector<std::thread> &threads) 
+{
     // After parsing, launch a function that executes whatever is in the
     // ClientMessage. This is done in a new thread to make this async.
     if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) 
     {
-        JSONParser jsparser;
         std::string rawMq;
         rawMq = mq.Read(MQ_NAME_RECEIVED_MESSAGES);
 
-        std::cout << rawMq << "\n";
+        logger.Write(Logger::Severity::DEBUG, 
+                     __PRETTY_FUNCTION__, 
+                     "Received message: " + rawMq);
 
-        ClientMessage clientMessage;
-        std::string parseInfo;
-        JSONError result = jsparser.JsonToClientMessage(rawMq, 
-                                                    &clientMessage, 
-                                                    parseInfo);
-        if (result == JSONError::NONE) 
+        std::vector<std::string> splitMessages = splitRawMq(rawMq);
+        for (auto message : splitMessages) 
         {
-            std::packaged_task<ClientMessage(ClientMessage)> task(&slowFunc);
-            auto future = task.get_future();
-            std::thread thread(std::move(task), clientMessage);
-            futures.push_back(std::move(future));
-            threads.push_back(std::move(thread));
-        } 
-        else 
-        {
-            logger.Write(Logger::Severity::ERROR, 
-                         __PRETTY_FUNCTION__, 
-                         "Parsing failed: " + parseInfo);
+            parseSingleJSONString(message, mq, futures, threads);
         }
     }
 }
@@ -335,7 +423,7 @@ int main(int argc, char **argv)
     {
         thread.join();
     }
-    std::cout << "Halted program\n";    
+    std::cout << "Halted program\n";
     return 0;
 
 }

@@ -5,6 +5,8 @@
 #include <vector>
 #include <fstream>
 #include "Coordinates.h"
+#include "Logger.h"
+#include "Error.h"
 
 class Drive
 {
@@ -14,8 +16,8 @@ class Drive
 
     public:
         Drive(int driveid, Coordinates positions);
-        int OpenDrive();
-        int CloseDrive();
+        enum ErrorCode OpenDrive();
+        enum ErrorCode CloseDrive();
         int GetDriveID();
         Coordinates GetDriveCoordinates();
 };
