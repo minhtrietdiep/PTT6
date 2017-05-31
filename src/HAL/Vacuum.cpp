@@ -29,7 +29,7 @@ enum ErrorCode Vacuum::EnableVacuum()
     myfile << 1;
     myfile.close();
     myfile.open(VALVE);
-    myfile << 0;
+    myfile << 1;
     myfile.close();
     return ErrorCode::ERR_OK;
 }
@@ -42,7 +42,7 @@ enum ErrorCode Vacuum::DisableVacuum()
     myfile << 0;
     myfile.close();
     myfile.open(VALVE);
-    myfile << 1;
+    myfile << 0;
     myfile.close();
     return ErrorCode::ERR_OK;
 }
