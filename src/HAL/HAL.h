@@ -7,6 +7,8 @@
 #include "Arm.h"
 #include "Vacuum.h"
 #include "Coordinates.h"
+#include "Logger.h"
+#include "Error.h"
 
 class HAL
 {
@@ -17,11 +19,11 @@ class HAL
 
     public:
         HAL();
-        int Pickup(bool on);
-        int MoveArm(int driveid);
-        int MoveArmToHome();
-        int OpenDrive(int driveid);
-        int CloseDrive(int driveid);
+        enum ErrorCode Pickup(bool on);
+        enum ErrorCode MoveArm(int driveid);
+        enum ErrorCode MoveArmToHome();
+        enum ErrorCode OpenDrive(int driveid);
+        enum ErrorCode CloseDrive(int driveid);
 };
 
 #endif  //  HAL_H_

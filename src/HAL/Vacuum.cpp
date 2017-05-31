@@ -1,23 +1,48 @@
 #include "Vacuum.h"
 
-#define FILEPATH "/dev/Vacuum.txt"
+#define VACUUM "/sys/class/gpio/gpio51/value"
+#define VACUUMD "/sys/class/gpio/gpio51/direction"
+#define VALVE "/sys/class/gpio/gpio5/value"
+#define VALVED "/sys/class/gpio/gpio5/direction"
 
-int Vacuum::EnableVacuum()
+void Vacuum::Setup()
+{
+    std::ofstream f;
+    f.open(VACUUMD);
+    f << "out";
+    f.close();
+    f.open(VALVED);
+    f << "out";
+    f.close();
+}
+
+Vacuum::Vacuum()
+{
+    Setup();
+}
+
+enum ErrorCode Vacuum::EnableVacuum()
 {
     std::cout << "Enabling vacuum" << std::endl;
     std::ofstream myfile;
-    myfile.open (FILEPATH);
+    myfile.open (VACUUM);
     myfile << 1;
     myfile.close();
-    return 1;
+    myfile.open(VALVE);
+    myfile << 1;
+    myfile.close();
+    return ErrorCode::ERR_OK;
 }
 
-int Vacuum::DisableVacuum()
+enum ErrorCode Vacuum::DisableVacuum()
 {
     std::cout << "Disabling vacuum" << std::endl;
     std::ofstream myfile;
-    myfile.open (FILEPATH);
+    myfile.open (VACUUM);
     myfile << 0;
     myfile.close();
-    return 1;
+    myfile.open(VALVE);
+    myfile << 0;
+    myfile.close();
+    return ErrorCode::ERR_OK;
 }

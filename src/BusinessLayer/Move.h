@@ -12,6 +12,8 @@ private:
 
 public:
     Move(int PlateID,int Destination);
+    int GetPlateID();
+    int GetDestination();
     ~Move();
 };
 

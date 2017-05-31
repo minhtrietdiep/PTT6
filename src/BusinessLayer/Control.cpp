@@ -3,13 +3,14 @@
 #include <vector>
 
 #include "Control.h"
-
+#include "Config.h"
 #include "document.h"
 #include "istreamwrapper.h"
 #include "writer.h"
 #include "stringbuffer.h"
 #include "filereadstream.h"
 #include "Logger.h"
+#include "JSONUtils.h"
 
 
 #define COLLIMATORPOS 99
@@ -17,27 +18,7 @@
 Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
-    //TODO: VERVANGEN ALS HUBERT UITLEZEN GEREED HEEFT
-    /*std::vector<Preset> presets = std::vector<Preset>();
-    std::vector<int> presetlist;
-    presetlist.push_back(10);
-    presetlist.push_back(25);
-    presetlist.push_back(51);
-    Preset p0 = Preset(0,presetlist);
-    presets.push_back(p0);
-    presetlist.clear();
-    presetlist.push_back(15);
-    presetlist.push_back(20);
-    presetlist.push_back(16);
-    Preset p1 = Preset(1,presetlist);
-    presets.push_back(p1);*/
-    // driveList;
-    //std::vector<Plate> collimatorList;
-    // m_Order = Order();
-    //m_Config = Config(driveList, collimatorList);
-    //m_Presets = ;
-    
-    
+    LoadPresets();
 }
 
 Control::~Control()
@@ -47,12 +28,10 @@ Control::~Control()
 
 std::vector<Preset> Control::GetPresets()
 {
-    std::cout << "Control:Getting presets..." << std::endl;
-    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return m_Presets;
 }
 
-void Control::PlateToDrive(int plateid)
+enum ErrorCode Control::PlateToDrive(int plateid)
 {
     int driveID = -1;
     std::vector<Plate> drivelist = m_Config.GetDrivelist();
@@ -80,32 +59,38 @@ void Control::PlateToDrive(int plateid)
 
     if(driveID >= 0)
     {
-        Move move(driveID,plateid);
+        Move move(plateid,driveID);
         m_Order.NewMove(move);
-        std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;    
+  
     } 
     else
     {
-        std::cout << "Drive niet gevonden!" << std::endl;  
+        //////////////////////////////////////////////////////Logboek!
+        return ErrorCode::ERR_INVALID_ARG;
     }
+    m_Config.SaveConfig(PlateList::DRIVELIST);
+    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
+    return ErrorCode::ERR_OK;
 
 }
 
-void Control::PlateToCollimator(int plateid)
+enum ErrorCode Control::PlateToCollimator(int plateid)
 {
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
-    std::cout << "Control:Moving plate " << plateid << " to drive..." << std::endl;
+    m_Config.SaveConfig(PlateList::DRIVELIST);
+    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
+    return ErrorCode::ERR_OK;
 }
 
-void Control::CancelCurrentOperation()
+enum ErrorCode Control::CancelCurrentOperation()
 {
     m_Order.Stop();
-    std::cout << "Control:Canceling current operation..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    return ErrorCode::ERR_OK;
 }
 
-void Control::SetPreset(int presetid)
+enum ErrorCode Control::SetPreset(int presetid)
 {
     int status = -1;
     std::vector<int> presetlist;
@@ -127,28 +112,32 @@ void Control::SetPreset(int presetid)
 
     if (status < 0)
     {
-        std::cout << "ERROR -> Preset not found." << std::endl;
+        return ErrorCode::ERR_UNKNOWN;
 
     }
-    std::cout << "Control:Setting preset " << presetid << "..." << std::endl;
+    m_Config.SaveConfig(PlateList::DRIVELIST);
+    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
     //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    return ErrorCode::ERR_OK;
 }
 
-void Control::EmergencyStop()
+enum ErrorCode Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(0));
+    return ErrorCode::ERR_OK;
 }
 
-void Control::ContinueSystem()
+enum ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    return ErrorCode::ERR_OK;
 }
 
-void Control::ResetSystem()
+enum ErrorCode Control::ResetSystem()
 {
     std::cout << "Control:Resetting system..." << std::endl;
     m_Order.Stop();
@@ -158,18 +147,70 @@ void Control::ResetSystem()
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
     for(int i = 0; i < collimatorList.size(); i++)
     {
-      PlateToDrive(collimatorList[i].GetID());
+        if(collimatorList[i].GetCollimatorPosition() > 0)
+        {
+           PlateToDrive(collimatorList[i].GetID()); 
+        }
+      
     }
-
+    return ErrorCode::ERR_OK;
 
 }
-
-ErrorCode Control::UploadConfig()
+enum ErrorCode Control::StartSystem()
 {
-    std::cout << "Control:Uploading config..." << std::endl;
+
+    std::vector<Move> moves = m_Order.GetMoves(); 
+    if (moves.size() < 1)
+    {
+        return ErrorCode::ERR_NO_ITEM;
+    }
+    int ID = moves[0].GetPlateID();
+    int Destination = moves[0].GetDestination();
+
+    std::cout << "*/*/*/*/start moving" << std::endl;
+    enum ErrorCode returnvalue = m_Order.Start();
+    if (returnvalue == ErrorCode::ERR_OK)
+    {
+        std::cout << "*/*/*/*/gelukt" << std::endl;
+        if (Destination == 99)
+        {
+            int position = 0;
+            std::vector<Plate> platelist = m_Config.GetCollimatorlist();
+            for (int i = 0; i < platelist.size(); i ++)
+            {
+                if (platelist[i].GetCollimatorPosition() > position)
+                    position = platelist[i].GetCollimatorPosition();
+            }
+            position ++;
+             m_Config.SetCollimatorposition(ID,position);
+        } else
+        {
+             m_Config.SetCollimatorposition(ID,Destination);
+        }
+        m_Config.SaveConfig(PlateList::COLLIMATORLIST);
+        m_Config.SaveConfig(PlateList::DRIVELIST);
+        return ErrorCode::ERR_OK;
+    } 
+    return ErrorCode::ERR_UNKNOWN;
+   
 }
 
-ErrorCode Control::DownloadConfig()
+
+std::string Control::UploadPresets()
+{
+    return PresetToJSONString(m_Presets);
+}
+
+std::string Control::UploadDriveState()
+{
+    return PlateListToJSONString(m_Config.GetDrivelist(),PlateList::DRIVELIST);
+}
+std::string Control::UploadCollimatorState()
+{
+    return PlateListToJSONString(m_Config.GetCollimatorlist(), PlateList::COLLIMATORLIST);
+}
+
+ErrorCode Control::LoadPresets()
 {
     
     Logger logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
@@ -224,7 +265,7 @@ ErrorCode Control::DownloadConfig()
     
     std::cout << "Control:Downloading config..." << std::endl;
 
-    return ErrorCode::OK;
+    return ErrorCode::ERR_OK;
 }
 
 ErrorCode Control::DownloadLog(int logfilenumber)
