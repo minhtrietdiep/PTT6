@@ -10,21 +10,33 @@
 void Drive::Setup()
 {
     std::ofstream f;
-    f.open(DRIVE0);
-    f << "out";
-    f.close();
-    f.open(DRIVE1);
-    f << "out";
-    f.close();
-    f.open(DRIVE2);
-    f << "out";
-    f.close();
-    f.open(DRIVE3);
-    f << "out";
-    f.close();
-    f.open(DRIVE4);
-    f << "out";
-    f.close();
+    switch(m_DriveID)
+    {
+        case 0:
+            f.open(DRIVE0);
+            break;
+
+        case 1:
+            f.open(DRIVE1);
+            break;
+
+        case 2:
+            f.open(DRIVE2);
+            break;
+
+        case 3:
+            f.open(DRIVE3);
+            break;
+
+        case 4:
+            f.open(DRIVE4);
+            break; 
+
+        default:
+            break;
+    }
+        f << "out";
+        f.close();
 }
 
 Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
