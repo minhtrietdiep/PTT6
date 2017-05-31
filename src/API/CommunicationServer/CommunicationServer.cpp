@@ -130,8 +130,9 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
 
     if(receiveMessageSize < 0)
     {
-        //Error("recv() failed");
-        // Don't exit program, just close socket and kill tread
+        std::ostringstream logOutput;
+        logOutput << "recv() failed";
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, logOutput.str());
     }
 
     m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "message received");
