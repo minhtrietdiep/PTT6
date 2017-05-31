@@ -3,6 +3,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
+
 #include <functional>
 #include <iostream>
 #include <string>
@@ -39,7 +40,6 @@ std::vector<std::string> knownOperations =
     "EmergencyStop"         ,
     "ContinueSystem"        ,
     "ResetSystem"           ,
-    // Embedded -> Client
     "UploadPresets"         ,
     "UploadDriveState"      ,
     "UploadCollimatorState" ,
@@ -50,15 +50,8 @@ std::vector<std::string> knownOperations =
 std::string generateJson() 
 {
     JSONParser jsParser;
-    std::string funcName = 
-        knownOperations.at(rand() % knownOperations.size());
-    ClientMessage cm(
-        0,
-        funcName,
-        "0.0.0.0",
-        rand() % 10,
-        {}
-    );
+    std::string funcName = knownOperations.at(rand() % knownOperations.size());
+    ClientMessage cm( 0, funcName, "0.0.0.0", rand() % 10, {} );
     std::string message = jsParser.ClientMessageToJson(cm);
     return message;
 }
@@ -76,16 +69,13 @@ void generateSentMessage()
     mq.Write(MQ_NAME_SEND_MESSAGES, generateJson());
 }
 
-ErrorCode executeFunction(IUIControl *control, 
-    const std::string &functionName, 
-    const std::vector<Parameter> &params,
-    std::string &payload) 
+ErrorCode executeFunction(IUIControl *control, const std::string &functionName,
+    const std::vector<Parameter> &params, std::string &payload) 
 {
     if (std::find(knownOperations.begin(), knownOperations.end(), functionName) == knownOperations.end())
     {
-        logger.Write(Logger::Severity::ERROR,
-            __PRETTY_FUNCTION__,
-            "Function not in known operations");
+        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, 
+                     "Function not in known operations");
         return ErrorCode::ERR_UNKNOWN_FUNC;
     }
 
@@ -161,9 +151,8 @@ ErrorCode executeFunction(IUIControl *control,
     }
     else
     {
-        logger.Write(Logger::Severity::ERROR,
-            __PRETTY_FUNCTION__,
-            "Function in list but not implemented");
+        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, 
+                     "Function in list but not implemented");
         return ErrorCode::ERR_UNKNOWN;
     }
 }
@@ -172,59 +161,33 @@ ErrorCode executeFunction(IUIControl *control,
 // We can return a ClientMessage we got, but also a new one if desired?
 ClientMessage asyncConsumeMessage(ClientMessage cm) 
 {
-    // We only have one Control for now...
     int priority = cm.GetPriority();
     std::string sender = cm.GetSender();
     std::string funcName = cm.GetFunctionName();
     std::vector<Parameter> params = cm.GetParams();
     int timeout = rand() % 5000;
-    //std::cout << "Priority:      " << priority << "\n";
-    //std::cout << "Sender:        " <<  sender << "\n";
-    //std::cout << "Function Name: " << funcName << "\n";
     for (auto p : params) 
     {
-        std::cout   << p.Name << "\n"
-                    << p.Type << "\n"
-                    << p.Value << "\n";
+        std::cout << p.Name << "\n" << p.Type << "\n" << p.Value << "\n";
     }
     std::string payloadData = "";    
     ErrorCode err = executeFunction(&control, funcName, params, payloadData);
-
-    Parameter result = 
-    {
-        "ReturnValue",
-        "String",
-        ErrorCodeText[(int)err],
-    };
-
-
-
-
+    Parameter result = { "ReturnValue", "String", ErrorCodeText[(int)err] };
     params.push_back(result);
-
-    if (payloadData != "") {
-        Parameter payload = 
-        {
-            "JSONData",
-            "String",
-            payloadData,
-        };
+    if (payloadData != "") 
+    {
+        Parameter payload = { "JSONData", "String", payloadData, };
         params.push_back(payload);
-        logger.Write(Logger::Severity::DEBUG,
-                     __PRETTY_FUNCTION__,
-                     "Payload: " + payloadData);
+        logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Payload: " + payloadData);
     }
-
     cm.SetParams(params);
     return cm;
 }
 
+// We check the threads here, using C++11/STL threading. We also know
+// which thread (ClientMessage) is done.
 void checkThreads(std::vector<std::future<ClientMessage>> &futures) 
 {
-    // We check the threads here, using C++11/STL threading. We also know
-    // which thread (ClientMessage) is done.
-    // Also don't use a ranged for, because we can remove the current
-    // element. Need the iterator!
     for (auto it = futures.begin(); it != futures.end();) 
     {
         auto status = (*it).wait_for(std::chrono::milliseconds(0));
@@ -237,14 +200,12 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures)
             {
                 JSONParser jsparser;
                 mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));                    
-                logger.Write(Logger::Severity::INFO,
-                         __PRETTY_FUNCTION__,
-                         "Response: " + jsparser.ClientMessageToJson(doneMessage));
+                logger.Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, 
+                             "Response: " + jsparser.ClientMessageToJson(doneMessage));
             }
             else
             {
-                logger.Write(Logger::Severity::ERROR,
-                             __PRETTY_FUNCTION__,
+                logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__,
                              "MessageQueue is full, emptying...");
                 while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) 
                 {
@@ -254,8 +215,7 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures)
 
             // We're done tracking it so we can erase the progress handle.
             futures.erase(it);
-            logger.Write(Logger::Severity::INFO,
-                         __PRETTY_FUNCTION__,
+            logger.Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, 
                          "Threads left: " + std::to_string(futures.size()));
         }
         else 
@@ -267,7 +227,6 @@ void checkThreads(std::vector<std::future<ClientMessage>> &futures)
 
 // Due to TCP appending multiple messages in one message, we can get an MQ
 // message that's not a valid JSON message. Hence needing to split up.
-// Due to our networking person being absent today this hack was needed.
 std::vector<std::string> splitRawMq(std::string rawMq) 
 {
     std::vector<std::string> results;
@@ -298,23 +257,17 @@ std::vector<std::string> splitRawMq(std::string rawMq)
     return results;
 }
 
-void parseSingleJSONString(std::string rawString, 
-    MessageQueue &mq, 
-    std::vector<std::future<ClientMessage>> &futures,
-    std::vector<std::thread> &threads) 
+void parseSingleJSONString(std::string rawString, MessageQueue &mq, 
+    std::vector<std::future<ClientMessage>> &futures, std::vector<std::thread> &threads) 
 {
 
     JSONParser jsparser;
     ClientMessage clientMessage;
     std::string parseInfo;
-    JSONError result = jsparser.JsonToClientMessage(rawString, 
-                                                &clientMessage, 
-                                                parseInfo);
+    JSONError result = jsparser.JsonToClientMessage(rawString, &clientMessage, parseInfo);
     if (result == JSONError::NONE) 
     {
-        logger.Write(Logger::Severity::DEBUG, 
-                 __PRETTY_FUNCTION__, 
-                 "Parse success");
+        logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Parse success");
         std::packaged_task<ClientMessage(ClientMessage)> task(&asyncConsumeMessage);
         auto future = task.get_future();
         std::thread thread(std::move(task), clientMessage);
@@ -324,42 +277,27 @@ void parseSingleJSONString(std::string rawString,
     else 
     {
         std::string jsError = GetJSONErrorString(result);
-
-        Parameter result = 
-        {
-            "ReturnValue",
-            "String",
-            jsError,
-        };
-        ClientMessage tempMsg(0, "JsonToClientMessage", "embedded", 999, {result}); // for json formatted stuff response
-
+        Parameter result = { "ReturnValue", "String", jsError };
+        ClientMessage tempMsg(0, "JsonToClientMessage", "embedded", 999, {result});
         std::string returnMessage = jsparser.ClientMessageToJson(tempMsg);
-
         mq.Write(MQ_NAME_SEND_MESSAGES, returnMessage);
-        logger.Write(Logger::Severity::ERROR, 
-                     __PRETTY_FUNCTION__, 
+        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, 
                      "Parsing failed: " + parseInfo + " (" + jsError + ")");
-        logger.Write(Logger::Severity::ERROR,
-                     __PRETTY_FUNCTION__,
+        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__,
                      "Response: " + returnMessage);
     }
 }
 
-void checkMessages(MessageQueue &mq, 
-    std::vector<std::future<ClientMessage>> &futures,
+// After parsing, launch a function that executes whatever is in the
+// ClientMessage. This is done in a new thread to make this async.
+void checkMessages(MessageQueue &mq, std::vector<std::future<ClientMessage>> &futures,
     std::vector<std::thread> &threads) 
 {
-    // After parsing, launch a function that executes whatever is in the
-    // ClientMessage. This is done in a new thread to make this async.
     if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) 
     {
         std::string rawMq;
         rawMq = mq.Read(MQ_NAME_RECEIVED_MESSAGES);
-
-        logger.Write(Logger::Severity::DEBUG, 
-                     __PRETTY_FUNCTION__, 
-                     "Received message: " + rawMq);
-
+        logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Received message: " + rawMq);
         std::vector<std::string> splitMessages = splitRawMq(rawMq);
         for (auto message : splitMessages) 
         {
@@ -381,7 +319,6 @@ int main(int argc, char **argv)
     std::cout << "Press 2 to generate ClientMessage->MessageQueue item\n";
     while (true) 
     {
-
         control.StartSystem();
         // User input, because we want to create fake messages to test too
         if (kbhit()) 
@@ -410,10 +347,7 @@ int main(int argc, char **argv)
         }
 
         checkMessages(mq, futures, threads);
-
         checkThreads(futures);
-
-        // Let's go easy on the cpu here.
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     // Use references because otherwise copy ctor and dtor are called.
@@ -423,5 +357,4 @@ int main(int argc, char **argv)
     }
     std::cout << "Halted program\n";
     return 0;
-
 }

@@ -86,13 +86,7 @@ enum ErrorCode Config::LoadConfig(enum PlateList plate)
     { 
         std::string presetName;
         const rapidjson::Value& object = document["Plates"][i].GetObject();
-        //std::cout << "dd" << "\n";
-       /* if (!object["Plates"].IsObject()) 
-        {
-            m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
-            //return ErrorCode::PARSE_ERROR;
-            return -1;
-        }*/
+
         int id = object["m_ID"].GetInt();
         int drivePosition = object["m_DrivePosition"].GetInt();
         int collimatorPosition = object["m_CollimatorPosition"].GetInt();
