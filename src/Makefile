@@ -13,18 +13,21 @@ lib-host:
 	cd UI; make lib-host
 
 target:
+	make lib-target
 	cd BusinessLayer; make target
 	cd API; make target
 	cd HAL; make target
 	cd UI; make target
 
 host:
+	make lib-host
 	cd BusinessLayer; make host
 	cd API; make host
 	cd HAL; make host
 	cd UI; make host
 
 test:
+	make lib-host
 	cd BusinessLayer; make test
 	cd API; make test
 	cd HAL; make test
@@ -36,8 +39,8 @@ copy:
 
 all:
 	make lib-host
-	make lib-target
 	make host
+	make lib-target
 	make target
 	make test
 
