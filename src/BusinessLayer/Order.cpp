@@ -4,6 +4,7 @@
 
 #define COLLIMATORPOS 99
 
+
 Order::Order()
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
@@ -22,14 +23,16 @@ std::vector<Move> Order::GetMoves()
 
 enum ErrorCode Order::NewMove(Move newMove)
 {
-    m_MoveList.push_back(newMove);
-    return ErrorCode::ERR_OK;
+
+        m_MoveList.push_back(newMove);
+       return ErrorCode::ERR_OK;
+
 }
 
 enum ErrorCode Order::Start() 
 {
 	
-    m_States state = OPEN_DRIVE;
+    m_States state = m_States::OPEN_DRIVE;
     if ((int)m_MoveList.size() <= 0)
     {
         return ErrorCode::ERR_NO_ITEM;
@@ -37,13 +40,13 @@ enum ErrorCode Order::Start()
     int ID = m_MoveList[0].GetPlateID();
     int Destination = m_MoveList[0].GetDestination();
 
-    while (state != COMPLETED )
+    while (state != m_States::COMPLETED )
     {
         switch(state) 
         { 
-          case OPEN_DRIVE :
+          case m_States::OPEN_DRIVE :
                 if(m_Hal.OpenDrive(ID) == ErrorCode::ERR_OK)
-                state = MOVE_ARM_SOURCE;
+                state = m_States::MOVE_ARM_SOURCE;
 
                 else
                 {
@@ -51,27 +54,27 @@ enum ErrorCode Order::Start()
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
-            case MOVE_ARM_SOURCE :
+            case m_States::MOVE_ARM_SOURCE :
                 if(m_Hal.MoveArm(ID) == ErrorCode::ERR_OK)
-                state = ENABLE_VACUUM;
+                state = m_States::ENABLE_VACUUM;
                 else
                 {
                     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to ID");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
-            case ENABLE_VACUUM :
+            case m_States::ENABLE_VACUUM :
                 if(m_Hal.Pickup(true) == ErrorCode::ERR_OK)
-                state = MOVE_ARM_DESTINATION;
+                state = m_States::MOVE_ARM_DESTINATION;
                 else
                 {
                     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
-            case MOVE_ARM_DESTINATION :
+            case m_States::MOVE_ARM_DESTINATION :
                 if(m_Hal.MoveArm(Destination) == ErrorCode::ERR_OK)
-                state = DISABLE_VACUUM;
+                state = m_States::DISABLE_VACUUM;
                 else
                 {
                     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Destination");
@@ -79,18 +82,18 @@ enum ErrorCode Order::Start()
                     
                 }
                 break;
-            case DISABLE_VACUUM :
+            case m_States::DISABLE_VACUUM :
                 if(m_Hal.Pickup(false) == ErrorCode::ERR_OK)
-                state = MOVE_ARM_HOME;
+                state = m_States::MOVE_ARM_HOME;
                 else
                     {
                         m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
                         return ErrorCode::ERR_UNKNOWN;
                     }
                 break;
-            case MOVE_ARM_HOME :
+            case m_States::MOVE_ARM_HOME :
                 if(m_Hal.MoveArmToHome() == ErrorCode::ERR_OK)
-                state = CLOSE_DRIVE;
+                state = m_States::CLOSE_DRIVE;
                 else
                 {
                     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to home");
@@ -98,9 +101,9 @@ enum ErrorCode Order::Start()
 
                 }
                 break;
-            case CLOSE_DRIVE :
+            case m_States::CLOSE_DRIVE :
                 if(m_Hal.CloseDrive(ID) == ErrorCode::ERR_OK)
-                state = COMPLETED;
+                state = m_States::COMPLETED;
                 else
                 {
                     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to close drive");

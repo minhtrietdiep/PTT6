@@ -14,6 +14,9 @@
 
 #define COLLIMATORPOS 99
 
+#define MAX_PLATE_ID 4
+#define MIN_PLATE_ID 0
+
 Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
@@ -33,6 +36,11 @@ std::vector<Preset> Control::GetPresets()
 
 enum ErrorCode Control::PlateToDrive(int plateid)
 {
+    if (plateid < MIN_PLATE_ID && plateid > MAX_PLATE_ID)
+    {
+         m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
+         return ErrorCode::ERR_INVALID_ARG;
+    }
     int driveID = -1;
     std::vector<Plate> drivelist = m_Config.GetDrivelist();
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
@@ -60,7 +68,8 @@ enum ErrorCode Control::PlateToDrive(int plateid)
     if(driveID >= 0)
     {
         Move move(plateid,driveID);
-        m_Order.NewMove(move);
+        if (m_Order.NewMove(move) != ErrorCode::ERR_OK)
+            return ErrorCode::ERR_UNKNOWN;
   
     } 
     else
@@ -75,14 +84,21 @@ enum ErrorCode Control::PlateToDrive(int plateid)
 
 enum ErrorCode Control::PlateToCollimator(int plateid)
 {
+    if (plateid < MIN_PLATE_ID && plateid > MAX_PLATE_ID)
+    {
+         m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
+         return ErrorCode::ERR_INVALID_ARG;
+    }
     Move move(plateid,COLLIMATORPOS);
-    m_Order.NewMove(move);
+    if (m_Order.NewMove(move) != ErrorCode::ERR_OK)
+        return ErrorCode::ERR_UNKNOWN;  
     return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::CancelCurrentOperation()
 {
-    m_Order.Stop();
+    if (m_Order.Stop() != ErrorCode::ERR_OK)
+        return ErrorCode::ERR_UNKNOWN;
     return ErrorCode::ERR_OK;
 }
 
@@ -119,7 +135,6 @@ enum ErrorCode Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
-    //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     return ErrorCode::ERR_OK;
 }
 
@@ -127,14 +142,15 @@ enum ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
-    //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::ResetSystem() 
 {
-    m_Order.Stop();
-    m_Order.Reset();
+    if (m_Order.Stop() != ErrorCode::ERR_OK)
+        return ErrorCode::ERR_UNKNOWN;
+    if (m_Order.Reset() != ErrorCode::ERR_OK)
+        return ErrorCode::ERR_UNKNOWN;
 
 
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
@@ -176,13 +192,19 @@ enum ErrorCode Control::StartSystem()
                     position = platelist[i].GetCollimatorPosition();
             }
             position ++;
-             m_Config.SetCollimatorposition(ID,position);
+            if (m_Config.SetCollimatorposition(ID,position) != ErrorCode::ERR_OK)
+                return ErrorCode::ERR_UNKNOWN;
+
         } else
         {
-             m_Config.SetCollimatorposition(ID,Destination);
+            if (m_Config.SetCollimatorposition(ID,Destination) != ErrorCode::ERR_OK)
+                return ErrorCode::ERR_UNKNOWN;
         }
-        m_Config.SaveConfig(PlateList::COLLIMATORLIST);
-        m_Config.SaveConfig(PlateList::DRIVELIST);
+        
+        if (m_Config.SaveConfig(PlateList::COLLIMATORLIST) != ErrorCode::ERR_OK)
+            return ErrorCode::ERR_UNKNOWN;
+        if (m_Config.SaveConfig(PlateList::DRIVELIST) != ErrorCode::ERR_OK)
+            return ErrorCode::ERR_UNKNOWN;
         return ErrorCode::ERR_OK;
     } 
     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "cannot start order");
@@ -238,18 +260,17 @@ ErrorCode Control::LoadPresets()
             return ErrorCode::ERR_PARSE;    
         }
         int id = object["m_PresetID"].GetInt();
-       // std::cout << object["m_PresetID"].GetInt() << "\n";
+
         if (!object["m_PlateIDs"].IsArray()) 
         {
             m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
             return ErrorCode::ERR_PARSE;
         }
         presetName = object["m_PresetName"].GetString();
-        //std::cout << object["m_PresetName"].GetString() << "\n";
+
         std::vector<int> plateList;
         for (int j = 0; j < object["m_PlateIDs"].Size(); j++) 
         {
-            //std::cout << object["m_PlateIDs"][j]["ID"].GetInt() << "\n";
             plateList.push_back(object["m_PlateIDs"][j]["ID"].GetInt());
 
         }
@@ -258,8 +279,6 @@ ErrorCode Control::LoadPresets()
 
     fclose(fp);
     
-    std::cout << "Control:Downloading config..." << std::endl;
-
     return ErrorCode::ERR_OK;
 }
 
