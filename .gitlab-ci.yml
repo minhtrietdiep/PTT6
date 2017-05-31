@@ -40,4 +40,5 @@ lint:
     - cd scripts/
     - bash lint.sh
 after_script:
+
   #  - make clean

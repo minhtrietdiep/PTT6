@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "Logger.h"
+#include "Error.h"
 
 class Vacuum
 {
@@ -11,8 +13,8 @@ class Vacuum
         int m_VacuumStatus;
 
     public:
-        int EnableVacuum();
-        int DisableVacuum();
+        enum ErrorCode EnableVacuum();
+        enum ErrorCode DisableVacuum();
 };
 
 #endif  //  VACUUM_H_

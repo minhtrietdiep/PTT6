@@ -6,6 +6,7 @@
 #include "Const.h"
 #include "Logger.h"
 #include "Config.h"
+#include "JSONUtils.h"
 #include <fstream>
 #include <vector>
 
@@ -15,6 +16,9 @@ Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 {
     m_DriveList = drivelist;
     m_CollimatorList = collimatorlist;
+ 
+    LoadConfig(PlateList::COLLIMATORLIST);
+    LoadConfig(PlateList::DRIVELIST);
 
 }
 Config::~Config()
@@ -32,7 +36,21 @@ std::vector<Plate> Config::GetCollimatorlist()
     return m_CollimatorList;
 }
 
-int Config::DownloadConfig(enum PlateList plate)
+enum ErrorCode Config::SetCollimatorposition(int drive, int collimatorPosition)
+{
+    for (int i = 0; i < m_CollimatorList.size(); i++)
+    {
+        if (m_CollimatorList[i].GetID() == drive)
+        {
+            m_CollimatorList[i].SetCollimatorPosition(collimatorPosition);
+            return ErrorCode::ERR_OK;
+        }
+    }
+    return ErrorCode::ERR_NO_ITEM;
+    
+}
+
+enum ErrorCode Config::LoadConfig(enum PlateList plate)
 {
     const char* filename;
     if(plate == PlateList::DRIVELIST)
@@ -48,9 +66,8 @@ int Config::DownloadConfig(enum PlateList plate)
     FILE* fp = fopen(filename, "r"); // non-Windows use "r"
     if(!fp)
     {
-        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open logfile");
-        //return ErrorCode::ERR_FILE_OPEN;    
-        return -1;
+        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open Config");
+        return ErrorCode::ERR_FILE_OPEN;    
     }
     char readBuffer[65536];
     rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
@@ -60,14 +77,12 @@ int Config::DownloadConfig(enum PlateList plate)
     if(document.HasParseError()) 
     {
         logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
-        //return ErrorCode::PARSE_ERROR;    
-        return -1;    
+        return ErrorCode::ERR_PARSE;    
     }
     
     int presetListSize = document["Plates"].Size();
-
     for (int i = 0; i < presetListSize; i++) 
-    {
+    { 
         std::string presetName;
         const rapidjson::Value& object = document["Plates"][i].GetObject();
         //std::cout << "dd" << "\n";
@@ -79,13 +94,9 @@ int Config::DownloadConfig(enum PlateList plate)
         }*/
         int id = object["m_ID"].GetInt();
         int drivePosition = object["m_DrivePosition"].GetInt();
-        int collimatorPosition = object["m_ColimatorPostion"].GetInt();
-        int property = object["m_Property"].GetInt();
+        int collimatorPosition = object["m_CollimatorPosition"].GetInt();
+        std::string property = object["m_Property"].GetString();
         double thickness = object["m_Thickness"].GetDouble();
-
-        std::cout << "ID: "<<id << "drivepos: " << drivePosition << "collpos: "<< collimatorPosition << "prop: " << property << "thickness: " << thickness << "\n";
-        
-
         Plate newPlate(id, drivePosition, collimatorPosition, property, thickness);
         if(plate == PlateList::DRIVELIST)
         {
@@ -99,22 +110,37 @@ int Config::DownloadConfig(enum PlateList plate)
     }
 
     fclose(fp);
+    return ErrorCode::ERR_OK;
+}
+
+enum ErrorCode Config::SaveConfig(enum PlateList plate)
+{
+    std::string jsPlateList;
+    const char* filename;
+
+    Logger logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
+    if(plate == PlateList::DRIVELIST)
+    {
+        filename = m_DriveFileName;
+        jsPlateList = PlateListToJSONString(m_DriveList, plate);
+    }
+    else if(plate == PlateList::COLLIMATORLIST)
+    {
+        filename = m_CollimatorFileName;
+        jsPlateList = PlateListToJSONString(m_CollimatorList, plate);
+    }
+    std::ofstream ofs (filename, std::ios_base::out|std::ios_base::trunc);
     
-    std::cout << "Control:Downloading config..." << std::endl;
-    //return ErrorCode::OK;
-	return 0;
-}
+    if(!ofs.is_open())   
+    {
+        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open config");
+        return ErrorCode::ERR_FILE_OPEN;       
+    }
 
-int Config::UploadConfig(enum PlateList plate)
-{
-    std::cout << "Config:Uploading config..." << std::endl;
-	return 0;
-}
+    ofs << jsPlateList;
 
-int Config::SaveConfig(enum PlateList plate)
-{
-    std::cout << "Config:Saving config..." << std::endl;
-	return 0;
-}
+    ofs.close();
+	return ErrorCode::ERR_OK;
 
+}
 

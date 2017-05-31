@@ -6,7 +6,8 @@ SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp main.cpp\
 ../HAL/Arm.cpp ../HAL/Drive.cpp ../HAL/Vacuum.cpp ../HAL/HAL.cpp ../HAL/Coordinates.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o)
-TESTSOURCES=$(wildcard Tests/*.cpp) Move.cpp Order.cpp Plate.cpp Preset.cpp
+TESTSOURCES=$(wildcard Tests/*.cpp) Move.cpp Order.cpp Plate.cpp Preset.cpp ../HAL/Arm.cpp ../HAL/Drive.cpp ../HAL/Vacuum.cpp ../HAL/HAL.cpp ../HAL/Coordinates.cpp
+
 TESTOBJECTS=$(TESTSOURCES:.cpp=.o)
 LIBPATH=-L../lib -I../lib/include -I ../lib/include/rapidjson
 
@@ -34,6 +35,7 @@ target:
 
 host:
 	cp Error.h ../lib/include
+	cp PlateList.h ../lib/include
 	cd Logging; make host
 	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out ${SOURCES} ${LIBSHOST} ${LIBS}
 

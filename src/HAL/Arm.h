@@ -5,6 +5,8 @@
 #include <vector>
 #include <fstream>
 #include "Coordinates.h"
+#include "Logger.h"
+#include "Error.h"
 
 class Arm
 {
@@ -13,8 +15,8 @@ class Arm
 
     public:
         Arm(Coordinates homeposition);
-        int MoveToCoord(Coordinates coordinates);
-        int MoveHome();
+        enum ErrorCode MoveToCoord(Coordinates coordinates);
+        enum ErrorCode MoveHome();
 };
 
 #endif  //  ARM_H_
