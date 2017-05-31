@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <Logger.h>
+#include <Const.h>
+#include <Error.h>
 
 class Plate
 {
@@ -13,6 +16,7 @@ class Plate
 		int m_CollimatorPosition;
 		std::string m_Properties;
 		double m_Thickness;
+		Logger *m_Logger;
 
 	public:
 		Plate(int id, int drivePos, int collimatorPosition, std::string properties, double tickness);
@@ -21,7 +25,7 @@ class Plate
 		int GetCollimatorPosition();
 		int GetDrivePosition();
 		int GetID();
-		void SetCollimatorPosition(int value);
+		enum ErrorCode SetCollimatorPosition(int value);
 
 };
 
