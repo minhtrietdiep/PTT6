@@ -141,16 +141,52 @@ enum ErrorCode Control::ResetSystem()
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
     for(int i = 0; i < collimatorList.size(); i++)
     {
-      PlateToDrive(collimatorList[i].GetID());
+        if(collimatorList[i].GetCollimatorPosition() > 0)
+        {
+           PlateToDrive(collimatorList[i].GetID()); 
+        }
+      
     }
     return ErrorCode::ERR_OK;
 
 }
 enum ErrorCode Control::StartSystem()
 {
-    std::cout << "Order start moving" << std::endl;
-    m_Order.Start();
-    return ErrorCode::ERR_OK;
+
+    std::vector<Move> moves = m_Order.GetMoves(); 
+    if (moves.size() < 1)
+    {
+        return ErrorCode::ERR_NO_ITEM;
+    }
+    int ID = moves[0].GetPlateID();
+    int Destination = moves[0].GetDestination();
+
+    std::cout << "*/*/*/*/start moving" << std::endl;
+    enum ErrorCode returnvalue = m_Order.Start();
+    if (returnvalue == ErrorCode::ERR_OK)
+    {
+        std::cout << "*/*/*/*/gelukt" << std::endl;
+        if (Destination == 99)
+        {
+            int position = 0;
+            std::vector<Plate> platelist = m_Config.GetCollimatorlist();
+            for (int i = 0; i < platelist.size(); i ++)
+            {
+                if (platelist[i].GetCollimatorPosition() > position)
+                    position = platelist[i].GetCollimatorPosition();
+            }
+            position ++;
+             m_Config.SetCollimatorposition(ID,position);
+        } else
+        {
+             m_Config.SetCollimatorposition(ID,Destination);
+        }
+        m_Config.SaveConfig(PlateList::COLLIMATORLIST);
+        m_Config.SaveConfig(PlateList::DRIVELIST);
+        return ErrorCode::ERR_OK;
+    } 
+    return ErrorCode::ERR_UNKNOWN;
+   
 }
 
 

@@ -374,6 +374,16 @@ int main(int argc, char **argv)
     control.StartSystem();
     control.StartSystem();
     control.StartSystem();
+        control.StartSystem();
+            control.StartSystem();
+                control.StartSystem();
+                    control.StartSystem();
+                        control.StartSystem();
+                            control.StartSystem();
+                                control.StartSystem();
+                                    control.StartSystem();
+                                        control.StartSystem();
+                                            control.StartSystem();
     srand (time(NULL));
     logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Program started");
     MessageQueue mq;

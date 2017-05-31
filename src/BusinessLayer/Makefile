@@ -34,6 +34,7 @@ target:
 
 host:
 	cp Error.h ../lib/include
+	cp PlateList.h ../lib/include
 	cd Logging; make host
 	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out ${SOURCES} ${LIBSHOST} ${LIBS}
 
