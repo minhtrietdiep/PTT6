@@ -1,0 +1,10 @@
+GPIO7	drive0	P9.42
+GPIO20	drive1	P9.41
+GPIO112	drive2	P9.30
+GPIO60	drive3	P9.12
+GPIO50	drive4	P9.14
+
+GPIO30	vacuum	P9.11
+
+echo 0 > /sys/class/gpio/gpio**/value
+echo 1 > /sys/class/gpio/gpio**/value
