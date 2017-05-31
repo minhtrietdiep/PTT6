@@ -1,5 +1,6 @@
 CC=g++
-CFLAGS=-O2 -Wall -std=c++11
+CFLAGS=-O2 -Wall -std=c++11 -fprofile-arcs -ftest-coverage
+TESTCFLAGS=-O2 -Wall -std=c++11
 TESTLDFLAGS=-lpthread -lgtest -lgtest_main -L/usr/lib -pthread
 SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp main.cpp\
 ../HAL/Arm.cpp ../HAL/Drive.cpp ../HAL/Vacuum.cpp ../HAL/HAL.cpp ../HAL/Coordinates.cpp
@@ -40,7 +41,7 @@ host:
 
 .cpp.o:
 
-	$(CC) $(CFLAGS) $(LIBPATH) -c $< -o $@
+	$(CC) $(TESTCFLAGS) $(LIBPATH) -c $< -o $@
 
 test: $(TESTSOURCES) $(TESTEXECUTABLE)
 
@@ -52,9 +53,12 @@ all:
 	make lib-host
 	make target
 	make host
+	make test
 
 clean:
 	cd Logging; make clean
 	rm -f *.out
 	rm -f *.o
+	rm -f *.gcno
+	rm -f *.gcda
 	$(RM) $(TESTOBJECTS) $(TESTEXECUTABLE)

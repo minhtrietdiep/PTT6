@@ -7,6 +7,8 @@ stages:
   - compile
   - cross-compile
   - unit-test
+  - code-coverage
+  - lint
 compile:
   stage: compile
   script:
@@ -23,6 +25,20 @@ unit-test:
     - make test
     - ./BusinessLayer/Tests/bl-RunTests.out
     #todo: ./ into api en de rest
+code-coverage:
+    stage: code-coverage
+    script:
+    - make lib-host
+    - make host
+    - bash  ./scripts/codecoverage.sh
+    #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
+    #- q
+    #- gcovr -r .
+lint:
+  stage: lint
+  script:
+    - cd scripts/
+    - bash lint.sh
 after_script:
 
   #  - make clean

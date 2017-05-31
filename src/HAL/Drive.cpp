@@ -79,4 +79,3 @@ Coordinates Drive::GetDriveCoordinates()
 {
     return m_Positions;
 }
-
