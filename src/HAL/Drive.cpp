@@ -16,31 +16,44 @@ Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
 enum ErrorCode Drive::ToggleDrive()
 {
     std::ofstream myfile;
+    std::ofstream mijnfile;
+
     switch(m_DriveID)
     {
         case 0:
             myfile.open (DRIVE0);
+            mijnfile.open (DRIVE0);
             break;
         case 1:
             myfile.open (DRIVE1);
+            mijnfile.open (DRIVE1);
             break;
         case 2:
             myfile.open (DRIVE2);
+            mijnfile.open (DRIVE2);
             break;
         case 3:
             myfile.open (DRIVE3);
+            mijnfile.open (DRIVE3);
             break;
         case 4:
             myfile.open (DRIVE4);
+            mijnfile.open (DRIVE4);
             break;
         default:
 
             break;
     }
     myfile << 1;
-    usleep(424242);
-    myfile << 0;
     myfile.close();
+
+    usleep(20000);
+
+
+    mijnfile << 0;
+    mijnfile.close();
+
+    usleep(2000000);
 
     return ErrorCode::ERR_OK;
 }
