@@ -16,7 +16,7 @@ namespace CalibrationPlateChangerClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            PlateChanger plateChanger = new PlateChanger();
+            PlateChanger plateChanger = new PlateChanger();       
         }
     }
 }

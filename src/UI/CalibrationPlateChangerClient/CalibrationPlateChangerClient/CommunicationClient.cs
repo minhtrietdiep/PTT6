@@ -19,6 +19,7 @@ namespace CalibrationPlateChangerClient
             m_ServerIp = serverIp;
             m_ServerPort = serverPort;
             m_TcpClient = new TcpClient();
+            m_TcpClient.NoDelay = true;
             m_IsConnected = false;
         }
 
@@ -203,22 +204,51 @@ namespace CalibrationPlateChangerClient
             {
                 if (ConnectionState() != 0)
                     return;
-                NetworkStream dataStream = m_TcpClient.GetStream();
+                NetworkStream dataStream = null;
+                try
+                {   
+                    dataStream = m_TcpClient.GetStream();
+                }
+                catch (ObjectDisposedException ex)
+                {
+                    Console.WriteLine(ex + "\ntcpClient has been closed");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex + "\ntcpClient is not connected to a remote host");
+                }
+
                 int buffSize = 0;
                 byte[] inStream = new byte[4096];
                 buffSize = m_TcpClient.ReceiveBufferSize;
+
                 try
                 {
                     dataStream.Read(inStream, 0, inStream.Length);
                 }
-                catch (SocketException ex)
+                catch (ArgumentNullException ex)
                 {
-                    Console.WriteLine("Exception in ReceiveListener: " + ex);
+                    Console.WriteLine(ex + "\nBuffer parameter is null");
                     return;
                 }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    Console.WriteLine(ex + "\nOne or more parameters are invalid");
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(ex + "The underlying socket is closed");
+                }
+                catch (ObjectDisposedException ex)
+                {
+                    Console.WriteLine(ex + "\ntcpClient has been closed");
+                }
+
+
                 string receivedData = System.Text.Encoding.ASCII.GetString(inStream);
                 if (receivedData.EndsWith("\0"))
                     receivedData = receivedData.TrimEnd('\0');
+                dataStream.Flush();
                 Console.WriteLine("Received: " + receivedData);
                 if (receiveMessageHandler(receivedData) != 0)
                     Disconnect();          

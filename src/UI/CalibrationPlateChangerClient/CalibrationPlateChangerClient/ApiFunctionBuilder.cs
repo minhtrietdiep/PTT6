@@ -99,11 +99,11 @@ namespace CalibrationPlateChangerClient
             return function;
         }
 
-        public ApiFunction UploadColliState()
+        public ApiFunction UploadCollimatorState()
         {
             ApiFunctionParameter[] parameters = new ApiFunctionParameter[0];
             string ipAddress = GetLocalIPAddress();
-            ApiFunction function = new ApiFunction(new ApiFunctionProperties("0", ipAddress, "UploadColliState", "Request", parameters));
+            ApiFunction function = new ApiFunction(new ApiFunctionProperties("0", ipAddress, "UploadCollimatorState", "Request", parameters));
             return function;
         }
 
@@ -120,7 +120,6 @@ namespace CalibrationPlateChangerClient
                         return ip.ToString();
                 }
             }
-            //throw new Exception("Local IP Address Not Found!");
             return "";
         }
     }

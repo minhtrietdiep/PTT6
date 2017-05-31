@@ -15,6 +15,6 @@ namespace CalibrationPlateChangerClient
         ApiFunction ResetSystem();
         ApiFunction UploadPresets();
         ApiFunction UploadDriveState();
-        ApiFunction UploadColliState();
+        ApiFunction UploadCollimatorState();
     }
 }

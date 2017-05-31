@@ -6,17 +6,18 @@ namespace CalibrationPlateChangerClient
 {
     enum ReturnStatus
     {
-        OK,
+        ERR_OK,
         ERR_UNKNOWN_FUNC,
         ERR_UNKNOWN,
         ERR_PARSE,
         ERR_HW,
-        ERR_TIMEOUT
+        ERR_TIMEOUT,
+        PARSE_ERROR
     }
 
     class PlateChanger
     {
-        private const string m_ServerIp = "192.168.0.137";
+        private const string m_ServerIp = "192.168.0.10";
         private const int m_ServerPort = 4244;
 
         private MainForm m_UserInterface;
@@ -37,10 +38,8 @@ namespace CalibrationPlateChangerClient
             m_JsonSerializer = new JsonSerializer();
             m_TcpClient = new CommunicationClient(m_ServerIp, m_ServerPort);
             ConnectToServer();
-            Application.Run(m_UserInterface);
+            Application.Run(m_UserInterface);     
         }
-
-
 
         private void M_UserInterface_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -50,8 +49,7 @@ namespace CalibrationPlateChangerClient
 
         private void UserInterface_Shown(object sender, EventArgs e)
         {
-            TESTgenerateTestData();
-            UpdateUserInterface();
+            InitializeUserInterface();
         }
 
         private void UpdateUserInterface()
@@ -64,7 +62,6 @@ namespace CalibrationPlateChangerClient
                     m_UserInterface.SetDriverPlateList(m_DrivePlateList);
                 if (m_PresetList != null)
                     m_UserInterface.SetPresetList(m_PresetList);
-                m_UserInterface.LogFromAnotherThread("UI Updated");
             });
         }
 
@@ -105,16 +102,49 @@ namespace CalibrationPlateChangerClient
             }
         }
 
-        private int OnMessageReceived(string message)
+        private int OnMessageReceived(string rawMessage)
         {
-            ApiFunction functionResponse = m_JsonSerializer.Deserialize<ApiFunction>(message);
-            if (functionResponse == default(ApiFunction) || functionResponse.Function == null || functionResponse.Function.ReturnType != "Response")
-            {
-                m_UserInterface.LogFromAnotherThread("Invalid data received");
+            List<string> splittedMessage = SplitRawMessage(rawMessage);
+            if (splittedMessage.Count <= 0)
                 return -1;
+            foreach (string message in splittedMessage)
+            {
+                ApiFunction functionResponse = m_JsonSerializer.Deserialize<ApiFunction>(message);
+                if (functionResponse == default(ApiFunction) || functionResponse.Function == null || functionResponse.Function.ReturnType != "Response")
+                {
+                    m_UserInterface.LogFromAnotherThread("Invalid data received");
+                }
+                else
+                {
+                    HandleFunctionResponse(functionResponse);
+                }
             }
-            HandleFunctionResponse(functionResponse);
             return 0;
+        }
+
+        public List<string> SplitRawMessage(string rawMessage)
+        {
+            List<string> splittedMessages = new List<string>();
+            int leftBracketCount = 0;
+            int rightBracketCount = 0;
+            int start = 0;
+            for (int pos = 0; pos < rawMessage.Length; pos++)
+            {
+                char c = rawMessage[pos];
+                if (c == '{')
+                    leftBracketCount++;
+                if (c == '}')
+                    rightBracketCount++;
+                if (rightBracketCount == leftBracketCount && leftBracketCount != 0 || pos == (rawMessage.Length - 1))
+                {
+                    string singleMessage = rawMessage.Substring(start, pos - start + 1);
+                    leftBracketCount = 0;
+                    rightBracketCount = 0;
+                    start = pos + 1;
+                    splittedMessages.Add(singleMessage);
+                }
+            }
+            return splittedMessages;
         }
 
         private void HandleFunctionResponse(ApiFunction functionResponse)
@@ -127,7 +157,7 @@ namespace CalibrationPlateChangerClient
                     try
                     {
                         ReturnStatus status = (ReturnStatus)Enum.Parse(typeof(ReturnStatus), parameter.Value);
-                        if (status != ReturnStatus.OK)
+                        if (status != ReturnStatus.ERR_OK)
                         {
                             ReceivedErrorStatus(status);
                             return;
@@ -135,21 +165,35 @@ namespace CalibrationPlateChangerClient
                     }
                     catch (ArgumentException ex)
                     {
-                        Console.WriteLine(ex);
+                        Console.WriteLine("Invalid return code" + ex);
                         return;
 
                     }
                     switch (functionResponse.Function.FunctionName)
                     {
-                        case "UploadPreset":
+                        case "UploadPresets":
                             foreach (ApiFunctionParameter param in parameterList)
                             {
-                                if (param.Name == "TBD")
-                                    ApplyNewConfiguration(param.Value);                                    
+                                if (param.Name == "JSONData")
+                                    ApplyNewPresetList(param.Value);
+                            }
+                            break;
+                        case "UploadDriveState":
+                            foreach (ApiFunctionParameter param in parameterList)
+                            {
+                                if (param.Name == "JSONData")
+                                    ApplyNewDriveState(param.Value);
+                            }
+                            break;
+                        case "UploadCollimatorState":
+                            foreach (ApiFunctionParameter param in parameterList)
+                            {
+                                if (param.Name == "JSONData")
+                                    ApplyNewColliState(param.Value);
                             }
                             break;
                         case "PlateToCollimator":
-                            foreach(ApiFunctionParameter param in parameterList)
+                            foreach (ApiFunctionParameter param in parameterList)
                             {
                                 if (param.Name == "plateID")
                                     PlateToCollimator(int.Parse(param.Value));
@@ -181,24 +225,57 @@ namespace CalibrationPlateChangerClient
             }
         }
 
-        private void ApplyNewConfiguration(string config)
+        private void ApplyNewPresetList(string serializedPresetList)
         {
-            ApiPlateList newPlateList = m_JsonSerializer.Deserialize<ApiPlateList>(config);
-            if (newPlateList == default(ApiPlateList))
+            List<Preset> newPresetList = new List<Preset>();
+            List<Plate> allAvailablePlates = new List<Plate>(m_CollimatorPlateList);
+            allAvailablePlates.AddRange(m_DrivePlateList);
+
+            ApiPresetList apiPresetList = m_JsonSerializer.Deserialize<ApiPresetList>(serializedPresetList);
+            List<PresetList> presets = apiPresetList.PresetList;
+            foreach (PresetList list in presets)
             {
-                List<Preset> newPresetList = m_JsonSerializer.Deserialize<List<Preset>>(config);
-                if (newPresetList != default(List<Preset>))
-                    m_PresetList = newPresetList;
+                int presetId = list.m_PresetID;
+                string presetName = list.m_PresetName;
+                List<Plate> plateList = new List<Plate>();
+                foreach(MPlateID plate in list.m_PlateIDs)
+                {
+                    foreach (Plate selectedPlate in allAvailablePlates)
+                    {
+                        if (selectedPlate.GetID() == plate.ID)
+                        {
+                            plateList.Add(selectedPlate);
+                        }
+                    }
+                }
+                newPresetList.Add(new Preset(presetId, presetName, plateList));
             }
-            else if (newPlateList.PlateList == "m_DriveList")
-            {
-                m_DrivePlateList = newPlateList.Plates;
-            }
-            else if (newPlateList.PlateList == "m_CollimatorList")
-            {
-                m_CollimatorPlateList = newPlateList.Plates;
-            }
+            m_PresetList = newPresetList;
             UpdateUserInterface();
+        }
+
+        private void ApplyNewDriveState(string serializedDriveState)
+        {
+            ApiPlateList driveState = m_JsonSerializer.Deserialize<ApiPlateList>(serializedDriveState);
+            List<Plate> newDrivePlateList = new List<Plate>();
+            foreach (ApiPlate plate in driveState.Plates)
+            {
+                if (plate.m_DrivePosition > 0)
+                    newDrivePlateList.Add(new Plate(plate.m_ID, plate.m_Property, plate.m_Thickness));
+            }
+            m_DrivePlateList = newDrivePlateList;
+        }
+
+        private void ApplyNewColliState(string serializedColliState)
+        {
+            ApiPlateList colliState = m_JsonSerializer.Deserialize<ApiPlateList>(serializedColliState);
+            List<Plate> newColliPlateList = new List<Plate>();
+            foreach (ApiPlate plate in colliState.Plates)
+            {
+                if (plate.m_CollimatorPosition > 0)
+                    newColliPlateList.Add(new Plate(plate.m_ID, plate.m_Property, plate.m_Thickness));
+            }
+            m_CollimatorPlateList = newColliPlateList;
         }
 
         private void ReceivedErrorStatus(ReturnStatus status)
@@ -225,7 +302,7 @@ namespace CalibrationPlateChangerClient
 
         private void PlateToCollimator(int plateId)
         {
-            foreach(Plate plate in m_DrivePlateList)
+            foreach (Plate plate in m_DrivePlateList)
             {
                 if (plate.GetID() == plateId)
                 {
@@ -252,11 +329,11 @@ namespace CalibrationPlateChangerClient
         private void SetPreset(int presetId)
         {
             ResetSystem();
-            foreach(Preset preset in m_PresetList)
+            foreach (Preset preset in m_PresetList)
             {
                 if (preset.GetID() == presetId)
                 {
-                    foreach(Plate plate in preset.GetPlates())
+                    foreach (Plate plate in preset.GetPlates())
                     {
                         PlateToCollimator(plate.GetID());
                     }
@@ -266,12 +343,26 @@ namespace CalibrationPlateChangerClient
 
         private void ResetSystem()
         {
-            foreach(Plate plate in m_CollimatorPlateList)
+            foreach (Plate plate in m_CollimatorPlateList)
             {
                 m_DrivePlateList.Add(plate);
             }
             m_CollimatorPlateList.Clear();
         }
+
+        private void InitializeUserInterface()
+        {
+            ApiFunctionBuilder m_Api = new ApiFunctionBuilder();
+            ApiFunction getDriveStateRequest = m_Api.UploadDriveState();
+            SendFunctionRequest(getDriveStateRequest);
+            ApiFunction getColliStateRequest = m_Api.UploadCollimatorState();
+            SendFunctionRequest(getColliStateRequest);
+            ApiFunction getPresetRequest = m_Api.UploadPresets();
+            SendFunctionRequest(getPresetRequest);
+            return;
+        }
+
+
 
         private void TESTgenerateTestData()
         {
