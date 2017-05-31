@@ -1,16 +1,36 @@
 #include "Drive.h"
 #include <unistd.h>
 
-#define DRIVE0 "/sys/class/gpio/gpio07/value"
-#define DRIVE1 "/sys/class/gpio/gpio20/value"
-#define DRIVE2 "/sys/class/gpio/gpio112/value"
-#define DRIVE3 "/sys/class/gpio/gpio60/value"
-#define DRIVE4 "/sys/class/gpio/gpio50/value"
+#define DRIVE0 "/sys/class/gpio/gpio30/value"
+#define DRIVE1 "/sys/class/gpio/gpio60/value"
+#define DRIVE2 "/sys/class/gpio/gpio31/value"
+#define DRIVE3 "/sys/class/gpio/gpio50/value"
+#define DRIVE4 "/sys/class/gpio/gpio48/value"
 
+void Drive::Setup()
+{
+    std::ofstream f;
+    f.open(DRIVE0);
+    f << "out";
+    f.close();
+    f.open(DRIVE1);
+    f << "out";
+    f.close();
+    f.open(DRIVE2);
+    f << "out";
+    f.close();
+    f.open(DRIVE3);
+    f << "out";
+    f.close();
+    f.open(DRIVE4);
+    f << "out";
+    f.close();
+}
 
 Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
 {
     m_DriveID = driveid;
+    Setup();
 }
 
 enum ErrorCode Drive::ToggleDrive()

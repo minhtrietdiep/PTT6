@@ -11,8 +11,10 @@ class Vacuum
 {
     private:
         int m_VacuumStatus;
+        void Setup();
 
     public:
+        Vacuum();
         enum ErrorCode EnableVacuum();
         enum ErrorCode DisableVacuum();
 };
