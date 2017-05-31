@@ -10,3 +10,11 @@ Move::~Move()
 {
     
 }
+int Move::GetPlateID()
+{
+    return m_PlateID;
+}
+int Move::GetDestination()
+{
+    return m_Destination;
+}

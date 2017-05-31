@@ -1,23 +1,23 @@
 #include "Vacuum.h"
 
-#define FILEPATH "/dev/Vacuum.txt"
+#define FILEPATH "/sys/class/gpio/gpio30/value"
 
-int Vacuum::EnableVacuum()
+enum ErrorCode Vacuum::EnableVacuum()
 {
     std::cout << "Enabling vacuum" << std::endl;
     std::ofstream myfile;
     myfile.open (FILEPATH);
     myfile << 1;
     myfile.close();
-    return 1;
+    return ErrorCode::ERR_OK;
 }
 
-int Vacuum::DisableVacuum()
+enum ErrorCode Vacuum::DisableVacuum()
 {
     std::cout << "Disabling vacuum" << std::endl;
     std::ofstream myfile;
     myfile.open (FILEPATH);
     myfile << 0;
     myfile.close();
-    return 1;
+    return ErrorCode::ERR_OK;
 }

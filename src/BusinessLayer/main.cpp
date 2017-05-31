@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 #include <future>
 #include <thread>
@@ -23,49 +24,11 @@
 #include "../API/Interfaces/IUIControl.h"
 #include "Control.h"
 #include "Config.h"
-
-#define ESC 0x1B
+#include "CommandUtils.h"
+#include "JSONUtils.h"
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 Control control({});
-
-
-void init()
-{
-    //control = Control();
-    //std::cout << control->GetPresets()[0].GetPlatelist()[0].GetThickness() << std::endl; //just to test
-    //std::cout << control->GetPresets()[0].GetPlatelist()[1].GetThickness() << std::endl; //just to test
-    //control->ResetSystem();
-    // control.SetPreset(1);
-}
-
-// CTRL-C, CTRL-V because Linux doesn't have a kbhit
-int kbhit(void) 
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if(ch != EOF) 
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
-
-    return 0;
-}
 
 std::vector<std::string> knownOperations = 
 {
@@ -76,9 +39,11 @@ std::vector<std::string> knownOperations =
     "EmergencyStop"         ,
     "ContinueSystem"        ,
     "ResetSystem"           ,
-    "UploadConfig"          ,
-    "DownloadConfig"        ,
-    "InvalidStuff"          ,
+    // Embedded -> Client
+    "UploadPresets"         ,
+    "UploadDriveState"      ,
+    "UploadCollimatorState" ,
+    "InvalidOperationTest"  ,
 };
 
 // Generate a randomly numbered JSON message
@@ -101,7 +66,6 @@ std::string generateJson()
 // Generate/add a message to MessageQueue
 void generateReceivedMessage() 
 {
-
     MessageQueue mq;
     mq.Write(MQ_NAME_RECEIVED_MESSAGES, generateJson());
 }
@@ -112,64 +76,101 @@ void generateSentMessage()
     mq.Write(MQ_NAME_SEND_MESSAGES, generateJson());
 }
 
-
-ErrorCode executeFunction(IUIControl *control, const std::string &functionName, const std::vector<Parameter> &params) 
+ErrorCode executeFunction(IUIControl *control, 
+    const std::string &functionName, 
+    const std::vector<Parameter> &params,
+    std::string &payload) 
 {
+    if (std::find(knownOperations.begin(), knownOperations.end(), functionName) == knownOperations.end())
+    {
+        logger.Write(Logger::Severity::ERROR,
+            __PRETTY_FUNCTION__,
+            "Function not in known operations");
+        return ErrorCode::ERR_UNKNOWN_FUNC;
+    }
 
     if (functionName == "PlateToDrive") 
     {
-        control->PlateToDrive(0);
-        return ErrorCode::OK;
+        if (params.size() != 1)
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+        Parameter param = params[0];
+        if (param.Name != "plateID") 
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+        return control->PlateToDrive(std::stoi(param.Value));
     }
     else if (functionName == "PlateToCollimator") 
     {
-        control->PlateToCollimator(0);
-        return ErrorCode::OK;
-    }
-    else if (functionName == "CancelCurrentOperation") 
-    {
-        control->CancelCurrentOperation();
-        return ErrorCode::OK;
+        if (params.size() != 1)
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+        Parameter param = params[0];
+        if (param.Name != "plateID") 
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+        return control->PlateToCollimator(std::stoi(param.Value));
     }
     else if (functionName == "SetPreset") 
     {
-        control->SetPreset(0);
-        return ErrorCode::OK;
+        if (params.size() != 1)
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+        Parameter param = params[0];
+        if (param.Name != "presetID") 
+        {
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+        return control->SetPreset(std::stoi(param.Value));
+    }
+    else if (functionName == "CancelCurrentOperation") 
+    {
+        return control->CancelCurrentOperation();
     }
     else if (functionName == "EmergencyStop") 
     {
-        control->EmergencyStop();
-        return ErrorCode::OK;
+        return control->EmergencyStop();
     }
     else if (functionName == "ContinueSystem") 
     {
-        control->ContinueSystem();
-        return ErrorCode::OK;
+        return control->ContinueSystem();
     }
     else if (functionName == "ResetSystem")
     {
-        control->ResetSystem();
-        return ErrorCode::OK;
+        return control->ResetSystem();
     } 
-    else if (functionName == "UploadConfig")
+    else if (functionName == "UploadPresets")
     {
-        control->UploadConfig();   
-        return ErrorCode::OK;
+        payload = control->UploadPresets();
+        return ErrorCode::ERR_OK;
     }
-    else if (functionName == "DownloadConfig")
+    else if (functionName == "UploadDriveState")
     {
-        control->DownloadConfig();
-        return ErrorCode::OK;
-    } 
+        payload = control->UploadDriveState();
+        return ErrorCode::ERR_OK;
+    }
+    else if (functionName == "UploadCollimatorState")
+    {
+        payload = control->UploadCollimatorState();
+        return ErrorCode::ERR_OK;
+    }
     else
     {
-        return ErrorCode::ERR_UNKNOWN_FUNC;
+        logger.Write(Logger::Severity::ERROR,
+            __PRETTY_FUNCTION__,
+            "Function in list but not implemented");
+        return ErrorCode::ERR_UNKNOWN;
     }
 }
 
-// Consume the clientMessage. This can be blocking. We can return the
-// ClientMessage we got, but also a new one if desired?
-ClientMessage slowFunc(ClientMessage cm) 
+// Consume the clientMessage. This can be blocking. 
+// We can return a ClientMessage we got, but also a new one if desired?
+ClientMessage asyncConsumeMessage(ClientMessage cm) 
 {
     // We only have one Control for now...
     int priority = cm.GetPriority();
@@ -177,16 +178,17 @@ ClientMessage slowFunc(ClientMessage cm)
     std::string funcName = cm.GetFunctionName();
     std::vector<Parameter> params = cm.GetParams();
     int timeout = rand() % 5000;
-    std::cout << "Priority:      " << priority << "\n";
-    std::cout << "Sender:        " <<  sender << "\n";
-    std::cout << "Function Name: " << funcName << "\n";
+    //std::cout << "Priority:      " << priority << "\n";
+    //std::cout << "Sender:        " <<  sender << "\n";
+    //std::cout << "Function Name: " << funcName << "\n";
     for (auto p : params) 
     {
         std::cout   << p.Name << "\n"
                     << p.Type << "\n"
                     << p.Value << "\n";
-    }    
-    ErrorCode err = executeFunction(&control, funcName, params);
+    }
+    std::string payloadData = "";    
+    ErrorCode err = executeFunction(&control, funcName, params, payloadData);
 
     Parameter result = 
     {
@@ -195,16 +197,181 @@ ClientMessage slowFunc(ClientMessage cm)
         ErrorCodeText[(int)err],
     };
 
+
+
+
     params.push_back(result);
+
+    if (payloadData != "") {
+        Parameter payload = 
+        {
+            "JSONData",
+            "String",
+            payloadData,
+        };
+        params.push_back(payload);
+        logger.Write(Logger::Severity::DEBUG,
+                     __PRETTY_FUNCTION__,
+                     "Payload: " + payloadData);
+    }
+
     cm.SetParams(params);
     return cm;
+}
+
+void checkThreads(std::vector<std::future<ClientMessage>> &futures) 
+{
+    // We check the threads here, using C++11/STL threading. We also know
+    // which thread (ClientMessage) is done.
+    // Also don't use a ranged for, because we can remove the current
+    // element. Need the iterator!
+    for (auto it = futures.begin(); it != futures.end();) 
+    {
+        auto status = (*it).wait_for(std::chrono::milliseconds(0));
+        if (status == std::future_status::ready) 
+        {
+            ClientMessage doneMessage = (*it).get();
+
+            MessageQueue mq;
+            if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) < MQ_MAX_MESSAGE) 
+            {
+                JSONParser jsparser;
+                mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));                    
+                logger.Write(Logger::Severity::INFO,
+                         __PRETTY_FUNCTION__,
+                         "Response: " + jsparser.ClientMessageToJson(doneMessage));
+            }
+            else
+            {
+                logger.Write(Logger::Severity::ERROR,
+                             __PRETTY_FUNCTION__,
+                             "MessageQueue is full, emptying...");
+                while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) 
+                {
+                    mq.Read(MQ_NAME_SEND_MESSAGES);
+                }
+            }
+
+            // We're done tracking it so we can erase the progress handle.
+            futures.erase(it);
+            logger.Write(Logger::Severity::INFO,
+                         __PRETTY_FUNCTION__,
+                         "Threads left: " + std::to_string(futures.size()));
+        }
+        else 
+        {
+            ++it;
+        }
+    }
+}
+
+// Due to TCP appending multiple messages in one message, we can get an MQ
+// message that's not a valid JSON message. Hence needing to split up.
+// Due to our networking person being absent today this hack was needed.
+std::vector<std::string> splitRawMq(std::string rawMq) 
+{
+    std::vector<std::string> results;
+    
+    int leftBracketCount = 0;
+    int rightBracketCount = 0;
+    int start = 0;
+    for(int pos = 0; pos < rawMq.size(); pos++) 
+    {
+        char c = rawMq[pos];
+        if (c == '{') 
+        {
+            leftBracketCount++;
+        }
+        if (c == '}') 
+        {
+            rightBracketCount++;
+        }
+        if (rightBracketCount == leftBracketCount && leftBracketCount != 0 || pos == rawMq.size() - 1) 
+        {
+            std::string singleMessage = rawMq.substr(start, pos - start + 1);
+            leftBracketCount = 0;
+            rightBracketCount = 0;
+            start = pos + 1;
+            results.push_back(singleMessage);
+        }
+    }
+    return results;
+}
+
+void parseSingleJSONString(std::string rawString, 
+    MessageQueue &mq, 
+    std::vector<std::future<ClientMessage>> &futures,
+    std::vector<std::thread> &threads) 
+{
+
+    JSONParser jsparser;
+    ClientMessage clientMessage;
+    std::string parseInfo;
+    JSONError result = jsparser.JsonToClientMessage(rawString, 
+                                                &clientMessage, 
+                                                parseInfo);
+    if (result == JSONError::NONE) 
+    {
+        logger.Write(Logger::Severity::DEBUG, 
+                 __PRETTY_FUNCTION__, 
+                 "Parse success");
+        std::packaged_task<ClientMessage(ClientMessage)> task(&asyncConsumeMessage);
+        auto future = task.get_future();
+        std::thread thread(std::move(task), clientMessage);
+        futures.push_back(std::move(future));
+        threads.push_back(std::move(thread));
+    } 
+    else 
+    {
+        std::string jsError = GetJSONErrorString(result);
+
+        Parameter result = 
+        {
+            "ReturnValue",
+            "String",
+            jsError,
+        };
+        ClientMessage tempMsg(0, "JsonToClientMessage", "embedded", 999, {result}); // for json formatted stuff response
+
+        std::string returnMessage = jsparser.ClientMessageToJson(tempMsg);
+
+        mq.Write(MQ_NAME_SEND_MESSAGES, returnMessage);
+        logger.Write(Logger::Severity::ERROR, 
+                     __PRETTY_FUNCTION__, 
+                     "Parsing failed: " + parseInfo + " (" + jsError + ")");
+        logger.Write(Logger::Severity::ERROR,
+                     __PRETTY_FUNCTION__,
+                     "Response: " + returnMessage);
+    }
+}
+
+void checkMessages(MessageQueue &mq, 
+    std::vector<std::future<ClientMessage>> &futures,
+    std::vector<std::thread> &threads) 
+{
+    // After parsing, launch a function that executes whatever is in the
+    // ClientMessage. This is done in a new thread to make this async.
+    if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) 
+    {
+        std::string rawMq;
+        rawMq = mq.Read(MQ_NAME_RECEIVED_MESSAGES);
+
+        logger.Write(Logger::Severity::DEBUG, 
+                     __PRETTY_FUNCTION__, 
+                     "Received message: " + rawMq);
+
+        std::vector<std::string> splitMessages = splitRawMq(rawMq);
+        for (auto message : splitMessages) 
+        {
+            parseSingleJSONString(message, mq, futures, threads);
+        }
+    }
 }
 
 int main(int argc, char **argv) 
 {
     srand (time(NULL));
     logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Program started");
-    JSONParser jsparser;
     MessageQueue mq;
     std::vector<std::future<ClientMessage>> futures;
     std::vector<std::thread> threads;
@@ -214,11 +381,13 @@ int main(int argc, char **argv)
     std::cout << "Press 2 to generate ClientMessage->MessageQueue item\n";
     while (true) 
     {
+
+        control.StartSystem();
         // User input, because we want to create fake messages to test too
         if (kbhit()) 
         {
             char c = getchar();
-            if (c == ESC || c == 'q') 
+            if (c == ESCAPE_KEY || c == 'q') 
             {
                 std::cout << "\n";
                 break;
@@ -240,73 +409,9 @@ int main(int argc, char **argv)
             }
         }
 
-        // After parsing, launch a function that executes whatever is in the
-        // ClientMessage. This is done in a new thread to make this async.
-        if (mq.GetMessageCount(MQ_NAME_RECEIVED_MESSAGES) > 0) 
-        {
-            std::string rawMq;
-            rawMq = mq.Read(MQ_NAME_RECEIVED_MESSAGES);
+        checkMessages(mq, futures, threads);
 
-            std::cout << rawMq << "\n";
-
-            ClientMessage clientMessage;
-            std::string parseInfo;
-            JSONError result = jsparser.JsonToClientMessage(rawMq, 
-                                                        &clientMessage, 
-                                                        parseInfo);
-            if (result == JSONError::NONE) 
-            {
-                std::packaged_task<ClientMessage(ClientMessage)> task(&slowFunc);
-                auto future = task.get_future();
-                std::thread thread(std::move(task), clientMessage);
-                futures.push_back(std::move(future));
-                threads.push_back(std::move(thread));
-            } 
-            else 
-            {
-                logger.Write(Logger::Severity::ERROR, 
-                             __PRETTY_FUNCTION__, 
-                             "Parsing failed: " + parseInfo);
-            }
-        }
-
-        // We check the threads here, using C++11/STL threading. We also know
-        // which thread (ClientMessage) is done.
-        // Also don't use a ranged for, because we can remove the current
-        // element. Need the iterator!
-        for (auto it = futures.begin(); it != futures.end();) 
-        {
-            auto status = (*it).wait_for(std::chrono::milliseconds(0));
-            if (status == std::future_status::ready) 
-            {
-                ClientMessage doneMessage = (*it).get();
-
-                MessageQueue mq;
-                if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) < MQ_MAX_MESSAGE) {
-                    mq.Write(MQ_NAME_SEND_MESSAGES, jsparser.ClientMessageToJson(doneMessage));                    
-                    logger.Write(Logger::Severity::INFO,
-                             __PRETTY_FUNCTION__,
-                             jsparser.ClientMessageToJson(doneMessage));
-                }
-                else
-                {
-                    logger.Write(Logger::Severity::ERROR,
-                                 __PRETTY_FUNCTION__,
-                                 "MessageQueue is full, emptying...");
-                    while (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) > 0) {
-                        mq.Read(MQ_NAME_SEND_MESSAGES);
-                    }
-                }
-
-                // We're done tracking it so we can erase the progress handle.
-                futures.erase(it);
-                std::cout << "Threads left: " << futures.size() << "\n";
-            }
-            else 
-            {
-                ++it;
-            }
-        }
+        checkThreads(futures);
 
         // Let's go easy on the cpu here.
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -316,7 +421,7 @@ int main(int argc, char **argv)
     {
         thread.join();
     }
-    std::cout << "Halted program\n";    
+    std::cout << "Halted program\n";
     return 0;
 
 }

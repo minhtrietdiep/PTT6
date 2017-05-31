@@ -5,17 +5,20 @@
 #include <vector>
 #include <fstream>
 #include "Coordinates.h"
+#include "Logger.h"
+#include "Error.h"
 
 class Drive
 {
     private:
         int m_DriveID;
         Coordinates m_Positions;
+        enum ErrorCode ToggleDrive();
 
     public:
         Drive(int driveid, Coordinates positions);
-        int OpenDrive();
-        int CloseDrive();
+        enum ErrorCode OpenDrive();
+        enum ErrorCode CloseDrive();
         int GetDriveID();
         Coordinates GetDriveCoordinates();
 };

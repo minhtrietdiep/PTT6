@@ -134,7 +134,7 @@ void * Thread::SenderThread(void *args)
             std::string sendMessage = mq.Read(MQ_NAME_SEND_MESSAGES);
 
             char *cstring = new char[sendMessage.length() + 1];
-            strcpy(cstring, sendMessage.c_str()); 
+            snprintf(cstring, sendMessage.c_str());
 
             for(unsigned int i = 0; i < senderThreadArgs->clientSockets->size(); i++)
             {
