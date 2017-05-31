@@ -68,6 +68,8 @@ enum ErrorCode Control::PlateToDrive(int plateid)
         //////////////////////////////////////////////////////Logboek!
         return ErrorCode::ERR_INVALID_ARG;
     }
+    m_Config.SaveConfig(PlateList::DRIVELIST);
+    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
     return ErrorCode::ERR_OK;
 
 }
@@ -76,6 +78,8 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
 {
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
+    m_Config.SaveConfig(PlateList::DRIVELIST);
+    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
     return ErrorCode::ERR_OK;
 }
 
@@ -111,6 +115,8 @@ enum ErrorCode Control::SetPreset(int presetid)
         return ErrorCode::ERR_UNKNOWN;
 
     }
+    m_Config.SaveConfig(PlateList::DRIVELIST);
+    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
     //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     return ErrorCode::ERR_OK;
 }
