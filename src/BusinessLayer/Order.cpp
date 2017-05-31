@@ -1,15 +1,18 @@
 #include "Order.h"
+#include <Logger.h>
+#include <Const.h>
 
 #define COLLIMATORPOS 99
 
 Order::Order()
 {
+    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     m_MoveList = std::vector<Move>();
     m_Hal = HAL();
 }
 Order::~Order()
 {
-
+    delete m_Logger;
 }
 
 std::vector<Move> Order::GetMoves()
@@ -44,7 +47,7 @@ enum ErrorCode Order::Start()
 
                 else
                 {
-                    std::cout<<"##enable"<< std::endl;
+                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Cannot open drive");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -53,7 +56,7 @@ enum ErrorCode Order::Start()
                 state = ENABLE_VACUUM;
                 else
                 {
-                    std::cout<<"##move arm source"<< std::endl;
+                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to ID");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -62,7 +65,7 @@ enum ErrorCode Order::Start()
                 state = MOVE_ARM_DESTINATION;
                 else
                 {
-                    std::cout<<"##pickup"<< std::endl;
+                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -71,7 +74,7 @@ enum ErrorCode Order::Start()
                 state = DISABLE_VACUUM;
                 else
                 {
-                    std::cout<<"##move arm dest"<< std::endl;
+                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Destination");
                     return ErrorCode::ERR_UNKNOWN;
                     
                 }
@@ -81,8 +84,7 @@ enum ErrorCode Order::Start()
                 state = MOVE_ARM_HOME;
                 else
                     {
-                        
-                        std::cout<<"##pickup"<< std::endl;
+                        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
                         return ErrorCode::ERR_UNKNOWN;
                     }
                 break;
@@ -91,7 +93,7 @@ enum ErrorCode Order::Start()
                 state = CLOSE_DRIVE;
                 else
                 {
-                    std::cout<<"##arm to home"<< std::endl;
+                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to home");
                     return ErrorCode::ERR_UNKNOWN;
 
                 }
@@ -101,13 +103,14 @@ enum ErrorCode Order::Start()
                 state = COMPLETED;
                 else
                 {
-                    std::cout<<"##close drive"<< std::endl;
+                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to close drive");
                     return ErrorCode::ERR_UNKNOWN;
                 }
 
 
                 break;
             default:
+                m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unknow switch state");
                 return ErrorCode::ERR_UNKNOWN;
                 break;
         }

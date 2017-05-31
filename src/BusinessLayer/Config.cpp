@@ -4,7 +4,7 @@
 #include "stringbuffer.h"
 #include "filereadstream.h"
 #include "Const.h"
-#include "Logger.h"
+#include <Logger.h>
 #include "Config.h"
 #include "JSONUtils.h"
 #include <fstream>
@@ -14,6 +14,7 @@
 
 Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 {
+    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     m_DriveList = drivelist;
     m_CollimatorList = collimatorlist;
  
@@ -23,7 +24,7 @@ Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 }
 Config::~Config()
 {
-
+    delete m_Logger;
 }
 
 std::vector<Plate> Config::GetDrivelist()
@@ -46,6 +47,7 @@ enum ErrorCode Config::SetCollimatorposition(int drive, int collimatorPosition)
             return ErrorCode::ERR_OK;
         }
     }
+     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid drive");
     return ErrorCode::ERR_NO_ITEM;
     
 }
@@ -62,11 +64,10 @@ enum ErrorCode Config::LoadConfig(enum PlateList plate)
         filename = m_CollimatorFileName;
     }
 
-    Logger logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     FILE* fp = fopen(filename, "r"); // non-Windows use "r"
     if(!fp)
     {
-        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open Config");
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open Config");
         return ErrorCode::ERR_FILE_OPEN;    
     }
     char readBuffer[65536];
@@ -76,7 +77,7 @@ enum ErrorCode Config::LoadConfig(enum PlateList plate)
     document.ParseStream(is);
     if(document.HasParseError()) 
     {
-        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
         return ErrorCode::ERR_PARSE;    
     }
     
@@ -88,7 +89,7 @@ enum ErrorCode Config::LoadConfig(enum PlateList plate)
         //std::cout << "dd" << "\n";
        /* if (!object["Plates"].IsObject()) 
         {
-            logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
+            m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
             //return ErrorCode::PARSE_ERROR;
             return -1;
         }*/
@@ -133,7 +134,7 @@ enum ErrorCode Config::SaveConfig(enum PlateList plate)
     
     if(!ofs.is_open())   
     {
-        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open config");
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open config");
         return ErrorCode::ERR_FILE_OPEN;       
     }
 

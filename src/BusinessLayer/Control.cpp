@@ -9,7 +9,6 @@
 #include "writer.h"
 #include "stringbuffer.h"
 #include "filereadstream.h"
-#include "Logger.h"
 #include "JSONUtils.h"
 
 
@@ -18,12 +17,13 @@
 Control::Control(std::vector<Preset> presets) : m_Presets(presets),
 m_Config(std::vector<Plate>(), std::vector<Plate>())
 {
+    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     LoadPresets();
 }
 
 Control::~Control()
 {
-
+    delete m_Logger;
 }
 
 std::vector<Preset> Control::GetPresets()
@@ -65,11 +65,10 @@ enum ErrorCode Control::PlateToDrive(int plateid)
     } 
     else
     {
-        //////////////////////////////////////////////////////Logboek!
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid driveID");
         return ErrorCode::ERR_INVALID_ARG;
     }
-    m_Config.SaveConfig(PlateList::DRIVELIST);
-    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
+
     return ErrorCode::ERR_OK;
 
 }
@@ -78,15 +77,12 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
 {
     Move move(plateid,COLLIMATORPOS);
     m_Order.NewMove(move);
-    m_Config.SaveConfig(PlateList::DRIVELIST);
-    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
     return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Control::CancelCurrentOperation()
 {
     m_Order.Stop();
-    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
     return ErrorCode::ERR_OK;
 }
 
@@ -112,12 +108,10 @@ enum ErrorCode Control::SetPreset(int presetid)
 
     if (status < 0)
     {
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "no preset found");
         return ErrorCode::ERR_UNKNOWN;
 
     }
-    m_Config.SaveConfig(PlateList::DRIVELIST);
-    m_Config.SaveConfig(PlateList::COLLIMATORLIST);
-    //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     return ErrorCode::ERR_OK;
 }
 
@@ -137,9 +131,8 @@ enum ErrorCode Control::ContinueSystem()
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Control::ResetSystem()
+enum ErrorCode Control::ResetSystem() 
 {
-    std::cout << "Control:Resetting system..." << std::endl;
     m_Order.Stop();
     m_Order.Reset();
 
@@ -147,11 +140,14 @@ enum ErrorCode Control::ResetSystem()
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
     for(int i = 0; i < collimatorList.size(); i++)
     {
-        if(collimatorList[i].GetCollimatorPosition() > 0)
-        {
-           PlateToDrive(collimatorList[i].GetID()); 
-        }
-      
+            for (int j = collimatorList.size(); j <= 0; j--)
+            {
+                if(collimatorList[i].GetCollimatorPosition() == j)
+                {
+                   PlateToDrive(collimatorList[i].GetID()); 
+                }
+            }
+     
     }
     return ErrorCode::ERR_OK;
 
@@ -167,12 +163,10 @@ enum ErrorCode Control::StartSystem()
     int ID = moves[0].GetPlateID();
     int Destination = moves[0].GetDestination();
 
-    std::cout << "*/*/*/*/start moving" << std::endl;
     enum ErrorCode returnvalue = m_Order.Start();
     if (returnvalue == ErrorCode::ERR_OK)
     {
-        std::cout << "*/*/*/*/gelukt" << std::endl;
-        if (Destination == 99)
+        if (Destination == COLLIMATORPOS)
         {
             int position = 0;
             std::vector<Plate> platelist = m_Config.GetCollimatorlist();
@@ -191,6 +185,7 @@ enum ErrorCode Control::StartSystem()
         m_Config.SaveConfig(PlateList::DRIVELIST);
         return ErrorCode::ERR_OK;
     } 
+    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "cannot start order");
     return ErrorCode::ERR_UNKNOWN;
    
 }
@@ -212,12 +207,12 @@ std::string Control::UploadCollimatorState()
 
 ErrorCode Control::LoadPresets()
 {
+
     
-    Logger logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     FILE* fp = fopen(m_FileName, "r"); // non-Windows use "r"
     if(!fp)
     {
-        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open logfile");
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open logfile");
         return ErrorCode::ERR_FILE_OPEN;    
     }
     char readBuffer[65536];
@@ -227,7 +222,7 @@ ErrorCode Control::LoadPresets()
     document.ParseStream(is);
     if(document.HasParseError()) 
     {
-        logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
         return ErrorCode::ERR_PARSE;    
     }
     
@@ -239,14 +234,14 @@ ErrorCode Control::LoadPresets()
         const rapidjson::Value& object = document["PresetList"][i].GetObject();
         if(!object.IsObject()) 
         {
-            logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get PresetList object");
+            m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get PresetList object");
             return ErrorCode::ERR_PARSE;    
         }
         int id = object["m_PresetID"].GetInt();
        // std::cout << object["m_PresetID"].GetInt() << "\n";
         if (!object["m_PlateIDs"].IsArray()) 
         {
-            logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
+            m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
             return ErrorCode::ERR_PARSE;
         }
         presetName = object["m_PresetName"].GetString();

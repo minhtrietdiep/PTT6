@@ -46,7 +46,8 @@ host:
 test: $(TESTSOURCES) $(TESTEXECUTABLE)
 
 $(TESTEXECUTABLE):$(TESTOBJECTS)
-	$(CC) $(TESTOBJECTS) $(TESTLDFLAGS) -o $@
+
+	$(CC) ${LIBPATH} $(TESTOBJECTS) $(TESTLDFLAGS) -o $@ ${LIBSHOST} 
 
 all:
 	make lib-target

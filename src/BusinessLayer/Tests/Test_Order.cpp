@@ -2,6 +2,8 @@
 #include <vector>
 #include "../Order.h"
 #include "../Move.h"
+#include <Logger.h>
+#include <Const.h>
  
 #define MOVESOURCE 0
 #define MOVEDESTINATION 2
