@@ -21,6 +21,7 @@ class Plate
 		int GetCollimatorPosition();
 		int GetDrivePosition();
 		int GetID();
+		void SetCollimatorPosition(int value);
 
 };
 

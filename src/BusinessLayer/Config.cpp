@@ -36,6 +36,20 @@ std::vector<Plate> Config::GetCollimatorlist()
     return m_CollimatorList;
 }
 
+enum ErrorCode Config::SetCollimatorposition(int drive, int collimatorPosition)
+{
+    for (int i = 0; i < m_CollimatorList.size(); i++)
+    {
+        if (m_CollimatorList[i].GetID() == drive)
+        {
+            m_CollimatorList[i].SetCollimatorPosition(collimatorPosition);
+            return ErrorCode::ERR_OK;
+        }
+    }
+    return ErrorCode::ERR_NO_ITEM;
+    
+}
+
 enum ErrorCode Config::LoadConfig(enum PlateList plate)
 {
     const char* filename;

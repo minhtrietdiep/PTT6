@@ -29,3 +29,8 @@ int Plate::GetID()
 {
 	return m_ID;
 }
+void Plate::SetCollimatorPosition(int value)
+{
+	m_CollimatorPosition = value;
+	std::cout<<"plate set to " << value << std::endl;
+}

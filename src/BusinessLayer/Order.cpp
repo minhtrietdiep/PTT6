@@ -1,5 +1,7 @@
 #include "Order.h"
 
+#define COLLIMATORPOS 99
+
 Order::Order()
 {
     m_MoveList = std::vector<Move>();
@@ -39,8 +41,10 @@ enum ErrorCode Order::Start()
           case OPEN_DRIVE :
                 if(m_Hal.OpenDrive(ID) == ErrorCode::ERR_OK)
                 state = MOVE_ARM_SOURCE;
+
                 else
                 {
+                    std::cout<<"##enable"<< std::endl;
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -49,6 +53,7 @@ enum ErrorCode Order::Start()
                 state = ENABLE_VACUUM;
                 else
                 {
+                    std::cout<<"##move arm source"<< std::endl;
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -57,6 +62,7 @@ enum ErrorCode Order::Start()
                 state = MOVE_ARM_DESTINATION;
                 else
                 {
+                    std::cout<<"##pickup"<< std::endl;
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -64,15 +70,19 @@ enum ErrorCode Order::Start()
                 if(m_Hal.MoveArm(Destination) == ErrorCode::ERR_OK)
                 state = DISABLE_VACUUM;
                 else
-                    {
-                        return ErrorCode::ERR_UNKNOWN;
-                    }
+                {
+                    std::cout<<"##move arm dest"<< std::endl;
+                    return ErrorCode::ERR_UNKNOWN;
+                    
+                }
                 break;
             case DISABLE_VACUUM :
                 if(m_Hal.Pickup(false) == ErrorCode::ERR_OK)
                 state = MOVE_ARM_HOME;
                 else
                     {
+                        
+                        std::cout<<"##pickup"<< std::endl;
                         return ErrorCode::ERR_UNKNOWN;
                     }
                 break;
@@ -81,7 +91,9 @@ enum ErrorCode Order::Start()
                 state = CLOSE_DRIVE;
                 else
                 {
+                    std::cout<<"##arm to home"<< std::endl;
                     return ErrorCode::ERR_UNKNOWN;
+
                 }
                 break;
             case CLOSE_DRIVE :
@@ -89,6 +101,7 @@ enum ErrorCode Order::Start()
                 state = COMPLETED;
                 else
                 {
+                    std::cout<<"##close drive"<< std::endl;
                     return ErrorCode::ERR_UNKNOWN;
                 }
 

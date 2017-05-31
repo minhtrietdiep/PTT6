@@ -4,14 +4,7 @@
 #include <Error.h>
 #include "Plate.h"
 #include <vector>
-
-
-enum class PlateList
-{    
-    DRIVELIST,
-    COLLIMATORLIST,
-    Size // This is just a helper to make arrays.
-};
+#include <PlateList.h>
 
 class Config
 {
@@ -29,6 +22,7 @@ class Config
         std::vector<Plate> GetCollimatorlist();
         enum ErrorCode LoadConfig(enum PlateList plate);
         enum ErrorCode SaveConfig(enum PlateList plate);
+        enum ErrorCode SetCollimatorposition(int drive, int collimatorPosition);
         
 };
 

@@ -9,6 +9,7 @@
 #include "Order.h"
 #include "Move.h"
 #include "Config.h"
+#include <PlateList.h>
 
 class Control : public IUIControl, public IRemoteLog
 {
