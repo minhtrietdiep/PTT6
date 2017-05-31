@@ -83,6 +83,9 @@ ErrorCode executeFunction(IUIControl *control,
 {
     if (std::find(knownOperations.begin(), knownOperations.end(), functionName) == knownOperations.end())
     {
+        logger.Write(Logger::Severity::ERROR,
+            __PRETTY_FUNCTION__,
+            "Function not in known operations");
         return ErrorCode::ERR_UNKNOWN_FUNC;
     }
 
@@ -156,11 +159,11 @@ ErrorCode executeFunction(IUIControl *control,
         payload = control->UploadCollimatorState();
         return ErrorCode::ERR_OK;
     }
-    else    // This shouldn't happen tho
+    else
     {
         logger.Write(Logger::Severity::ERROR,
             __PRETTY_FUNCTION__,
-            "Function not implemented somehow????");
+            "Function in list but not implemented");
         return ErrorCode::ERR_UNKNOWN;
     }
 }
@@ -367,23 +370,6 @@ void checkMessages(MessageQueue &mq,
 
 int main(int argc, char **argv) 
 {
-    control.StartSystem();
-    control.SetPreset(1);
-    control.StartSystem();
-    control.StartSystem();
-    control.StartSystem();
-    control.StartSystem();
-    control.StartSystem();
-        control.StartSystem();
-            control.StartSystem();
-                control.StartSystem();
-                    control.StartSystem();
-                        control.StartSystem();
-                            control.StartSystem();
-                                control.StartSystem();
-                                    control.StartSystem();
-                                        control.StartSystem();
-                                            control.StartSystem();
     srand (time(NULL));
     logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Program started");
     MessageQueue mq;
@@ -395,6 +381,8 @@ int main(int argc, char **argv)
     std::cout << "Press 2 to generate ClientMessage->MessageQueue item\n";
     while (true) 
     {
+
+        control.StartSystem();
         // User input, because we want to create fake messages to test too
         if (kbhit()) 
         {
