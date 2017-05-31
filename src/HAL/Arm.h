@@ -7,11 +7,13 @@
 #include "Coordinates.h"
 #include "Logger.h"
 #include "Error.h"
+#include <Const.h>
 
 class Arm
 {
     private:
         Coordinates m_HomePosition;
+        Logger *m_Logger;
 
     public:
         Arm(Coordinates homeposition);

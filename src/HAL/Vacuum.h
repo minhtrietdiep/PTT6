@@ -6,12 +6,15 @@
 #include <vector>
 #include "Logger.h"
 #include "Error.h"
+#include <Const.h>
 
 class Vacuum
 {
     private:
         int m_VacuumStatus;
-        void Setup();
+        enum ErrorCode Setup();
+        Logger *m_Logger;
+        enum ErrorCode FileCheck(std::ofstream &f, std::string functionname);
 
     public:
         Vacuum();

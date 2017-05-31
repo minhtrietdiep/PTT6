@@ -5,44 +5,58 @@
 #define VALVE "/sys/class/gpio/gpio5/value"
 #define VALVED "/sys/class/gpio/gpio5/direction"
 
-void Vacuum::Setup()
+enum ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
+{
+   if(f.is_open())
+    {
+        f << "out";
+        f.close(); 
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::ERROR,
+                __PRETTY_FUNCTION__,
+                "In " + functionname + ": failed to open a GPIO file");
+        return ErrorCode::ERR_UNKNOWN;
+    } 
+}
+
+enum ErrorCode Vacuum::Setup()
 {
     std::ofstream f;
     f.open(VACUUMD);
-    f << "out";
-    f.close();
+    FileCheck(f, "Vacuum Setup");
     f.open(VALVED);
-    f << "out";
-    f.close();
+    FileCheck(f, "Vacuum Setup");
 }
 
 Vacuum::Vacuum()
 {
+    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     Setup();
 }
 
 enum ErrorCode Vacuum::EnableVacuum()
 {
-    std::cout << "Enabling vacuum" << std::endl;
+    m_Logger->Write(Logger::Severity::DEBUG,
+                __PRETTY_FUNCTION__,
+                "Enabling vacuum");
     std::ofstream myfile;
     myfile.open (VACUUM);
-    myfile << 1;
-    myfile.close();
+    FileCheck(myfile, "Vacuum EnableVacuum");
     myfile.open(VALVE);
-    myfile << 1;
-    myfile.close();
-    return ErrorCode::ERR_OK;
+    return FileCheck(myfile, "Vacuum EnableVacuum");
 }
 
 enum ErrorCode Vacuum::DisableVacuum()
 {
-    std::cout << "Disabling vacuum" << std::endl;
+    m_Logger->Write(Logger::Severity::DEBUG,
+                __PRETTY_FUNCTION__,
+                "Disabling vacuum");
     std::ofstream myfile;
     myfile.open (VACUUM);
-    myfile << 0;
-    myfile.close();
+    FileCheck(myfile, "Vacuum DisableVacuum");
     myfile.open(VALVE);
-    myfile << 0;
-    myfile.close();
-    return ErrorCode::ERR_OK;
+    return FileCheck(myfile, "Vacuum DisableVacuum");
 }

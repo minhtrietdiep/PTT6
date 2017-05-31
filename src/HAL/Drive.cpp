@@ -13,7 +13,9 @@
 #define DRIVE3D "/sys/class/gpio/gpio50/direction"
 #define DRIVE4D "/sys/class/gpio/gpio48/direction"
 
-void Drive::Setup()
+#define BUFFSIZE 50
+
+enum ErrorCode Drive::Setup()
 {
     std::ofstream f;
     switch(m_DriveID)
@@ -41,71 +43,139 @@ void Drive::Setup()
         default:
             break;
     }
+    if(f.is_open())
+    {
         f << "out";
-        f.close();
+        f.close(); 
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::ERROR,
+                __PRETTY_FUNCTION__,
+                "In Drive Setup: failed to open a GPIO file");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+        
 }
 
 Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
 {
+    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     m_DriveID = driveid;
     Setup();
 }
 
 enum ErrorCode Drive::ToggleDrive()
 {
-    std::ofstream myfile;
-    std::ofstream mijnfile;
+    std::ofstream f1;
+    std::ofstream f2;
 
     switch(m_DriveID)
     {
         case 0:
-            myfile.open (DRIVE0);
-            mijnfile.open (DRIVE0);
+            f1.open (DRIVE0);
+            f2.open (DRIVE0);
             break;
         case 1:
-            myfile.open (DRIVE1);
-            mijnfile.open (DRIVE1);
+            f1.open (DRIVE1);
+            f2.open (DRIVE1);
             break;
         case 2:
-            myfile.open (DRIVE2);
-            mijnfile.open (DRIVE2);
+            f1.open (DRIVE2);
+            f2.open (DRIVE2);
             break;
         case 3:
-            myfile.open (DRIVE3);
-            mijnfile.open (DRIVE3);
+            f1.open (DRIVE3);
+            f2.open (DRIVE3);
             break;
         case 4:
-            myfile.open (DRIVE4);
-            mijnfile.open (DRIVE4);
+            f1.open (DRIVE4);
+            f2.open (DRIVE4);
             break;
         default:
 
             break;
     }
-    myfile << 1;
-    myfile.close();
+    if(f1.is_open())
+    {
+        f1 << 1;
+        f1.close();
+        usleep(20000);
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::ERROR,
+                __PRETTY_FUNCTION__,
+                "In Drive ToggleDrive: failed to open a GPIO file");
+        return ErrorCode::ERR_UNKNOWN;
+    }
 
-    usleep(20000);
-
-
-    mijnfile << 0;
-    mijnfile.close();
-
-    usleep(2000000);
+    if(f2.is_open())
+    {
+        f2 << 0;
+        f2.close();
+        usleep(2000000);
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::ERROR,
+                __PRETTY_FUNCTION__,
+                "In Drive ToggleDrive: failed to open a GPIO file");
+        return ErrorCode::ERR_UNKNOWN;
+    } 
 
     return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Drive::OpenDrive()
 {
-    std::cout << "Opening drive " << m_DriveID << std::endl;
-    return ToggleDrive();
+    char buffer [BUFFSIZE];
+    if(snprintf(buffer, BUFFSIZE, "Opening drive: %d", m_DriveID) >= BUFFSIZE)
+    {
+        m_Logger->Write(Logger::Severity::DEBUG,
+                __PRETTY_FUNCTION__,
+                "In drive OpenDrive: string exceeded buffer size");
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::DEBUG,
+                __PRETTY_FUNCTION__,
+                buffer);
+    }  
+    if(ToggleDrive() == ErrorCode::ERR_OK)  
+    {
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
 }
 
 enum ErrorCode Drive::CloseDrive()
 {
-    std::cout << "Closing drive " << m_DriveID << std::endl;
-    return ToggleDrive();;
+    char buffer [BUFFSIZE];
+    if(snprintf(buffer, BUFFSIZE, "Closing drive: %d", m_DriveID) >= BUFFSIZE)
+    {
+        m_Logger->Write(Logger::Severity::DEBUG,
+                __PRETTY_FUNCTION__,
+                "In drive CloseDrive: string exceeded buffer size");
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::DEBUG,
+                __PRETTY_FUNCTION__,
+                buffer);
+    }
+    if(ToggleDrive() == ErrorCode::ERR_OK)  
+    {
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
 }
 
 int Drive::GetDriveID()

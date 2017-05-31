@@ -7,6 +7,7 @@
 #include "Coordinates.h"
 #include "Logger.h"
 #include "Error.h"
+#include "Const.h"
 
 class Drive
 {
@@ -14,7 +15,8 @@ class Drive
         int m_DriveID;
         Coordinates m_Positions;
         enum ErrorCode ToggleDrive();
-        void Setup();
+        enum ErrorCode Setup();
+        Logger *m_Logger;
 
     public:
         Drive(int driveid, Coordinates positions);
