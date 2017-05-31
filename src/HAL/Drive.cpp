@@ -7,29 +7,35 @@
 #define DRIVE3 "/sys/class/gpio/gpio50/value"
 #define DRIVE4 "/sys/class/gpio/gpio48/value"
 
+#define DRIVE0D "/sys/class/gpio/gpio30/direction"
+#define DRIVE1D "/sys/class/gpio/gpio60/direction"
+#define DRIVE2D "/sys/class/gpio/gpio31/direction"
+#define DRIVE3D "/sys/class/gpio/gpio50/direction"
+#define DRIVE4D "/sys/class/gpio/gpio48/direction"
+
 void Drive::Setup()
 {
     std::ofstream f;
     switch(m_DriveID)
     {
         case 0:
-            f.open(DRIVE0);
+            f.open(DRIVE0D);
             break;
 
         case 1:
-            f.open(DRIVE1);
+            f.open(DRIVE1D);
             break;
 
         case 2:
-            f.open(DRIVE2);
+            f.open(DRIVE2D);
             break;
 
         case 3:
-            f.open(DRIVE3);
+            f.open(DRIVE3D);
             break;
 
         case 4:
-            f.open(DRIVE4);
+            f.open(DRIVE4D);
             break; 
 
         default:
