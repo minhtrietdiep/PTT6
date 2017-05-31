@@ -4,16 +4,11 @@ after_script:
     - cd ./src
     - make clean
 stages:
-  - lint
   - compile
   - cross-compile
   - unit-test
   - code-coverage
-lint:
-  stage: lint
-  script:
-    - cd scripts/
-    - bash lint.sh
+  - lint
 compile:
   stage: compile
   script:
@@ -39,5 +34,10 @@ code-coverage:
     #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
     #- q
     #- gcovr -r .
+lint:
+  stage: lint
+  script:
+    - cd scripts/
+    - bash lint.sh
 after_script:
   #  - make clean
