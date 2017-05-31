@@ -1,6 +1,6 @@
 #include "Vacuum.h"
 
-#define FILEPATH "/dev/Vacuum.txt"
+#define FILEPATH "/sys/class/gpio/gpio30/value"
 
 enum ErrorCode Vacuum::EnableVacuum()
 {
