@@ -132,7 +132,8 @@ enum ErrorCode Drive::ToggleDrive()
 enum ErrorCode Drive::OpenDrive()
 {
     char buffer [BUFFSIZE];
-    if(snprintf(buffer, BUFFSIZE, "Opening drive: %d", m_DriveID) >= BUFFSIZE)
+    int retval = snprintf(buffer, BUFFSIZE, "Opening drive: %d", m_DriveID);
+    if(retval >= BUFFSIZE)
     {
         m_Logger->Write(Logger::Severity::DEBUG,
                 __PRETTY_FUNCTION__,
@@ -157,7 +158,8 @@ enum ErrorCode Drive::OpenDrive()
 enum ErrorCode Drive::CloseDrive()
 {
     char buffer [BUFFSIZE];
-    if(snprintf(buffer, BUFFSIZE, "Closing drive: %d", m_DriveID) >= BUFFSIZE)
+    int retval = snprintf(buffer, BUFFSIZE, "Closing drive: %d", m_DriveID);
+    if(retval >= BUFFSIZE)
     {
         m_Logger->Write(Logger::Severity::DEBUG,
                 __PRETTY_FUNCTION__,
