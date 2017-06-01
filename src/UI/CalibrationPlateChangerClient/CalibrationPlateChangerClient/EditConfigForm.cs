@@ -35,6 +35,11 @@ namespace CalibrationPlateChangerClient
 
         private void UpdateUI(List<Plate> collimatorPlateList, List<Plate> drivePlateList)
         {
+            if (collimatorPlateList == null || drivePlateList == null)
+            {
+                MessageBox.Show("No plate list(s) available.");
+                return;
+            }
             lbCollimator.Items.Clear();
             lbDrive.Items.Clear();
             foreach (Plate plate in collimatorPlateList) {

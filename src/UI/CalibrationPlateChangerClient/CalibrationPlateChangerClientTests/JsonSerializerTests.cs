@@ -1,17 +1,21 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CalibrationPlateChangerClient.Tests {
+namespace CalibrationPlateChangerClient.Tests
+{
     [TestClass()]
-    public class JsonSerializerTests {
+    public class JsonSerializerTests
+    {
         [TestMethod()]
-        public void JsonSerializerTest() {
+        public void JsonSerializerTest()
+        {
             JsonSerializer serializer = new JsonSerializer();
             Assert.IsNotNull(serializer, "serializer is null");
             Assert.IsInstanceOfType(serializer, typeof(JsonSerializer), "serializer not type of JsonSerializer"); 
         }
 
         [TestMethod()]
-        public void SerializeFunctionRequestParameterTest() {
+        public void SerializeFunctionRequestParameterTest()
+        {
             JsonSerializer serializer = new JsonSerializer();
             ApiFunctionParameter requestParameter = new ApiFunctionParameter("nameOfParam", "dataTypeOfParam", "valueOfParam");
             string serializedRequestParam = serializer.Serialize(ref requestParameter);
@@ -19,7 +23,8 @@ namespace CalibrationPlateChangerClient.Tests {
         }
 
         [TestMethod()]
-        public void SerializeFunctionRequestPropertiesTest() {
+        public void SerializeFunctionRequestPropertiesTest()
+        {
             JsonSerializer serializer = new JsonSerializer();
             ApiFunctionProperties requestProperties = new ApiFunctionProperties("1", "192.168.0.142", "SetPreset", "void", new ApiFunctionParameter[0]);
             string serializedRequestProperties = serializer.Serialize(ref requestProperties);
@@ -27,7 +32,8 @@ namespace CalibrationPlateChangerClient.Tests {
         }
 
         [TestMethod()]
-        public void SerializeFunctionRequestTest() {
+        public void SerializeFunctionRequestTest()
+        {
             JsonSerializer serializer = new JsonSerializer();
             ApiFunctionParameter requestParameter = new ApiFunctionParameter("param_1", "int", "123");
             ApiFunctionProperties requestProperties = new ApiFunctionProperties("1", "ip", "MyFunction1", "int", new ApiFunctionParameter[] { requestParameter });
@@ -37,7 +43,8 @@ namespace CalibrationPlateChangerClient.Tests {
         }
 
         [TestMethod()]
-        public void DeserializeTest() {
+        public void DeserializeTest()
+        {
             JsonSerializer serializer = new JsonSerializer();
             string serializedRequestParam = "{\"Name\":\"nameOfParam\",\"DataType\":\"dataTypeOfParam\",\"Value\":\"valueOfParam\"}";
             ApiFunctionParameter requestParameter = serializer.Deserialize<ApiFunctionParameter>(serializedRequestParam);
