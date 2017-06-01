@@ -26,9 +26,12 @@ enum ErrorCode Vacuum::Setup()
 {
     std::ofstream f;
     f.open(VACUUMD);
-    FileCheck(f, "Vacuum Setup");
+    if(FileCheck(f, "Vacuum Setup") == ErrorCode::ERR_UNKNOWN)
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
     f.open(VALVED);
-    FileCheck(f, "Vacuum Setup");
+    return FileCheck(f, "Vacuum Setup");
 }
 
 Vacuum::Vacuum()
@@ -44,7 +47,10 @@ enum ErrorCode Vacuum::EnableVacuum()
                 "Enabling vacuum");
     std::ofstream myfile;
     myfile.open (VACUUM);
-    FileCheck(myfile, "Vacuum EnableVacuum");
+    if(FileCheck(myfile, "Vacuum EnableVacuum") == ErrorCode::ERR_UNKNOWN)
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
     myfile.open(VALVE);
     return FileCheck(myfile, "Vacuum EnableVacuum");
 }
@@ -56,7 +62,10 @@ enum ErrorCode Vacuum::DisableVacuum()
                 "Disabling vacuum");
     std::ofstream myfile;
     myfile.open (VACUUM);
-    FileCheck(myfile, "Vacuum DisableVacuum");
+    if(FileCheck(myfile, "Vacuum DisableVacuum") == ErrorCode::ERR_UNKNOWN)
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
     myfile.open(VALVE);
     return FileCheck(myfile, "Vacuum DisableVacuum");
 }

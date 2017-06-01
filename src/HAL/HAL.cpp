@@ -29,13 +29,16 @@ enum ErrorCode HAL::Pickup(bool on)
 {
     if(on)
     {
-        m_Vacuum.EnableVacuum();
+        return m_Vacuum.EnableVacuum();
+    }
+    else if(!on)
+    {
+        return m_Vacuum.DisableVacuum();
     }
     else
     {
-        m_Vacuum.DisableVacuum();
+        return ErrorCode::ERR_UNKNOWN;
     }
-    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode HAL::MoveArm(int driveid)
@@ -44,8 +47,7 @@ enum ErrorCode HAL::MoveArm(int driveid)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
-            m_Arm.MoveToCoord(m_DriveList[i].GetDriveCoordinates());
-            return ErrorCode::ERR_OK;
+            return m_Arm.MoveToCoord(m_DriveList[i].GetDriveCoordinates());
         }
     }
     return ErrorCode::ERR_UNKNOWN;
@@ -53,8 +55,7 @@ enum ErrorCode HAL::MoveArm(int driveid)
 
 enum ErrorCode HAL::MoveArmToHome()
 {
-    m_Arm.MoveHome();
-    return ErrorCode::ERR_OK;
+    return m_Arm.MoveHome();
 }
 
 enum ErrorCode HAL::OpenDrive(int driveid)
@@ -64,8 +65,7 @@ enum ErrorCode HAL::OpenDrive(int driveid)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
-            m_DriveList[i].OpenDrive();
-            return ErrorCode::ERR_OK;
+            return m_DriveList[i].OpenDrive();
         }
     } 
     return ErrorCode::ERR_UNKNOWN;
@@ -78,8 +78,7 @@ enum ErrorCode HAL::CloseDrive(int driveid)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
-            m_DriveList[i].CloseDrive();
-            return ErrorCode::ERR_OK;
+            return m_DriveList[i].CloseDrive();
         }
     }
     return ErrorCode::ERR_UNKNOWN;

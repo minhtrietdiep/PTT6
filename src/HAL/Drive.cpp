@@ -41,6 +41,7 @@ enum ErrorCode Drive::Setup()
             break; 
 
         default:
+            return ErrorCode::ERR_UNKNOWN;
             break;
     }
     if(f.is_open())
@@ -94,7 +95,7 @@ enum ErrorCode Drive::ToggleDrive()
             f2.open (DRIVE4);
             break;
         default:
-
+            return ErrorCode::ERR_UNKNOWN;
             break;
     }
     if(f1.is_open())
