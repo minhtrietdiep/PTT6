@@ -1,23 +1,5 @@
 #include "Arm.h"
 
-ErrorCode Arm::SetupHardware()
-{
-    std::ofstream f(ARMPATH);
-    if(f.is_open())
-    {
-        f << "out";
-        f.close();
-        return ErrorCode::ERR_OK;
-    }
-    else
-    {
-        m_Logger->Write(Logger::Severity::ERROR,
-                __PRETTY_FUNCTION__,
-                "In Arm Setup: failed to open a GPIO file");
-        return ErrorCode::ERR_UNKNOWN;
-    }
-}
-
 Arm::Arm(Coordinates homeposition) : m_HomePosition(homeposition)
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);

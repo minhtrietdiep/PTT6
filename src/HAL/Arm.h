@@ -21,7 +21,6 @@ class Arm
         Arm(Coordinates homeposition);
         ErrorCode MoveToCoord(Coordinates coordinates);
         ErrorCode MoveHome();
-        ErrorCode SetupHardware();
 };
 
 #endif  //  ARM_H_

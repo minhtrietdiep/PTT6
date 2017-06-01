@@ -88,7 +88,7 @@ ErrorCode HAL::SetupHardware()
         }
         
     }
-    if(m_Vacuum.SetupHardware() != ErrorCode::ERR_OK || m_Arm.SetupHardware() != ErrorCode::ERR_OK)
+    if(m_Vacuum.SetupHardware() != ErrorCode::ERR_OK)
     {
         return ErrorCode::ERR_OK;
     }
