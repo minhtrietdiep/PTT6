@@ -230,7 +230,6 @@ std::string Control::UploadCollimatorState()
 ErrorCode Control::LoadPresets()
 {
 
-    
     FILE* fp = fopen(m_FileName, "r"); // non-Windows use "r"
     if(!fp)
     {
