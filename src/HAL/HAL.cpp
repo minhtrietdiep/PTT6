@@ -31,13 +31,9 @@ enum ErrorCode HAL::Pickup(bool on)
     {
         return m_Vacuum.EnableVacuum();
     }
-    else if(!on)
-    {
-        return m_Vacuum.DisableVacuum();
-    }
     else
     {
-        return ErrorCode::ERR_UNKNOWN;
+        return m_Vacuum.DisableVacuum();
     }
 }
 
@@ -60,8 +56,7 @@ enum ErrorCode HAL::MoveArmToHome()
 
 enum ErrorCode HAL::OpenDrive(int driveid)
 {
-    int i = 0;
-    for(;i < (int)m_DriveList.size(); i++)
+    for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
@@ -73,8 +68,7 @@ enum ErrorCode HAL::OpenDrive(int driveid)
 
 enum ErrorCode HAL::CloseDrive(int driveid)
 {
-    int i = 0;
-    for(;i < (int)m_DriveList.size(); i++)
+    for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {

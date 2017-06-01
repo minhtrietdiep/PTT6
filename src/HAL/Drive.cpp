@@ -1,19 +1,5 @@
 #include "Drive.h"
-#include <unistd.h>
 
-#define DRIVE0 "/sys/class/gpio/gpio30/value"
-#define DRIVE1 "/sys/class/gpio/gpio60/value"
-#define DRIVE2 "/sys/class/gpio/gpio31/value"
-#define DRIVE3 "/sys/class/gpio/gpio50/value"
-#define DRIVE4 "/sys/class/gpio/gpio48/value"
-
-#define DRIVE0D "/sys/class/gpio/gpio30/direction"
-#define DRIVE1D "/sys/class/gpio/gpio60/direction"
-#define DRIVE2D "/sys/class/gpio/gpio31/direction"
-#define DRIVE3D "/sys/class/gpio/gpio50/direction"
-#define DRIVE4D "/sys/class/gpio/gpio48/direction"
-
-#define BUFFSIZE 50
 
 enum ErrorCode Drive::Setup()
 {
@@ -69,35 +55,31 @@ Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
 
 enum ErrorCode Drive::ToggleDrive()
 {
+    std::string filepath = "";
     std::ofstream f1;
-    std::ofstream f2;
 
     switch(m_DriveID)
     {
         case 0:
-            f1.open (DRIVE0);
-            f2.open (DRIVE0);
+            filepath = DRIVE0;
             break;
         case 1:
-            f1.open (DRIVE1);
-            f2.open (DRIVE1);
+            filepath = DRIVE1;
             break;
         case 2:
-            f1.open (DRIVE2);
-            f2.open (DRIVE2);
+            filepath = DRIVE2;
             break;
         case 3:
-            f1.open (DRIVE3);
-            f2.open (DRIVE3);
+            filepath = DRIVE3;
             break;
         case 4:
-            f1.open (DRIVE4);
-            f2.open (DRIVE4);
+            filepath = DRIVE4;
             break;
         default:
             return ErrorCode::ERR_UNKNOWN;
             break;
     }
+    f1.open(filepath);
     if(f1.is_open())
     {
         f1 << 1;
@@ -112,10 +94,11 @@ enum ErrorCode Drive::ToggleDrive()
         return ErrorCode::ERR_UNKNOWN;
     }
 
-    if(f2.is_open())
+    f1.open(filepath);
+    if(f1.is_open())
     {
-        f2 << 0;
-        f2.close();
+        f1 << 0;
+        f1.close();
         usleep(2000000);
     }
     else
@@ -131,20 +114,9 @@ enum ErrorCode Drive::ToggleDrive()
 
 enum ErrorCode Drive::OpenDrive()
 {
-    char buffer [BUFFSIZE];
-    int retval = snprintf(buffer, BUFFSIZE, "Opening drive: %d", m_DriveID);
-    if(retval >= BUFFSIZE)
-    {
-        m_Logger->Write(Logger::Severity::DEBUG,
-                __PRETTY_FUNCTION__,
-                "In drive OpenDrive: string exceeded buffer size");
-    }
-    else
-    {
-        m_Logger->Write(Logger::Severity::DEBUG,
-                __PRETTY_FUNCTION__,
-                buffer);
-    }  
+    std::ostringstream msg;
+    msg << "Opening drive: " << m_DriveID;
+    m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str()); 
     if(ToggleDrive() == ErrorCode::ERR_OK)  
     {
         return ErrorCode::ERR_OK;
@@ -157,20 +129,9 @@ enum ErrorCode Drive::OpenDrive()
 
 enum ErrorCode Drive::CloseDrive()
 {
-    char buffer [BUFFSIZE];
-    int retval = snprintf(buffer, BUFFSIZE, "Closing drive: %d", m_DriveID);
-    if(retval >= BUFFSIZE)
-    {
-        m_Logger->Write(Logger::Severity::DEBUG,
-                __PRETTY_FUNCTION__,
-                "In drive CloseDrive: string exceeded buffer size");
-    }
-    else
-    {
-        m_Logger->Write(Logger::Severity::DEBUG,
-                __PRETTY_FUNCTION__,
-                buffer);
-    }
+    std::ostringstream msg;
+    msg << "Closing drive: " << m_DriveID;
+    m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str());
     if(ToggleDrive() == ErrorCode::ERR_OK)  
     {
         return ErrorCode::ERR_OK;

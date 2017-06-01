@@ -8,12 +8,16 @@
 #include "Logger.h"
 #include "Error.h"
 #include <Const.h>
+#include <sstream>
+
+#define FILEPATH "/dev/ttyUSB0"
 
 class Arm
 {
     private:
         Coordinates m_HomePosition;
         Logger *m_Logger;
+        enum ErrorCode Setup();
 
     public:
         Arm(Coordinates homeposition);

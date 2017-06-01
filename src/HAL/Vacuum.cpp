@@ -1,16 +1,9 @@
 #include "Vacuum.h"
 
-#define VACUUM "/sys/class/gpio/gpio51/value"
-#define VACUUMD "/sys/class/gpio/gpio51/direction"
-#define VALVE "/sys/class/gpio/gpio5/value"
-#define VALVED "/sys/class/gpio/gpio5/direction"
-
 enum ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
 {
    if(f.is_open())
     {
-        f << "out";
-        f.close(); 
         return ErrorCode::ERR_OK;
     }
     else
@@ -30,8 +23,16 @@ enum ErrorCode Vacuum::Setup()
     {
         return ErrorCode::ERR_UNKNOWN;
     }
+    f << "out";
+    f.close();
     f.open(VALVED);
-    return FileCheck(f, "Vacuum Setup");
+    if(FileCheck(f, "Vacuum Setup") == ErrorCode::ERR_UNKNOWN)
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    f << "out";
+    f.close();
+    return ErrorCode::ERR_OK;
 }
 
 Vacuum::Vacuum()
@@ -51,8 +52,16 @@ enum ErrorCode Vacuum::EnableVacuum()
     {
         return ErrorCode::ERR_UNKNOWN;
     }
+    myfile << 1;
+    myfile.close();
     myfile.open(VALVE);
-    return FileCheck(myfile, "Vacuum EnableVacuum");
+    if(FileCheck(myfile, "Vacuum EnableVacuum") == ErrorCode::ERR_UNKNOWN)
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    myfile << 1;
+    myfile.close();
+    return ErrorCode::ERR_OK;
 }
 
 enum ErrorCode Vacuum::DisableVacuum()
@@ -66,6 +75,14 @@ enum ErrorCode Vacuum::DisableVacuum()
     {
         return ErrorCode::ERR_UNKNOWN;
     }
+    myfile << 0;
+    myfile.close();
     myfile.open(VALVE);
-    return FileCheck(myfile, "Vacuum DisableVacuum");
+    if(FileCheck(myfile, "Vacuum DisableVacuum") == ErrorCode::ERR_UNKNOWN)
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    myfile << 0;
+    myfile.close();
+    return ErrorCode::ERR_OK;
 }

@@ -8,6 +8,11 @@
 #include "Error.h"
 #include <Const.h>
 
+#define VACUUM "/sys/class/gpio/gpio51/value"
+#define VACUUMD "/sys/class/gpio/gpio51/direction"
+#define VALVE "/sys/class/gpio/gpio5/value"
+#define VALVED "/sys/class/gpio/gpio5/direction"
+
 class Vacuum
 {
     private:
