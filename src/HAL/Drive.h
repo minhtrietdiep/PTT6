@@ -38,7 +38,7 @@ class Drive
         ErrorCode CloseDrive();
         int GetDriveID();
         Coordinates GetDriveCoordinates();
-        ErrorCode Setup();
+        ErrorCode SetupHardware();
 };
 
 #endif  //  DRIVE_H_

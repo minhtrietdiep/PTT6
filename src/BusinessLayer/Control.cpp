@@ -285,3 +285,8 @@ ErrorCode Control::DownloadLog(int logfilenumber)
 {
     std::cout << "Control:Downloading log " << logfilenumber << "..." << std::endl;
 }
+
+ErrorCode Control::SetupHardware()
+{
+    return m_Order.SetupHardware();
+}

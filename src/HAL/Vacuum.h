@@ -24,7 +24,7 @@ class Vacuum
         Vacuum();
         ErrorCode EnableVacuum();
         ErrorCode DisableVacuum();
-        ErrorCode Setup();
+        ErrorCode SetupHardware();
 };
 
 #endif  //  VACUUM_H_

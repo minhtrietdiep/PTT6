@@ -15,7 +15,7 @@ ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
     } 
 }
 
-ErrorCode Vacuum::Setup()
+ErrorCode Vacuum::SetupHardware()
 {
     std::ofstream f(VACUUMD);
     if(FileCheck(f, "Vacuum Setup") == ErrorCode::ERR_UNKNOWN)

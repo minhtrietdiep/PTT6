@@ -25,6 +25,7 @@ class Control : public IUIControl, public IRemoteLog
 	public:
 
         Control(std::vector<Preset> presets);
+        ErrorCode SetupHardware();
         //IUIControl functions
         std::vector<Preset> GetPresets();
         virtual ~Control();

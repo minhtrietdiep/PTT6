@@ -1,7 +1,7 @@
 #include "Drive.h"
 
 
-ErrorCode Drive::Setup()
+ErrorCode Drive::SetupHardware()
 {
     std::ofstream f;
     switch(m_DriveID)

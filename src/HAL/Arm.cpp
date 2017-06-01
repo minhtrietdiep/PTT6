@@ -1,6 +1,6 @@
 #include "Arm.h"
 
-ErrorCode Arm::Setup()
+ErrorCode Arm::SetupHardware()
 {
     std::ofstream f(ARMPATH);
     if(f.is_open())
