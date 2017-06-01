@@ -135,3 +135,8 @@ enum ErrorCode Order::Reset()
 	std::cout << "Order:Resetting order..." << std::endl;
     return ErrorCode::ERR_OK;
 }
+
+ErrorCode Order::SetupHardware()
+{
+    return m_Hal.SetupHardware();
+}

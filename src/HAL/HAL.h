@@ -24,7 +24,7 @@ class HAL
         ErrorCode MoveArmToHome();
         ErrorCode OpenDrive(int driveid);
         ErrorCode CloseDrive(int driveid);
-        ErrorCode Setup();
+        ErrorCode SetupHardware();
 };
 
 #endif  //  HAL_H_

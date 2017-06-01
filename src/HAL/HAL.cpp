@@ -78,12 +78,22 @@ ErrorCode HAL::CloseDrive(int driveid)
     return ErrorCode::ERR_UNKNOWN;
 }
 
-ErrorCode HAL::Setup()
+ErrorCode HAL::SetupHardware()
 {
     for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
-        m_DriveList[i].Setup();
-        m_Vacuum.Setup();
-        m_Arm.Setup();
+        if(m_DriveList[i].SetupHardware() != ErrorCode::ERR_OK)
+        {
+            return ErrorCode::ERR_UNKNOWN;
+        }
+        
+    }
+    if(m_Vacuum.SetupHardware() != ErrorCode::ERR_OK || m_Arm.SetupHardware() != ErrorCode::ERR_OK)
+    {
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_UNKNOWN;
     }
 }
