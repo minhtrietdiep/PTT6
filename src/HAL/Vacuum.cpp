@@ -1,6 +1,6 @@
 #include "Vacuum.h"
 
-enum ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
+ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
 {
    if(f.is_open())
     {
@@ -15,10 +15,9 @@ enum ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
     } 
 }
 
-enum ErrorCode Vacuum::Setup()
+ErrorCode Vacuum::Setup()
 {
-    std::ofstream f;
-    f.open(VACUUMD);
+    std::ofstream f(VACUUMD);
     if(FileCheck(f, "Vacuum Setup") == ErrorCode::ERR_UNKNOWN)
     {
         return ErrorCode::ERR_UNKNOWN;
@@ -38,51 +37,48 @@ enum ErrorCode Vacuum::Setup()
 Vacuum::Vacuum()
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
-    Setup();
 }
 
-enum ErrorCode Vacuum::EnableVacuum()
+ErrorCode Vacuum::EnableVacuum()
 {
     m_Logger->Write(Logger::Severity::DEBUG,
                 __PRETTY_FUNCTION__,
                 "Enabling vacuum");
-    std::ofstream myfile;
-    myfile.open (VACUUM);
-    if(FileCheck(myfile, "Vacuum EnableVacuum") == ErrorCode::ERR_UNKNOWN)
+    std::ofstream f(VACUUMD);
+    if(FileCheck(f, "Vacuum EnableVacuum") == ErrorCode::ERR_UNKNOWN)
     {
         return ErrorCode::ERR_UNKNOWN;
     }
-    myfile << 1;
-    myfile.close();
-    myfile.open(VALVE);
-    if(FileCheck(myfile, "Vacuum EnableVacuum") == ErrorCode::ERR_UNKNOWN)
+    f << 1;
+    f.close();
+    f.open(VALVE);
+    if(FileCheck(f, "Vacuum EnableVacuum") == ErrorCode::ERR_UNKNOWN)
     {
         return ErrorCode::ERR_UNKNOWN;
     }
-    myfile << 1;
-    myfile.close();
+    f << 1;
+    f.close();
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Vacuum::DisableVacuum()
+ErrorCode Vacuum::DisableVacuum()
 {
     m_Logger->Write(Logger::Severity::DEBUG,
                 __PRETTY_FUNCTION__,
                 "Disabling vacuum");
-    std::ofstream myfile;
-    myfile.open (VACUUM);
-    if(FileCheck(myfile, "Vacuum DisableVacuum") == ErrorCode::ERR_UNKNOWN)
+    std::ofstream f(VACUUMD);
+    if(FileCheck(f, "Vacuum DisableVacuum") == ErrorCode::ERR_UNKNOWN)
     {
         return ErrorCode::ERR_UNKNOWN;
     }
-    myfile << 0;
-    myfile.close();
-    myfile.open(VALVE);
-    if(FileCheck(myfile, "Vacuum DisableVacuum") == ErrorCode::ERR_UNKNOWN)
+    f << 0;
+    f.close();
+    f.open(VALVE);
+    if(FileCheck(f, "Vacuum DisableVacuum") == ErrorCode::ERR_UNKNOWN)
     {
         return ErrorCode::ERR_UNKNOWN;
     }
-    myfile << 0;
-    myfile.close();
+    f << 0;
+    f.close();
     return ErrorCode::ERR_OK;
 }

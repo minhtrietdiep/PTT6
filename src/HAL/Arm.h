@@ -10,19 +10,18 @@
 #include <Const.h>
 #include <sstream>
 
-#define FILEPATH "/dev/ttyUSB0"
-
 class Arm
 {
     private:
         Coordinates m_HomePosition;
         Logger *m_Logger;
-        enum ErrorCode Setup();
+        const char* ARMPATH = "/dev/ttyUSB0";
 
     public:
         Arm(Coordinates homeposition);
-        enum ErrorCode MoveToCoord(Coordinates coordinates);
-        enum ErrorCode MoveHome();
+        ErrorCode MoveToCoord(Coordinates coordinates);
+        ErrorCode MoveHome();
+        ErrorCode Setup();
 };
 
 #endif  //  ARM_H_

@@ -1,7 +1,7 @@
 #include "Drive.h"
 
 
-enum ErrorCode Drive::Setup()
+ErrorCode Drive::Setup()
 {
     std::ofstream f;
     switch(m_DriveID)
@@ -46,14 +46,12 @@ enum ErrorCode Drive::Setup()
         
 }
 
-Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
+Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions), m_DriveID(driveid)
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
-    m_DriveID = driveid;
-    Setup();
 }
 
-enum ErrorCode Drive::ToggleDrive()
+ErrorCode Drive::ToggleDrive()
 {
     std::string filepath = "";
     std::ofstream f1;
@@ -112,7 +110,7 @@ enum ErrorCode Drive::ToggleDrive()
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Drive::OpenDrive()
+ErrorCode Drive::OpenDrive()
 {
     std::ostringstream msg;
     msg << "Opening drive: " << m_DriveID;
@@ -127,7 +125,7 @@ enum ErrorCode Drive::OpenDrive()
     }
 }
 
-enum ErrorCode Drive::CloseDrive()
+ErrorCode Drive::CloseDrive()
 {
     std::ostringstream msg;
     msg << "Closing drive: " << m_DriveID;

@@ -8,23 +8,23 @@
 #include "Error.h"
 #include <Const.h>
 
-#define VACUUM "/sys/class/gpio/gpio51/value"
-#define VACUUMD "/sys/class/gpio/gpio51/direction"
-#define VALVE "/sys/class/gpio/gpio5/value"
-#define VALVED "/sys/class/gpio/gpio5/direction"
-
 class Vacuum
 {
     private:
         int m_VacuumStatus;
-        enum ErrorCode Setup();
         Logger *m_Logger;
-        enum ErrorCode FileCheck(std::ofstream &f, std::string functionname);
+        ErrorCode FileCheck(std::ofstream &f, std::string functionname);
+
+        const char* VACUUM = "/sys/class/gpio/gpio51/value";
+        const char* VACUUMD = "/sys/class/gpio/gpio51/direction";
+        const char* VALVE = "/sys/class/gpio/gpio5/value";
+        const char* VALVED = "/sys/class/gpio/gpio5/direction";
 
     public:
         Vacuum();
-        enum ErrorCode EnableVacuum();
-        enum ErrorCode DisableVacuum();
+        ErrorCode EnableVacuum();
+        ErrorCode DisableVacuum();
+        ErrorCode Setup();
 };
 
 #endif  //  VACUUM_H_

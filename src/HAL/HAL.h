@@ -19,11 +19,12 @@ class HAL
 
     public:
         HAL();
-        enum ErrorCode Pickup(bool on);
-        enum ErrorCode MoveArm(int driveid);
-        enum ErrorCode MoveArmToHome();
-        enum ErrorCode OpenDrive(int driveid);
-        enum ErrorCode CloseDrive(int driveid);
+        ErrorCode Pickup(bool on);
+        ErrorCode MoveArm(int driveid);
+        ErrorCode MoveArmToHome();
+        ErrorCode OpenDrive(int driveid);
+        ErrorCode CloseDrive(int driveid);
+        ErrorCode Setup();
 };
 
 #endif  //  HAL_H_

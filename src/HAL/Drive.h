@@ -11,34 +11,34 @@
 #include <sstream>
 #include <unistd.h>
 
-#define DRIVE0 "/sys/class/gpio/gpio30/value"
-#define DRIVE1 "/sys/class/gpio/gpio60/value"
-#define DRIVE2 "/sys/class/gpio/gpio31/value"
-#define DRIVE3 "/sys/class/gpio/gpio50/value"
-#define DRIVE4 "/sys/class/gpio/gpio48/value"
-
-#define DRIVE0D "/sys/class/gpio/gpio30/direction"
-#define DRIVE1D "/sys/class/gpio/gpio60/direction"
-#define DRIVE2D "/sys/class/gpio/gpio31/direction"
-#define DRIVE3D "/sys/class/gpio/gpio50/direction"
-#define DRIVE4D "/sys/class/gpio/gpio48/direction"
-
 class Drive
 {
     private:
         int m_DriveID;
         Coordinates m_Positions;
-        enum ErrorCode ToggleDrive();
-        enum ErrorCode Setup();
+        ErrorCode ToggleDrive();
         Logger *m_Logger;
+
+        const char* DRIVE0 = "/sys/class/gpio/gpio30/value";
+        const char* DRIVE1 = "/sys/class/gpio/gpio60/value";
+        const char* DRIVE2 = "/sys/class/gpio/gpio31/value";
+        const char* DRIVE3 = "/sys/class/gpio/gpio50/value";
+        const char* DRIVE4 = "/sys/class/gpio/gpio48/value";
+
+        const char* DRIVE0D = "/sys/class/gpio/gpio30/direction";
+        const char* DRIVE1D = "/sys/class/gpio/gpio60/direction";
+        const char* DRIVE2D = "/sys/class/gpio/gpio31/direction";
+        const char* DRIVE3D = "/sys/class/gpio/gpio50/direction";
+        const char* DRIVE4D = "/sys/class/gpio/gpio48/direction";
 
 
     public:
         Drive(int driveid, Coordinates positions);
-        enum ErrorCode OpenDrive();
-        enum ErrorCode CloseDrive();
+        ErrorCode OpenDrive();
+        ErrorCode CloseDrive();
         int GetDriveID();
         Coordinates GetDriveCoordinates();
+        ErrorCode Setup();
 };
 
 #endif  //  DRIVE_H_
