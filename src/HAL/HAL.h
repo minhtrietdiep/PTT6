@@ -1,13 +1,11 @@
 #ifndef HAL_H_
 #define HAL_H_
 
-#include <iostream>
 #include <vector>
 #include "Drive.h"
 #include "Arm.h"
 #include "Vacuum.h"
-#include "Coordinates.h"
-#include "Logger.h"
+#include <Logger.h>
 #include "Error.h"
 
 class HAL

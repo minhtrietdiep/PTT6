@@ -1,10 +1,7 @@
 #ifndef VACUUM_H_
 #define VACUUM_H_
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include "Logger.h"
+#include <Logger.h>
 #include "Error.h"
 #include <Const.h>
 

@@ -1,5 +1,10 @@
 #include "Arm.h"
 
+#include <sstream>
+#include <iostream>
+#include <vector>
+#include <fstream>
+
 Arm::Arm(Coordinates homeposition) : m_HomePosition(homeposition)
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);

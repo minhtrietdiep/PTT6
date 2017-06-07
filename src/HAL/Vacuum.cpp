@@ -1,4 +1,7 @@
 #include "Vacuum.h"
+#include <iostream>
+#include <fstream>
+#include <vector>
 
 ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
 {

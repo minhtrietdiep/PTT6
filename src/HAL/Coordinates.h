@@ -1,10 +1,7 @@
 #ifndef COORDINATES_H_
 #define COORDINATES_H_
 
-#include <iostream>
 #include <vector>
-#include "Logger.h"
-#include "Error.h"
 
 class Coordinates
 {

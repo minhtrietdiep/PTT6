@@ -18,13 +18,13 @@ target:
 host:
 
 test:	
-	#cd test && make clean && make test
+	cd test && make clean && make test
 
 test-run:
-	#cd test && make test-run
+	cd test && make test-run
 
 test-clean:
-	#cd test && make clean
+	cd test && make clean
 
 copy:
 
