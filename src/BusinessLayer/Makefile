@@ -2,6 +2,8 @@ CFLAGS=-O2 -Wall -std=c++11
 CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
+lib-target: CC = $(CC_TARG)
+lib-host: 	CC = $(CC_HOST)
 target: CC = $(CC_TARG)
 host: 	CC = $(CC_HOST)
 
@@ -82,5 +84,3 @@ clean:
 	rm -f *.gcda
 	rm -f obj-host/*.o
 	rm -f obj-target/*.o
-	$(RM) $(TESTOBJECTS) $(TESTEXECUTABLE)
-

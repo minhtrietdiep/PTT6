@@ -4,6 +4,8 @@ CC_HOST=g++
 
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
+target: CC = $(CC_TARG)
+host: 	CC = $(CC_HOST)
 
 OBJDIR_TARG=obj-target
 OBJDIR_HOST=obj-host
@@ -64,7 +66,9 @@ clean:
 	rm -f *.o
 	rm -f ../lib/lib${OUTPUT}.a
 	rm -f ../lib/lib${OUTPUT}host.a
-
+	rm -f obj-host/*.o
+	rm -f obj-target/*.o
+	
 test:	
 	cd test && make clean && make test
 
