@@ -1,6 +1,7 @@
 #include "HAL.h"
-#include <iostream>
 #include "Coordinates.h"
+
+#include <iostream>
 
 HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
 {
@@ -25,6 +26,11 @@ HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
     drivelist.push_back(d99);
     m_DriveList = drivelist;
     //////TODO: Hubert -> to config file
+}
+
+HAL::~HAL()
+{
+    
 }
 
 ErrorCode HAL::Pickup(bool on)

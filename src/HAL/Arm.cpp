@@ -5,9 +5,14 @@
 #include <vector>
 #include <fstream>
 
-Arm::Arm(Coordinates homeposition) : m_HomePosition(homeposition)
+Arm::Arm(Coordinates homeposition) : 
+    m_HomePosition(homeposition)
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
+}
+
+Arm::~Arm() {
+    delete m_Logger;
 }
 
 ErrorCode Arm::MoveToCoord(Coordinates coordinates)
@@ -24,9 +29,7 @@ ErrorCode Arm::MoveToCoord(Coordinates coordinates)
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR,
-                __PRETTY_FUNCTION__,
-                "In Arm MoveToCoord: failed to open a GPIO file");
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm MoveToCoord: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
     return ErrorCode::ERR_OK;
@@ -34,9 +37,7 @@ ErrorCode Arm::MoveToCoord(Coordinates coordinates)
 
 ErrorCode Arm::MoveHome()
 {
-    m_Logger->Write(Logger::Severity::DEBUG,
-                __PRETTY_FUNCTION__,
-                "Moving home");
+    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Moving home");
     std::ofstream f(ARMPATH);
     if(f.is_open())
     {
@@ -45,9 +46,7 @@ ErrorCode Arm::MoveHome()
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR,
-                __PRETTY_FUNCTION__,
-                "In Arm MoveHome: failed to open a GPIO file");
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm MoveHome: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
     return ErrorCode::ERR_OK;
