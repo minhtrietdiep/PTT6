@@ -37,7 +37,7 @@ std::vector<Plate> Config::GetCollimatorlist()
     return m_CollimatorList;
 }
 
-enum ErrorCode Config::SetCollimatorposition(int drive, int collimatorPosition)
+ ErrorCode Config::SetCollimatorposition(int drive, int collimatorPosition)
 {
     for (int i = 0; i < m_CollimatorList.size(); i++)
     {
@@ -52,7 +52,7 @@ enum ErrorCode Config::SetCollimatorposition(int drive, int collimatorPosition)
     
 }
 
-enum ErrorCode Config::LoadConfig(enum PlateList plate)
+ ErrorCode Config::LoadConfig(enum PlateList plate)
 {
     const char* filename;
     if(plate == PlateList::DRIVELIST)
@@ -108,7 +108,7 @@ enum ErrorCode Config::LoadConfig(enum PlateList plate)
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Config::SaveConfig(enum PlateList plate)
+ ErrorCode Config::SaveConfig(enum PlateList plate)
 {
     std::string jsPlateList;
     const char* filename;

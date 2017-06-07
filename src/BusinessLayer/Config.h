@@ -23,9 +23,9 @@ class Config
         ~Config();
         std::vector<Plate> GetDrivelist();
         std::vector<Plate> GetCollimatorlist();
-        enum ErrorCode LoadConfig(enum PlateList plate);
-        enum ErrorCode SaveConfig(enum PlateList plate);
-        enum ErrorCode SetCollimatorposition(int drive, int collimatorPosition);
+         ErrorCode LoadConfig(enum PlateList plate);
+         ErrorCode SaveConfig(enum PlateList plate);
+         ErrorCode SetCollimatorposition(int drive, int collimatorPosition);
         
 };
 

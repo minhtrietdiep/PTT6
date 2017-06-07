@@ -35,7 +35,7 @@ int Plate::GetID()
 {
 	return m_ID;
 }
-enum ErrorCode Plate::SetCollimatorPosition(int value)
+ ErrorCode Plate::SetCollimatorPosition(int value)
 {
 	if (value <= MAX_COLLIMATORPOS_VALUE && value >= MIN_COLLIMATORPOS_VALUE)
 	{

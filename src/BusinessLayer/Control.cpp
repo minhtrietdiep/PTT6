@@ -34,7 +34,7 @@ std::vector<Preset> Control::GetPresets()
     return m_Presets;
 }
 
-enum ErrorCode Control::PlateToDrive(int plateid)
+ ErrorCode Control::PlateToDrive(int plateid)
 {
     if (plateid < MIN_PLATE_ID && plateid > MAX_PLATE_ID)
     {
@@ -82,7 +82,7 @@ enum ErrorCode Control::PlateToDrive(int plateid)
 
 }
 
-enum ErrorCode Control::PlateToCollimator(int plateid)
+ ErrorCode Control::PlateToCollimator(int plateid)
 {
     if (plateid < MIN_PLATE_ID && plateid > MAX_PLATE_ID)
     {
@@ -95,14 +95,14 @@ enum ErrorCode Control::PlateToCollimator(int plateid)
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Control::CancelCurrentOperation()
+ ErrorCode Control::CancelCurrentOperation()
 {
     if (m_Order.Stop() != ErrorCode::ERR_OK)
         return ErrorCode::ERR_UNKNOWN;
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Control::SetPreset(int presetid)
+ ErrorCode Control::SetPreset(int presetid)
 {
     int status = -1;
     std::vector<int> presetlist;
@@ -131,21 +131,21 @@ enum ErrorCode Control::SetPreset(int presetid)
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Control::EmergencyStop()
+ ErrorCode Control::EmergencyStop()
 {
     m_Order.Stop();
     std::cout << "Control:Emergency stop..." << std::endl;
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Control::ContinueSystem()
+ ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
     std::cout << "Control:Continueing system..." << std::endl;
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Control::ResetSystem() 
+ ErrorCode Control::ResetSystem() 
 {
     if (m_Order.Stop() != ErrorCode::ERR_OK)
         return ErrorCode::ERR_UNKNOWN;
@@ -168,7 +168,7 @@ enum ErrorCode Control::ResetSystem()
     return ErrorCode::ERR_OK;
 
 }
-enum ErrorCode Control::StartSystem()
+ ErrorCode Control::StartSystem()
 {
 
     std::vector<Move> moves = m_Order.GetMoves(); 

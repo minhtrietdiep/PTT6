@@ -21,7 +21,7 @@ std::vector<Move> Order::GetMoves()
     return m_MoveList;
 }
 
-enum ErrorCode Order::NewMove(Move newMove)
+ ErrorCode Order::NewMove(Move newMove)
 {
 
         m_MoveList.push_back(newMove);
@@ -29,7 +29,7 @@ enum ErrorCode Order::NewMove(Move newMove)
 
 }
 
-enum ErrorCode Order::Start() 
+ ErrorCode Order::Start() 
 {
 	
     m_States state = m_States::OPEN_DRIVE;
@@ -123,13 +123,13 @@ enum ErrorCode Order::Start()
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Order::Stop() 
+ ErrorCode Order::Stop() 
 {
 	std::cout << "Order:Stopping order..." << std::endl;
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Order::Reset()
+ ErrorCode Order::Reset()
 {
     m_MoveList.clear();
 	std::cout << "Order:Resetting order..." << std::endl;
