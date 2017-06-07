@@ -3,15 +3,21 @@ SOURCES=Arm.cpp Drive.cpp Vacuum.cpp HAL.cpp Coordinates.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBPATH=-L ../lib -I ../lib/include
 LIBS=-lstdc++ -lpthread -lrt
-LIBSTARGET=-lcommunication -llogger
-LIBSHOST=-lcommunicationhost -lloggerhost
+LIBSTARGET=-lhal -llogger
+LIBSHOST=-lhalhost -lloggerhost
 OUTPUT=hal
 
 lib-target:
-
+	cp $(SOURCES:.cpp=.h) ../lib/include
+	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
+	ar rvs ../lib/lib${OUTPUT}.a ${OBJECTS} -c
+	rm -f $(OBJECTS)
 
 lib-host:
-
+	cp $(SOURCES:.cpp=.h) ../lib/include
+	g++ ${CFLAGS} ${LIBPATH} -c ${SOURCES} ${LIBS}
+	ar rvs ../lib/lib${OUTPUT}host.a ${OBJECTS} -c
+	rm -f $(OBJECTS)
 
 target:
 
