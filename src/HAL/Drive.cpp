@@ -1,5 +1,6 @@
 #include "Drive.h"
-
+#include "Coordinates.h"
+#include "Logger.h"
 
 ErrorCode Drive::SetupHardware()
 {

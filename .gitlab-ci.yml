@@ -22,8 +22,8 @@ cross-compile:
 unit-test:
     stage: unit-test
     script:
-    - make test
-    - ./BusinessLayer/Tests/bl-RunTests.out
+    - make all
+    - make test-run
     #todo: ./ into api en de rest
 code-coverage:
     stage: code-coverage
