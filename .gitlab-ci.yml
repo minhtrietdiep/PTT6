@@ -22,8 +22,9 @@ cross-compile:
 unit-test:
     stage: unit-test
     script:
-    - make all
+    - make test
     - make test-run
+    - make test-clean
     #todo: ./ into api en de rest
 code-coverage:
     stage: code-coverage
