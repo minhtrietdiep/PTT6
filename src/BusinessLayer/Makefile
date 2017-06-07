@@ -44,12 +44,14 @@ host:
 
 	$(CC) $(TESTCFLAGS) $(LIBPATH) -c $< -o $@
 
-test: $(TESTSOURCES) $(TESTEXECUTABLE)
+test:	
+	cd test && make clean && make test
 
-$(TESTEXECUTABLE):$(TESTOBJECTS)
+test-run:
+	cd test && make test-run
 
-	$(CC) ${LIBPATH} $(TESTOBJECTS) $(TESTLDFLAGS) -o $@ ${LIBSHOST} 
-
+test-clean:
+	cd test && make clean
 all:
 	make lib-target
 	make lib-host
