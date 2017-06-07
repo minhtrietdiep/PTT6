@@ -43,7 +43,7 @@ $(OBJDIR_TARG)/%.o: %.cpp
 	$(CC) $(CFLAGS) $(LIBPATH) -c $< -o $@
 
 $(OBJDIR_HOST)/%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(LIBPATH) -c $< -o $@
 
 $(OBJDIR_TARG):
 	mkdir $(OBJDIR_TARG)
