@@ -70,8 +70,9 @@ clean:
 	rm -f ../lib/lib${OUTPUT}host.a
 	rm -f obj-host/*.o
 	rm -f obj-target/*.o
+	
 test:	
-	cd test && make clean && make test
+	cd test && make test
 test-run:
 	cd test && make test-run
 test-clean:

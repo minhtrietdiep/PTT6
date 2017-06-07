@@ -91,12 +91,12 @@ $(TESTS) : $(POBJECTS) $(TOBJECTS) gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 
-testJSONParser : JSONParserTest.cpp
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) JSONParserTest.cpp gtest_main.a -o JSONParserTest
+testJSONParser : JSONParserTest.o
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) $^ gtest_main.a -o JSONParserTest
 	./JSONParserTest
 
-testClientMessage : ClientMessageTest.cpp
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) ClientMessageTest.cpp gtest_main.a -o ClientMessageTest
+testClientMessage : ClientMessageTest.o
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) $^ gtest_main.a -o ClientMessageTest
 	./ClientMessageTest
 
 	

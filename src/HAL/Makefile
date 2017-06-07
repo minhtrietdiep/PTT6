@@ -70,10 +70,8 @@ clean:
 	rm -f obj-target/*.o
 	
 test:	
-	cd test && make clean && make test
-
+	cd test && make test
 test-run:
 	cd test && make test-run
-
 test-clean:
 	cd test && make clean

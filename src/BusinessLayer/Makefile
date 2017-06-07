@@ -11,13 +11,17 @@ OBJDIR_TARG=obj-target
 OBJDIR_HOST=obj-host
 
 SOURCES=main.cpp Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp
+LIBSRCS=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp
 
 OBJECTS_TARG=$(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(SOURCES)))
 OBJECTS_HOST=$(addprefix $(OBJDIR_HOST)/, $(patsubst %.cpp, %.o, $(SOURCES)))
 # $(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(wildcard *.cpp)))
 
-LIBS_TARG=-lcommunication -llogger -ljsonparser -lhal
-LIBS_HOST=-lcommunicationhost -lloggerhost -ljsonparserhost -lhalhost
+LIBSRCS_TARG=$(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(LIBSRCS)))
+LIBSRCS_HOST=$(addprefix $(OBJDIR_HOST)/, $(patsubst %.cpp, %.o, $(LIBSRCS)))
+
+LIBS_TARG=-lcommunication -llogger -ljsonparser -lhal -lbl
+LIBS_HOST=-lcommunicationhost -lloggerhost -ljsonparserhost -lhalhost -lblhost
 
 LIBPATH=-L../lib -I../lib/include -I ../lib/include/rapidjson
 LIBS=-lstdc++ -lrt -lpthread
@@ -26,14 +30,23 @@ OUTPUT=bl
 
 .PHONY: all test clean
 
-lib-target:
+# o mijn god wat een spaghetti 
+
+lib-target: $(OBJDIR_TARG) build-lib-target
+lib-host:	$(OBJDIR_HOST) build-lib-host
+
+build-lib-target: $(LIBSRCS_TARG)
+	cp $(LIBSRCS:.cpp=.h) ../lib/include
+	ar rvs ../lib/lib${OUTPUT}.a $^ -c
 	cp Error.h ../lib/include
 	cd Logging; make lib-target
 
-lib-host:
+build-lib-host: $(LIBSRCS_HOST)
+	cp $(LIBSRCS:.cpp=.h) ../lib/include
+	ar rvs ../lib/lib${OUTPUT}host.a $^ -c
 	cp Error.h ../lib/include
 	cd Logging; make lib-host
-	
+
 copy:
 	scp bl.out ptt@192.168.0.10:~
 
