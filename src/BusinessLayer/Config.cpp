@@ -14,7 +14,7 @@
 
 Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 {
-    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
+    m_Logger = new Logger(VERSION, Logger::Severity::ERROR, LOG_PATH);
     m_DriveList = drivelist;
     m_CollimatorList = collimatorlist;
  
