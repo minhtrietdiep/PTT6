@@ -1,4 +1,5 @@
-CPPFILES = PresetTest.cpp ConfigTest.cpp BLTest.cpp ControlTest.cpp PlateTest.cpp
+CPPFILES =  ../Plate.cpp
+CPPFILES +=  BLTest.cpp PresetTest.cpp ConfigTest.cpp ControlTest.cpp PlateTest.cpp
 
 # A sample Makefile for building Google Test and using it in user
 # tests.  Please tweak it to suit your environment and project.  You
@@ -27,7 +28,8 @@ USER_DIR = ..
 CPPFLAGS += -isystem $(GTEST_DIR)/include 
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11 -lgtest -lloggerhost -I../../lib/include -L../../lib
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11 -lgtest -I ../../lib/include/rapidjson
+LOGGER = -lloggerhost -I../../lib/include -L../../lib
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
@@ -66,11 +68,11 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 # conservative and not optimized.  This is fine as Google Test
 # compiles fast and for ordinary users its source rarely changes.
 gtest-all.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(LOGGER) -c \
 			$(GTEST_DIR)/src/gtest-all.cc
 
 gtest_main.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(LOGGER) -c \
 			$(GTEST_DIR)/src/gtest_main.cc
 
 gtest.a : gtest-all.o
@@ -84,15 +86,15 @@ gtest_main.a : gtest-all.o gtest_main.o
 # function.
 
 %.o : $(USER_DIR)/%.cpp $(USER_DIR)/%.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LOGGER) -c $<
 
 %.o : %.cpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LOGGER) -c $<
 
 $(TESTS) : $(POBJECTS) $(TOBJECTS) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LOGGER) -lpthread $^ -o $@
 
 
 testBL : $(CPPFILES)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) $(CPPFILES) gtest_main.a -o PresetTest
-	./PresetTest
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) $(CPPFILES) gtest_main.a $(LOGGER) -o BLTest
+	./BLTest
