@@ -65,3 +65,11 @@ clean:
 	rm -f ../../lib/lib${OUTPUT}.a
 	rm -f ../../lib/lib${OUTPUT}host.a
 
+test:	
+#	cd test && make clean && make test
+
+test-run:
+#	cd test && make test-run
+
+test-clean:
+#	cd test && make clean
