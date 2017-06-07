@@ -1,5 +1,5 @@
-CPPFILES =  ../Drive.cpp
-CPPFILES +=  DriveTest.cpp
+CPPFILES =
+CPPFILES +=  HALTest.cpp DriveTest.cpp
 
 # A sample Makefile for building Google Test and using it in user
 # tests.  Please tweak it to suit your environment and project.  You
@@ -50,10 +50,10 @@ all : $(TESTS)
 
 test : $(TESTS)
 
-test-run: $(TESTS) DriveTest
+test-run: $(TESTS) testHAL
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) HALTest gtest.a gtest_main.a *.o
 	
 
 
@@ -95,6 +95,6 @@ $(TESTS) : $(POBJECTS) $(TOBJECTS) gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LOGGER) -lpthread $^ -o $@
 
 
-DriveTest : $(CPPFILES)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) $(CPPFILES) gtest_main.a $(LOGGER) -o DriveTest
-	./DriveTest
+testHAL : $(CPPFILES)
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) $(POBJECTS) $(CPPFILES) gtest_main.a $(LOGGER) -o HALTest
+	./HALTest
