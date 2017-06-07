@@ -91,6 +91,7 @@ all:
 
 clean:
 	cd Logging; make clean
+	cd test; make clean
 	rm -f *.out
 	rm -f *.o
 	rm -f *.gcno

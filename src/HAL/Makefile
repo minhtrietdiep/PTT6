@@ -62,6 +62,7 @@ all:
 	make host
 
 clean:
+	cd test; make clean
 	rm -f *.out
 	rm -f *.o
 	rm -f ../lib/lib${OUTPUT}.a
