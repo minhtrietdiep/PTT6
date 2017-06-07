@@ -15,7 +15,7 @@ Drive::Drive(int driveid, Coordinates positions) :
 
 Drive::~Drive()
 {
-    delete m_Logger;
+    // WHY CRASH? delete m_Logger;
 }
 
 ErrorCode Drive::SetupHardware()

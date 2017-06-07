@@ -21,7 +21,7 @@ class Drive
     private:
         ErrorCode ToggleDrive();
         int m_DriveID;
-        Logger *m_Logger;
+        Logger * m_Logger;
         Coordinates m_Positions;
 };
 
