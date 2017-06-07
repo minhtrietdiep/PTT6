@@ -14,7 +14,7 @@ class CommunicationServer
         ~CommunicationServer();
         int AcceptTCPConnection(int serverSocket);
         int ReceiveMessage(int socket, char *message, int bufferSize);
-        int SendMessage(int socket, char *message, int bufferSize);   
+        int SendMessage(int socket, const char *message, int bufferSize);   
     private:
         void Error(std::string message);
         int CreateServerSocket(int port);
