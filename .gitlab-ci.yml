@@ -23,7 +23,8 @@ unit-test:
     stage: unit-test
     script:
     - make test
-    - ./BusinessLayer/Tests/bl-RunTests.out
+    - make test-run
+    - make test-clean
     #todo: ./ into api en de rest
 code-coverage:
     stage: code-coverage

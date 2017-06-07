@@ -1,4 +1,7 @@
 #include "Coordinates.h"
+#include <Logger.h>
+#include <iostream>
+#include "Error.h"
 
 Coordinates::Coordinates(int pos1, int pos2, int pos3, int pos4):m_Pos1(pos1),m_Pos2(pos2),m_Pos3(pos3),m_Pos4(pos4)
 {

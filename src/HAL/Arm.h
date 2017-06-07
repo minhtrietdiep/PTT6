@@ -1,14 +1,11 @@
 #ifndef ARM_H_
 #define ARM_H_
 
-#include <iostream>
-#include <vector>
-#include <fstream>
+
 #include "Coordinates.h"
-#include "Logger.h"
+#include <Logger.h>
 #include "Error.h"
 #include <Const.h>
-#include <sstream>
 
 class Arm
 {

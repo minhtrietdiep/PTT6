@@ -1,4 +1,6 @@
 #include "HAL.h"
+#include <iostream>
+#include "Coordinates.h"
 
 HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
 {

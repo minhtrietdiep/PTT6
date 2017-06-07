@@ -38,6 +38,10 @@ mqsend:
 
 test:
 
+test-run:
+
+test-clean:
+
 all:
 	make lib-target
 	make lib-host

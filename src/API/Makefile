@@ -13,6 +13,12 @@ host:
 test: 
 	cd CommunicationServer; make test
 
+test-run: 
+	cd CommunicationServer; make test-run
+
+test-clean: 
+	cd CommunicationServer; make test-clean
+
 copy:
 	cd CommunicationServer; make copy
 

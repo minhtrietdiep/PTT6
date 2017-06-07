@@ -33,6 +33,18 @@ test:
 	cd HAL; make test
 	cd UI; make test
 
+test-run:
+	cd BusinessLayer; make test-run
+	cd API; make test-run
+	cd HAL; make test-run
+	cd UI; make test-run
+
+test-clean:
+	cd BusinessLayer; make test-clean
+	cd API; make test-clean
+	cd HAL; make test-clean
+	cd UI; make test-clean
+
 copy:
 	cd BusinessLayer; make copy
 	cd API; make copy

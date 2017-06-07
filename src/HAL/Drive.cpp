@@ -1,5 +1,10 @@
 #include "Drive.h"
-
+#include "Coordinates.h"
+#include <sstream>
+#include <unistd.h>
+#include <iostream>
+#include <vector>
+#include <fstream>
 
 ErrorCode Drive::SetupHardware()
 {
@@ -38,17 +43,17 @@ ErrorCode Drive::SetupHardware()
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR,
-                __PRETTY_FUNCTION__,
-                "In Drive Setup: failed to open a GPIO file");
+        //m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive Setup: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
         
 }
 
-Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions), m_DriveID(driveid)
+Drive::Drive(int driveid, Coordinates positions) : 
+    m_DriveID(driveid),
+    m_Positions (positions)
 {
-    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
+    //m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
 }
 
 ErrorCode Drive::ToggleDrive()
@@ -86,9 +91,7 @@ ErrorCode Drive::ToggleDrive()
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR,
-                __PRETTY_FUNCTION__,
-                "In Drive ToggleDrive: failed to open a GPIO file");
+        //m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive ToggleDrive: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
 
@@ -101,9 +104,7 @@ ErrorCode Drive::ToggleDrive()
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR,
-                __PRETTY_FUNCTION__,
-                "In Drive ToggleDrive: failed to open a GPIO file");
+        //m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive ToggleDrive: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     } 
 
@@ -114,7 +115,7 @@ ErrorCode Drive::OpenDrive()
 {
     std::ostringstream msg;
     msg << "Opening drive: " << m_DriveID;
-    m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str()); 
+    //m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str()); 
     if(ToggleDrive() == ErrorCode::ERR_OK)  
     {
         return ErrorCode::ERR_OK;
@@ -129,7 +130,7 @@ ErrorCode Drive::CloseDrive()
 {
     std::ostringstream msg;
     msg << "Closing drive: " << m_DriveID;
-    m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str());
+    //m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str());
     if(ToggleDrive() == ErrorCode::ERR_OK)  
     {
         return ErrorCode::ERR_OK;

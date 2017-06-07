@@ -1,15 +1,10 @@
 #ifndef DRIVE_H_
 #define DRIVE_H_
 
-#include <iostream>
-#include <vector>
-#include <fstream>
 #include "Coordinates.h"
-#include "Logger.h"
 #include "Error.h"
 #include "Const.h"
-#include <sstream>
-#include <unistd.h>
+#include <Logger.h>
 
 class Drive
 {
