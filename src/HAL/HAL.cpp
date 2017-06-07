@@ -25,62 +25,75 @@ HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
     //////TODO: Hubert -> to config file
 }
 
-enum ErrorCode HAL::Pickup(bool on)
+ErrorCode HAL::Pickup(bool on)
 {
     if(on)
     {
-        m_Vacuum.EnableVacuum();
+        return m_Vacuum.EnableVacuum();
     }
     else
     {
-        m_Vacuum.DisableVacuum();
+        return m_Vacuum.DisableVacuum();
     }
-    return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode HAL::MoveArm(int driveid)
+ErrorCode HAL::MoveArm(int driveid)
 {
     for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
-            m_Arm.MoveToCoord(m_DriveList[i].GetDriveCoordinates());
-            return ErrorCode::ERR_OK;
+            return m_Arm.MoveToCoord(m_DriveList[i].GetDriveCoordinates());
         }
     }
     return ErrorCode::ERR_UNKNOWN;
 }
 
-enum ErrorCode HAL::MoveArmToHome()
+ErrorCode HAL::MoveArmToHome()
 {
-    m_Arm.MoveHome();
-    return ErrorCode::ERR_OK;
+    return m_Arm.MoveHome();
 }
 
-enum ErrorCode HAL::OpenDrive(int driveid)
+ErrorCode HAL::OpenDrive(int driveid)
 {
-    int i = 0;
-    for(;i < (int)m_DriveList.size(); i++)
+    for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
-            m_DriveList[i].OpenDrive();
-            return ErrorCode::ERR_OK;
+            return m_DriveList[i].OpenDrive();
         }
     } 
     return ErrorCode::ERR_UNKNOWN;
 }
 
-enum ErrorCode HAL::CloseDrive(int driveid)
+ErrorCode HAL::CloseDrive(int driveid)
 {
-    int i = 0;
-    for(;i < (int)m_DriveList.size(); i++)
+    for(int i = 0;i < (int)m_DriveList.size(); i++)
     {
         if(m_DriveList[i].GetDriveID() == driveid)
         {
-            m_DriveList[i].CloseDrive();
-            return ErrorCode::ERR_OK;
+            return m_DriveList[i].CloseDrive();
         }
     }
     return ErrorCode::ERR_UNKNOWN;
+}
+
+ErrorCode HAL::SetupHardware()
+{
+    for(int i = 0;i < (int)m_DriveList.size(); i++)
+    {
+        if(m_DriveList[i].SetupHardware() != ErrorCode::ERR_OK)
+        {
+            return ErrorCode::ERR_UNKNOWN;
+        }
+        
+    }
+    if(m_Vacuum.SetupHardware() != ErrorCode::ERR_OK)
+    {
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
 }

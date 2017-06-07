@@ -345,6 +345,8 @@ int main(int argc, char **argv)
     std::cout << "Press 9 to hard-exit\n";
     std::cout << "Press 1 to generate MessageQueue->ClientMessage item\n";
     std::cout << "Press 2 to generate ClientMessage->MessageQueue item\n";
+    control.SetupHardware();
+
     while (true) 
     {
         control.StartSystem();

@@ -34,6 +34,7 @@ class Order
         ErrorCode Start();
         ErrorCode Stop();
         ErrorCode Reset();
+        ErrorCode SetupHardware();
 };
 
 #endif  //  ORDER_H_
