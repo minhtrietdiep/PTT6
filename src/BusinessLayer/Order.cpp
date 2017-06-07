@@ -21,7 +21,7 @@ std::vector<Move> Order::GetMoves()
     return m_MoveList;
 }
 
- ErrorCode Order::NewMove(Move newMove)
+ErrorCode Order::NewMove(Move newMove)
 {
 
         m_MoveList.push_back(newMove);
@@ -29,7 +29,7 @@ std::vector<Move> Order::GetMoves()
 
 }
 
- ErrorCode Order::Start() 
+ErrorCode Order::Start() 
 {
 	
     m_States state = m_States::OPEN_DRIVE;
@@ -113,7 +113,7 @@ std::vector<Move> Order::GetMoves()
 
                 break;
             default:
-                m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unknow switch state");
+                m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unknown switch state");
                 return ErrorCode::ERR_UNKNOWN;
                 break;
         }
@@ -123,16 +123,16 @@ std::vector<Move> Order::GetMoves()
     return ErrorCode::ERR_OK;
 }
 
- ErrorCode Order::Stop() 
+ErrorCode Order::Stop() 
 {
-	std::cout << "Order:Stopping order..." << std::endl;
+    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Stopping order");
     return ErrorCode::ERR_OK;
 }
 
- ErrorCode Order::Reset()
+ErrorCode Order::Reset()
 {
+    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Resetting order");
     m_MoveList.clear();
-	std::cout << "Order:Resetting order..." << std::endl;
     return ErrorCode::ERR_OK;
 }
 

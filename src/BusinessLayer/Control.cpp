@@ -207,6 +207,8 @@ std::vector<Preset> Control::GetPresets()
         return ErrorCode::ERR_OK;
     } 
     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "cannot start order");
+    m_Order.Stop();
+    m_Order.Reset();
     return ErrorCode::ERR_UNKNOWN;
    
 }
