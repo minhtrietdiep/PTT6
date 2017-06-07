@@ -47,7 +47,9 @@ ErrorCode Drive::SetupHardware()
         
 }
 
-Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions), m_DriveID(driveid)
+Drive::Drive(int driveid, Coordinates positions) : 
+    m_DriveID(driveid),
+    m_Positions (positions)
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
 }
