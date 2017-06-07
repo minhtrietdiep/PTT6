@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "./../Plate.h"
+#include "../Plate.h"
 #include <string>
  
  #define PLATEID 1

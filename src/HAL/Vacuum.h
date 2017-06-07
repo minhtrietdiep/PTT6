@@ -6,17 +6,25 @@
 #include <vector>
 #include "Logger.h"
 #include "Error.h"
+#include <Const.h>
 
 class Vacuum
 {
     private:
         int m_VacuumStatus;
-        void Setup();
+        Logger *m_Logger;
+        ErrorCode FileCheck(std::ofstream &f, std::string functionname);
+
+        const char* VACUUM = "/sys/class/gpio/gpio51/value";
+        const char* VACUUMD = "/sys/class/gpio/gpio51/direction";
+        const char* VALVE = "/sys/class/gpio/gpio5/value";
+        const char* VALVED = "/sys/class/gpio/gpio5/direction";
 
     public:
         Vacuum();
-        enum ErrorCode EnableVacuum();
-        enum ErrorCode DisableVacuum();
+        ErrorCode EnableVacuum();
+        ErrorCode DisableVacuum();
+        ErrorCode SetupHardware();
 };
 
 #endif  //  VACUUM_H_

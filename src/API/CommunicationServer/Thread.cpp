@@ -133,15 +133,10 @@ void * Thread::SenderThread(void *args)
         {
             std::string sendMessage = mq.Read(MQ_NAME_SEND_MESSAGES);
 
-            char *cstring = new char[sendMessage.length() + 1];
-            snprintf(cstring, sendMessage.size(), sendMessage.c_str());
-
             for(unsigned int i = 0; i < senderThreadArgs->clientSockets->size(); i++)
             {
-                senderThreadArgs->communication->SendMessage(*senderThreadArgs->clientSockets->at(i), cstring, strlen(cstring));
+                senderThreadArgs->communication->SendMessage(*senderThreadArgs->clientSockets->at(i), sendMessage.c_str(), strlen(sendMessage.c_str()));
             }
-
-            delete [] cstring;
         }
         else if (mq.GetMessageCount(MQ_NAME_SEND_MESSAGES) >= MQ_MAX_MESSAGE)
         {

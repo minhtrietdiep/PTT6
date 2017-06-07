@@ -142,7 +142,7 @@ int CommunicationServer::ReceiveMessage(int socket, char *message, int bufferSiz
     return receiveMessageSize;
 }
 
-int CommunicationServer::SendMessage(int socket, char *message, int bufferSize)
+int CommunicationServer::SendMessage(int socket, const char *message, int bufferSize)
 {
     int sendMessageSize = send(socket, message, bufferSize, 0);
 

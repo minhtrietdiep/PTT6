@@ -1,19 +1,7 @@
 #include "Drive.h"
-#include <unistd.h>
 
-#define DRIVE0 "/sys/class/gpio/gpio30/value"
-#define DRIVE1 "/sys/class/gpio/gpio60/value"
-#define DRIVE2 "/sys/class/gpio/gpio31/value"
-#define DRIVE3 "/sys/class/gpio/gpio50/value"
-#define DRIVE4 "/sys/class/gpio/gpio48/value"
 
-#define DRIVE0D "/sys/class/gpio/gpio30/direction"
-#define DRIVE1D "/sys/class/gpio/gpio60/direction"
-#define DRIVE2D "/sys/class/gpio/gpio31/direction"
-#define DRIVE3D "/sys/class/gpio/gpio50/direction"
-#define DRIVE4D "/sys/class/gpio/gpio48/direction"
-
-void Drive::Setup()
+ErrorCode Drive::SetupHardware()
 {
     std::ofstream f;
     switch(m_DriveID)
@@ -39,73 +27,117 @@ void Drive::Setup()
             break; 
 
         default:
+            return ErrorCode::ERR_UNKNOWN;
             break;
     }
+    if(f.is_open())
+    {
         f << "out";
-        f.close();
+        f.close(); 
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::ERROR,
+                __PRETTY_FUNCTION__,
+                "In Drive Setup: failed to open a GPIO file");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+        
 }
 
-Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions)
+Drive::Drive(int driveid, Coordinates positions) : m_Positions (positions), m_DriveID(driveid)
 {
-    m_DriveID = driveid;
-    Setup();
+    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
 }
 
-enum ErrorCode Drive::ToggleDrive()
+ErrorCode Drive::ToggleDrive()
 {
-    std::ofstream myfile;
-    std::ofstream mijnfile;
+    std::string filepath = "";
+    std::ofstream f1;
 
     switch(m_DriveID)
     {
         case 0:
-            myfile.open (DRIVE0);
-            mijnfile.open (DRIVE0);
+            filepath = DRIVE0;
             break;
         case 1:
-            myfile.open (DRIVE1);
-            mijnfile.open (DRIVE1);
+            filepath = DRIVE1;
             break;
         case 2:
-            myfile.open (DRIVE2);
-            mijnfile.open (DRIVE2);
+            filepath = DRIVE2;
             break;
         case 3:
-            myfile.open (DRIVE3);
-            mijnfile.open (DRIVE3);
+            filepath = DRIVE3;
             break;
         case 4:
-            myfile.open (DRIVE4);
-            mijnfile.open (DRIVE4);
+            filepath = DRIVE4;
             break;
         default:
-
+            return ErrorCode::ERR_UNKNOWN;
             break;
     }
-    myfile << 1;
-    myfile.close();
+    f1.open(filepath);
+    if(f1.is_open())
+    {
+        f1 << 1;
+        f1.close();
+        usleep(20000);
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::ERROR,
+                __PRETTY_FUNCTION__,
+                "In Drive ToggleDrive: failed to open a GPIO file");
+        return ErrorCode::ERR_UNKNOWN;
+    }
 
-    usleep(20000);
-
-
-    mijnfile << 0;
-    mijnfile.close();
-
-    usleep(2000000);
+    f1.open(filepath);
+    if(f1.is_open())
+    {
+        f1 << 0;
+        f1.close();
+        usleep(2000000);
+    }
+    else
+    {
+        m_Logger->Write(Logger::Severity::ERROR,
+                __PRETTY_FUNCTION__,
+                "In Drive ToggleDrive: failed to open a GPIO file");
+        return ErrorCode::ERR_UNKNOWN;
+    } 
 
     return ErrorCode::ERR_OK;
 }
 
-enum ErrorCode Drive::OpenDrive()
+ErrorCode Drive::OpenDrive()
 {
-    std::cout << "Opening drive " << m_DriveID << std::endl;
-    return ToggleDrive();
+    std::ostringstream msg;
+    msg << "Opening drive: " << m_DriveID;
+    m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str()); 
+    if(ToggleDrive() == ErrorCode::ERR_OK)  
+    {
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
 }
 
-enum ErrorCode Drive::CloseDrive()
+ErrorCode Drive::CloseDrive()
 {
-    std::cout << "Closing drive " << m_DriveID << std::endl;
-    return ToggleDrive();;
+    std::ostringstream msg;
+    msg << "Closing drive: " << m_DriveID;
+    m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str());
+    if(ToggleDrive() == ErrorCode::ERR_OK)  
+    {
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_UNKNOWN;
+    }
 }
 
 int Drive::GetDriveID()

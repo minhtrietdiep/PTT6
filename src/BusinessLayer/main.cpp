@@ -25,8 +25,9 @@
 #include "../API/Interfaces/IUIControl.h"
 #include "Control.h"
 #include "Config.h"
-#include "CommandUtils.h"
 #include "JSONUtils.h"
+
+#define ESCAPE_KEY 0x1B
 
 Logger logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
 Control control({});
@@ -306,6 +307,33 @@ void checkMessages(MessageQueue &mq, std::vector<std::future<ClientMessage>> &fu
     }
 }
 
+int kbhit(void) 
+{
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    if(ch != EOF) 
+    {
+        ungetc(ch, stdin);
+        return 1;
+    }
+
+    return 0;
+}
+
 int main(int argc, char **argv) 
 {
     srand (time(NULL));
@@ -317,6 +345,8 @@ int main(int argc, char **argv)
     std::cout << "Press 9 to hard-exit\n";
     std::cout << "Press 1 to generate MessageQueue->ClientMessage item\n";
     std::cout << "Press 2 to generate ClientMessage->MessageQueue item\n";
+    control.SetupHardware();
+
     while (true) 
     {
         control.StartSystem();
