@@ -1,5 +1,5 @@
-CPPFILES =  ../Plate.cpp
-CPPFILES +=  BLTest.cpp PresetTest.cpp ConfigTest.cpp ControlTest.cpp PlateTest.cpp
+CPPFILES =  ../Plate.cpp ../Order.cpp ../Move.cpp ../../HAL/HAL.cpp ../../HAL/Arm.cpp ../../HAL/Coordinates.cpp ../../HAL/Drive.cpp ../../HAL/Vacuum.cpp
+CPPFILES +=  BLTest.cpp PresetTest.cpp ConfigTest.cpp ControlTest.cpp PlateTest.cpp MoveTest.cpp OrderTest.cpp
 
 # A sample Makefile for building Google Test and using it in user
 # tests.  Please tweak it to suit your environment and project.  You
@@ -53,7 +53,7 @@ test : $(TESTS)
 test-run: $(TESTS) testBL
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) BLTest gtest.a gtest_main.a *.o
 	
 
 
