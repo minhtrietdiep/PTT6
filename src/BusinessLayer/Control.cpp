@@ -179,8 +179,7 @@ std::vector<Preset> Control::GetPresets()
     int ID = moves[0].GetPlateID();
     int Destination = moves[0].GetDestination();
 
-    enum ErrorCode returnvalue = m_Order.Start();
-    if (returnvalue == ErrorCode::ERR_OK)
+    if (m_Order.Start() == ErrorCode::ERR_OK)
     {
         if (Destination == COLLIMATORPOS)
         {
