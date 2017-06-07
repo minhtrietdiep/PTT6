@@ -1,5 +1,5 @@
 CFLAGS=-O2 -Wall -std=c++11
-SOURCES=
+SOURCES=Arm.cpp Drive.cpp Vacuum.cpp HAL.cpp Coordinates.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBPATH=-L ../lib -I ../lib/include
 LIBS=-lstdc++ -lpthread -lrt
@@ -17,7 +17,14 @@ target:
 
 host:
 
-test:
+test:	
+	cd test && make clean && make test
+
+test-run:
+	cd test && make test-run
+
+test-clean:
+	cd test && make clean
 
 copy:
 
