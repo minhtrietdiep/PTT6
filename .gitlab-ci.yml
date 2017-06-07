@@ -1,8 +1,9 @@
+cache:
+  untracked: true
 before_script:
     - cd ./src
 after_script:
     - cd ./src
-    - make clean
 stages:
   - compile
   - cross-compile
@@ -40,6 +41,3 @@ lint:
   script:
     - cd scripts/
     - bash lint.sh
-after_script:
-
-  #  - make clean
