@@ -1,4 +1,5 @@
 cache:
+  key: "$CI_COMMIT_REF_NAME/$CI_PIPELINE_ID"
   untracked: true
 before_script:
     - cd ./src
