@@ -31,10 +31,10 @@ void MessageQueue::Create(std::string mqName)
 {
     m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "creating messagequeue");
     
-    if (mq_unlink(mqName.c_str()) < 0 && errno != ENOENT)
-    {
-        Error("mq_unlink() failed");
-    }
+    //if (mq_unlink(mqName.c_str()) < 0 && errno != ENOENT)
+    //{
+    //    Error("mq_unlink() failed");
+    //}
 
     struct mq_attr mqAttributes;
     mqAttributes.mq_flags = 0;
