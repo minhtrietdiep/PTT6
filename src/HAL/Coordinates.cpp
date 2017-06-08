@@ -1,7 +1,5 @@
 #include "Coordinates.h"
 
-#include "Error.h"
-
 #include <Logger.h>
 #include <iostream>
 
@@ -21,10 +19,6 @@ Coordinates::~Coordinates()
 
 std::vector<int> Coordinates::GetCoordinates()
 {
-    std::vector<int> coordinates;
-    coordinates.push_back(m_Pos4);
-    coordinates.push_back(m_Pos3);
-    coordinates.push_back(m_Pos2);
-    coordinates.push_back(m_Pos1);
+    std::vector<int> coordinates { m_Pos1, m_Pos2, m_Pos3, m_Pos4 };
     return coordinates;
 }
