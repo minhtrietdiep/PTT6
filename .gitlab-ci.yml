@@ -15,7 +15,7 @@ stages:
 compile:
   stage: compile
   script:
-    - make lib-host
+    - make lib-host-gcov
     - make host
 cross-compile:
     stage: cross-compile
@@ -32,8 +32,7 @@ unit-test:
 code-coverage:
     stage: code-coverage
     script:
-    - make lib-host
-    - make host
+    - make test-run
     - bash  ./scripts/codecoverage.sh
     #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
     #- q

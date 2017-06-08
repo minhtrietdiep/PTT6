@@ -12,6 +12,13 @@ lib-host:
 	cd API; make lib-host
 	cd UI; make lib-host
 
+lib-host-gcov:
+	cd sharedlibs; make lib-host-gcov
+	cd HAL; make lib-host-gcov
+	cd BusinessLayer; make lib-host-gcov
+	cd API; make lib-host-gcov
+	cd UI; make lib-host-gcov
+
 target:
 	make lib-target
 	cd HAL; make target
@@ -27,13 +34,14 @@ host:
 	cd UI; make host
 
 test:
-	make lib-host
+	make lib-host-gcov
 	cd HAL; make test
 	cd BusinessLayer; make test
 	cd API; make test
 	cd UI; make test
 
 test-run:
+	make lib-host-gcov
 	cd HAL; make test-run
 	cd BusinessLayer; make test-run
 	cd API; make test-run

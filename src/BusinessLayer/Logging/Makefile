@@ -1,11 +1,11 @@
-CFLAGS=-O2 -Wall -std=c++11
+CFLAGS=-O2 -Wall -std=c++11 --coverage 
 CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
-target: CC = $(CC_TARG)
-host: 	CC = $(CC_HOST)
+target: 	CC = $(CC_TARG)
+host: 		CC = $(CC_HOST)
 
 OBJDIR_TARG=obj-target
 OBJDIR_HOST=obj-host
@@ -68,6 +68,7 @@ clean:
 	rm -f ../../lib/lib${OUTPUT}host.a
 	rm -f obj-host/*.o
 	rm -f obj-target/*.o
+
 test:	
 #	cd test && make clean && make test
 

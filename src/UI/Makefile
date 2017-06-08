@@ -7,6 +7,8 @@ LIBSTARGET=-lcommunication -llogger
 LIBSHOST=-lcommunicationhost -lloggerhost
 OUTPUT=ui
 
+lib-host-gcov: lib-host
+
 lib-target:
 
 

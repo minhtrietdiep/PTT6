@@ -2,10 +2,11 @@ CFLAGS=-O2 -Wall -std=c++11
 CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
+lib-host-gcov:	CFLAGS += --coverage
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
-target: CC = $(CC_TARG)
-host: 	CC = $(CC_HOST)
+target: 	CC = $(CC_TARG)
+host: 		CC = $(CC_HOST)
 
 OBJDIR_TARG=obj-target
 OBJDIR_HOST=obj-host
@@ -25,6 +26,8 @@ LIBS=-lpthread -lrt
 OUTPUT=hal
 
 .PHONY: all test clean
+
+lib-host-gcov: lib-host
 
 lib-target: $(OBJDIR_TARG) build-lib-target
 lib-host:	$(OBJDIR_HOST) build-lib-host
