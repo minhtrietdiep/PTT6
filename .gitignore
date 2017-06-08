@@ -329,5 +329,6 @@ OpenCL_1/.vs/OpenCL_1/v14/.suo
 BLTest
 HALTest
 PresetTest
+*.test
 
 
