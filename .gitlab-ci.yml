@@ -5,7 +5,6 @@ before_script:
     - cd ./src
 after_script:
     - cd ./src
-    - make test-clean
 stages:
   - compile
   - cross-compile
