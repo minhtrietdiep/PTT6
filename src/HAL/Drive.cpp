@@ -1,9 +1,9 @@
 #include "Drive.h"
 
+#include <unistd.h>
 #include <vector>
 #include <sstream>
 #include <fstream>
-#include <unistd.h>
 #include <iostream>
 
 Drive::Drive(int driveid, std::string movecommand) : 

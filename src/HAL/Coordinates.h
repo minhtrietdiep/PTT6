@@ -1,5 +1,4 @@
-#ifndef COORDINATES_H_
-#define COORDINATES_H_
+#pragma once
 
 #include <vector>
 
@@ -15,5 +14,3 @@ class Coordinates
         int m_Pos3;
         int m_Pos4;
 };
-
-#endif  //  COORDINATES_H_

@@ -1,15 +1,14 @@
-#ifndef HAL_H_
-#define HAL_H_
+#pragma once
+
+#include <vector>
+
+#include <Const.h>
+#include <Error.h>
+#include <Logger.h>
 
 #include "Arm.h"
 #include "Drive.h"
 #include "Vacuum.h"
-
-#include "Error.h"
-
-#include <Logger.h>
-
-#include <vector>
 
 class HAL
 {
@@ -31,5 +30,3 @@ class HAL
         Vacuum m_Vacuum;
         Arm m_Arm;
 };
-
-#endif  //  HAL_H_

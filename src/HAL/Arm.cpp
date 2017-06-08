@@ -1,5 +1,9 @@
 #include "Arm.h"
 
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <sstream>
 #include <iostream>
 #include <vector>

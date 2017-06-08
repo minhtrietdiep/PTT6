@@ -1,8 +1,6 @@
 #include "HAL.h"
 #include "Coordinates.h"
 
-#include <iostream>
-
 HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
 {
     /*Coordinates coords1 = Coordinates(1,2,3,4);

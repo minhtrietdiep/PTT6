@@ -1,12 +1,10 @@
-#ifndef VACUUM_H_
-#define VACUUM_H_
-
-#include "Error.h"
-
-#include <Logger.h>
-#include <Const.h>
+#pragma once 
 
 #include <string>
+
+#include <Const.h>
+#include <Error.h>
+#include <Logger.h>
 
 class Vacuum
 {
@@ -29,5 +27,3 @@ class Vacuum
         std::string m_ValveValuePath;
         std::string m_ValveDirPath;
 };
-
-#endif  //  VACUUM_H_

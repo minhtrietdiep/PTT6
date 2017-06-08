@@ -1,16 +1,12 @@
-#ifndef ARM_H_
-#define ARM_H_
-
-#include "Coordinates.h"
-
-#include "Error.h"
-#include "Logger.h"
+#pragma once
 
 #include <termios.h>
+
 #include <Const.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <Error.h>
+#include <Logger.h>
+
+#include "Coordinates.h"
 
 class Arm
 {
@@ -34,5 +30,3 @@ class Arm
         std::string m_ArmHomeCommand;
         struct termios m_SerialConfig;
 };
-
-#endif  //  ARM_H_

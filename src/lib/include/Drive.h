@@ -1,11 +1,7 @@
-#ifndef DRIVE_H_
-#define DRIVE_H_
+#pragma once
 
-//#include "Coordinates.h"
-
-#include "Error.h"
-#include "Const.h"
-
+#include <Const.h>
+#include <Error.h>
 #include <Logger.h>
 
 class Drive
@@ -47,5 +43,3 @@ class Drive
         std::string m_Drive3DirPath;
         std::string m_Drive4DirPath;
 };
-
-#endif  //  DRIVE_H_
