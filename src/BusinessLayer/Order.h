@@ -24,7 +24,7 @@ class Order
             CLOSE_DRIVE,
             COMPLETED
             };
-        Logger *m_Logger;
+        Logger m_Logger;
 
     public:
         Order();

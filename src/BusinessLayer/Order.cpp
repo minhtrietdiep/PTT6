@@ -5,16 +5,12 @@
 #define COLLIMATORPOS 99
 
 
-Order::Order()
+Order::Order() : m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
-    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     m_MoveList = std::vector<Move>();
-    m_Hal = HAL();
 }
-Order::~Order()
-{
-    delete m_Logger;
-}
+
+Order::~Order() { }
 
 std::vector<Move> Order::GetMoves()
 {
@@ -50,7 +46,7 @@ ErrorCode Order::Start()
 
                 else
                 {
-                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Cannot open drive");
+                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Cannot open drive");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -59,7 +55,7 @@ ErrorCode Order::Start()
                 state = m_States::ENABLE_VACUUM;
                 else
                 {
-                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to ID");
+                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to ID");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -68,7 +64,7 @@ ErrorCode Order::Start()
                 state = m_States::MOVE_ARM_DESTINATION;
                 else
                 {
-                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
+                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
                     return ErrorCode::ERR_UNKNOWN;
                 }
                 break;
@@ -77,7 +73,7 @@ ErrorCode Order::Start()
                 state = m_States::DISABLE_VACUUM;
                 else
                 {
-                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Destination");
+                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Destination");
                     return ErrorCode::ERR_UNKNOWN;
                     
                 }
@@ -87,7 +83,7 @@ ErrorCode Order::Start()
                 state = m_States::MOVE_ARM_HOME;
                 else
                     {
-                        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
+                        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
                         return ErrorCode::ERR_UNKNOWN;
                     }
                 break;
@@ -96,7 +92,7 @@ ErrorCode Order::Start()
                 state = m_States::CLOSE_DRIVE;
                 else
                 {
-                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to home");
+                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to home");
                     return ErrorCode::ERR_UNKNOWN;
 
                 }
@@ -106,14 +102,14 @@ ErrorCode Order::Start()
                 state = m_States::COMPLETED;
                 else
                 {
-                    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to close drive");
+                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to close drive");
                     return ErrorCode::ERR_UNKNOWN;
                 }
 
 
                 break;
             default:
-                m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unknown switch state");
+                m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unknown switch state");
                 return ErrorCode::ERR_UNKNOWN;
                 break;
         }
@@ -125,13 +121,13 @@ ErrorCode Order::Start()
 
 ErrorCode Order::Stop() 
 {
-    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Stopping order");
+    m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Stopping order");
     return ErrorCode::ERR_OK;
 }
 
 ErrorCode Order::Reset()
 {
-    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Resetting order");
+    m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Resetting order");
     m_MoveList.clear();
     return ErrorCode::ERR_OK;
 }
