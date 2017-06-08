@@ -1,7 +1,7 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <vector>
-#include "../Order.h"
-#include "../Move.h"
+#include <Order.h>
+#include <Move.h>
 #include <Logger.h>
 #include <Const.h>
  
