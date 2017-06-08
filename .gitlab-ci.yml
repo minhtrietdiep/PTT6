@@ -18,11 +18,11 @@ compile:
         - make host-gcov
     artifacts:
         paths:
-            - "*/obj-*/*.o"
-            - "*/*/obj-*/*.o"
-            - "*/*.gcno"
-            - "*/*/*.gcno"
-            - "lib/*.a"
+            - "src/*/obj-*/*.o"
+            - "src/*/*/obj-*/*.o"
+            - "src/*/*.gcno"
+            - "src/*/*/*.gcno"
+            - "src/lib/*.a"
 cross-compile:
     stage: cross-compile
     script:
@@ -37,10 +37,10 @@ unit-test:
         - make test-run
     artifacts:
         paths:
-            - "*/obj-*/*.o"
-            - "*/*/obj-*/*.o"
-            - "*/*.gcda"
-            - "*/*/*.gcda"
+            - "src/*/obj-*/*.o"
+            - "src/*/*/obj-*/*.o"
+            - "src/*/*.gcda"
+            - "src/*/*/*.gcda"
 code-coverage:
     stage: code-coverage
     dependencies:
