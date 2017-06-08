@@ -1,51 +1,80 @@
-CC=g++
-CFLAGS=-O2 -Wall -std=c++11 -fprofile-arcs -ftest-coverage
-TESTCFLAGS=-O2 -Wall -std=c++11
-TESTLDFLAGS=-lpthread -lgtest -lgtest_main -L/usr/lib -pthread
-SOURCES=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp main.cpp\
-../HAL/Arm.cpp ../HAL/Drive.cpp ../HAL/Vacuum.cpp ../HAL/HAL.cpp ../HAL/Coordinates.cpp
+CFLAGS=-O2 -Wall -std=c++11
+CC_TARG=arm-linux-gnueabihf-g++
+CC_HOST=g++
 
-OBJECTS=$(SOURCES:.cpp=.o)
-TESTSOURCES=$(wildcard Tests/*.cpp) Move.cpp Order.cpp Plate.cpp Preset.cpp\
-../HAL/Arm.cpp ../HAL/Drive.cpp ../HAL/Vacuum.cpp ../HAL/HAL.cpp ../HAL/Coordinates.cpp
+lib-target: CC = $(CC_TARG)
+lib-host: 	CC = $(CC_HOST)
+target: CC = $(CC_TARG)
+host: 	CC = $(CC_HOST)
 
-TESTOBJECTS=$(TESTSOURCES:.cpp=.o)
+OBJDIR_TARG=obj-target
+OBJDIR_HOST=obj-host
+
+SOURCES=main.cpp Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp
+LIBSRCS=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp
+
+OBJECTS_TARG=$(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(SOURCES)))
+OBJECTS_HOST=$(addprefix $(OBJDIR_HOST)/, $(patsubst %.cpp, %.o, $(SOURCES)))
+# $(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(wildcard *.cpp)))
+
+LIBSRCS_TARG=$(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(LIBSRCS)))
+LIBSRCS_HOST=$(addprefix $(OBJDIR_HOST)/, $(patsubst %.cpp, %.o, $(LIBSRCS)))
+
+LIBS_TARG=-lcommunication -llogger -ljsonparser -lhal -lbl
+LIBS_HOST=-lcommunicationhost -lloggerhost -ljsonparserhost -lhalhost -lblhost
+
 LIBPATH=-L../lib -I../lib/include -I ../lib/include/rapidjson
-
 LIBS=-lstdc++ -lrt -lpthread
-LIBSTARGET=-lcommunication -llogger -ljsonparser
-LIBSHOST=-lcommunicationhost -lloggerhost -ljsonparserhost
-OUTPUT=bl
-TESTEXECUTABLE=Tests/$(OUTPUT)-RunTests.out
 
-lib-target:
+OUTPUT=bl
+
+.PHONY: all test clean
+
+# o mijn god wat een spaghetti 
+
+lib-target: $(OBJDIR_TARG) build-lib-target
+lib-host:	$(OBJDIR_HOST) build-lib-host
+
+build-lib-target: $(LIBSRCS_TARG)
+	cp $(LIBSRCS:.cpp=.h) ../lib/include
+	ar rvs ../lib/lib${OUTPUT}.a $^ -c
 	cp Error.h ../lib/include
 	cd Logging; make lib-target
 
-lib-host:
+build-lib-host: $(LIBSRCS_HOST)
+	cp $(LIBSRCS:.cpp=.h) ../lib/include
+	ar rvs ../lib/lib${OUTPUT}host.a $^ -c
 	cp Error.h ../lib/include
 	cd Logging; make lib-host
-	
+
 copy:
 	scp bl.out ptt@192.168.0.10:~
 
-target:
-	cp Error.h ../lib/include
-	cd Logging; make target
-	arm-linux-gnueabihf-g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}.out ${SOURCES} ${LIBSTARGET} ${LIBS}
+target: $(OBJDIR_TARG) build-target
+host: 	$(OBJDIR_HOST) build-host
 
-host:
-	cp Error.h ../lib/include
-	cp PlateList.h ../lib/include
-	cd Logging; make host
-	g++ ${CFLAGS} ${LIBPATH} -w -o ${OUTPUT}-host.out ${SOURCES} ${LIBSHOST} ${LIBS}
+build-target: $(OBJECTS_TARG)
+	make lib-target
+	$(CC) $(CFLAGS) $^ $(LIBPATH) $(LIBS_TARG) $(LIBS) -w -o $(OUTPUT).out
 
-.cpp.o:
+build-host: $(OBJECTS_HOST)
+	make lib-host
+	$(CC) $(CFLAGS) $^ $(LIBPATH) $(LIBS_HOST) $(LIBS) -w -o $(OUTPUT)-host.out
 
-	$(CC) $(TESTCFLAGS) $(LIBPATH) -c $< -o $@
+$(OBJDIR_TARG)/%.o: %.cpp
+	$(CC) $(CFLAGS) $(LIBPATH) -c $< -o $@
 
-test:	
-	cd test && make clean && make test
+$(OBJDIR_HOST)/%.o: %.cpp
+	$(CC) $(CFLAGS) $(LIBPATH) -c $< -o $@
+
+$(OBJDIR_TARG):
+	mkdir $(OBJDIR_TARG)
+
+$(OBJDIR_HOST):
+	mkdir $(OBJDIR_HOST)
+
+test:
+	cd test && make test
 
 test-run:
 	cd test && make test-run
@@ -62,8 +91,10 @@ all:
 
 clean:
 	cd Logging; make clean
+	cd test; make clean
 	rm -f *.out
 	rm -f *.o
 	rm -f *.gcno
 	rm -f *.gcda
-	$(RM) $(TESTOBJECTS) $(TESTEXECUTABLE)
+	rm -f obj-host/*.o
+	rm -f obj-target/*.o

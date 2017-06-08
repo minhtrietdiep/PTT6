@@ -162,11 +162,11 @@ ErrorCode executeFunction(IUIControl *control, const std::string &functionName,
 // We can return a ClientMessage we got, but also a new one if desired?
 ClientMessage asyncConsumeMessage(ClientMessage cm) 
 {
-    int priority = cm.GetPriority();
+    //int priority = cm.GetPriority();
     std::string sender = cm.GetSender();
     std::string funcName = cm.GetFunctionName();
     std::vector<Parameter> params = cm.GetParams();
-    int timeout = rand() % 5000;
+    //int timeout = rand() % 5000;
     for (auto p : params) 
     {
         std::cout << p.Name << "\n" << p.Type << "\n" << p.Value << "\n";
@@ -235,7 +235,7 @@ std::vector<std::string> splitRawMq(std::string rawMq)
     int leftBracketCount = 0;
     int rightBracketCount = 0;
     int start = 0;
-    for(int pos = 0; pos < rawMq.size(); pos++) 
+    for(unsigned int pos = 0; pos < rawMq.size(); pos++) 
     {
         char c = rawMq[pos];
         if (c == '{') 
@@ -246,7 +246,8 @@ std::vector<std::string> splitRawMq(std::string rawMq)
         {
             rightBracketCount++;
         }
-        if (rightBracketCount == leftBracketCount && leftBracketCount != 0 || pos == rawMq.size() - 1) 
+        if ((rightBracketCount == leftBracketCount && leftBracketCount != 0) || 
+            (pos == rawMq.size() - 1)) 
         {
             std::string singleMessage = rawMq.substr(start, pos - start + 1);
             leftBracketCount = 0;
