@@ -6,23 +6,23 @@
 #include <Const.h>
 #include "../../API/Interfaces/IUIControl.h"
 #include "../../API/Interfaces/IRemoteLog.h"
-#include "Preset.h"
-#include "Order.h"
-#include "Move.h"
-#include "Config.h"
+#include <Preset.h>
+#include <Order.h>
+#include <Move.h>
+#include <Config.h>
 #include <Logger.h>
 #include <PlateList.h>
 
 class Control : public IUIControl, public IRemoteLog
 {
-        private:
+    private:
         std::vector<Preset> m_Presets;
         Order m_Order;
         Config m_Config;
         const char* m_FileName = "Config/Presets.json";
-        Logger *m_Logger;
+        Logger m_Logger;
 
-	public:
+	public:    
 
         Control(std::vector<Preset> presets);
         ErrorCode SetupHardware();

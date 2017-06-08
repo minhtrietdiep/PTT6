@@ -17,7 +17,7 @@ class Arm
         ErrorCode MoveHome();
     private:
         Coordinates m_HomePosition;
-        Logger * m_Logger;
+        Logger m_Logger;
 };
 
 #endif  //  ARM_H_
