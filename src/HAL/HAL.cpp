@@ -15,21 +15,14 @@ HAL::HAL() : m_Arm(Arm(Coordinates(1,1,1,1)))
     Drive d5 = Drive(4, coords5);
     Coordinates coords99 = Coordinates(999,99,999,99);
     Drive d99 = Drive(99, coords99);*/
-    Drive d0 = Drive(0, DRIVE0_POS);
-    Drive d1 = Drive(1, DRIVE1_POS);
-    Drive d2 = Drive(2, DRIVE2_POS);
-    Drive d3 = Drive(3, DRIVE3_POS);
-    Drive d4 = Drive(4, DRIVE4_POS);
-    Drive col = Drive(99, COL_POS);
-    std::vector<Drive> drivelist;
-    drivelist.push_back(d0);
-    drivelist.push_back(d1);
-    drivelist.push_back(d2);
-    drivelist.push_back(d3);
-    drivelist.push_back(d4);
-    drivelist.push_back(col);
-    m_DriveList = drivelist;
-    //////TODO: Hubert -> to config file
+
+    m_DriveList.push_back(Drive(0, DRIVE0_POS));
+    m_DriveList.push_back(Drive(1, DRIVE1_POS));
+    m_DriveList.push_back(Drive(2, DRIVE2_POS));
+    m_DriveList.push_back(Drive(3, DRIVE3_POS));
+    m_DriveList.push_back(Drive(4, DRIVE4_POS));
+    m_DriveList.push_back(Drive(99, COL_POS)  );
+
 }
 
 HAL::~HAL()

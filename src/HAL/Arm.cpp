@@ -10,9 +10,9 @@
 #include <fstream>
 
 Arm::Arm(Coordinates homeposition) : 
-    m_HomePosition(homeposition)
+    m_HomePosition(homeposition),
+    m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
-    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     m_ColPrepCommand = COL_PREP_POS;
     m_DrivePrepCommand = DRIVE_PREP_POS;
     m_ArmHomeCommand = HOME_POS;
@@ -24,8 +24,9 @@ Arm::Arm(Coordinates homeposition) :
     m_SerialConfig.c_oflag = 0;
 }
 
-Arm::~Arm() {
-    delete m_Logger;
+Arm::~Arm() 
+{
+
 }
 
 
@@ -60,12 +61,12 @@ ErrorCode Arm::WriteCommand(std::string command)
     int fd = open(ARMPATH, O_RDWR | O_NOCTTY | O_NDELAY);
     if(fd < 0)
     {   
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
     if(tcsetattr(fd, TCSANOW, &m_SerialConfig) != 0)
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
 

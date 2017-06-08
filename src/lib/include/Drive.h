@@ -29,7 +29,6 @@ class Drive
     private:
         ErrorCode ToggleDrive();
         int m_DriveID;
-        Logger * m_Logger;
         std::string m_MoveCommand;
         //Coordinates m_Positions;
         std::string m_Drive0ValuePath;
@@ -42,4 +41,5 @@ class Drive
         std::string m_Drive2DirPath;
         std::string m_Drive3DirPath;
         std::string m_Drive4DirPath;
+        Logger m_Logger;
 };

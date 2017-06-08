@@ -23,10 +23,10 @@ class Arm
         ErrorCode WriteCommand(std::string command);
     private:
         Coordinates m_HomePosition;
-        Logger * m_Logger;
         std::string m_ArmFilePath;
         std::string m_ColPrepCommand;
         std::string m_DrivePrepCommand;
         std::string m_ArmHomeCommand;
         struct termios m_SerialConfig;
+        Logger m_Logger;
 };
