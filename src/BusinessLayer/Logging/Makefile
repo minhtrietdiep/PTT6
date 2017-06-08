@@ -3,6 +3,7 @@ CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
 lib-host-gcov:	CFLAGS += --coverage
+host-gcov:		CFLAGS += --coverage
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
 target: 	CC = $(CC_TARG)

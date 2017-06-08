@@ -3,6 +3,7 @@ CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
 lib-host-gcov:	CFLAGS += --coverage
+host-gcov:		CFLAGS += --coverage
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
 target: 	CC = $(CC_TARG)
@@ -50,6 +51,8 @@ build-lib-host: $(LIBSRCS_HOST)
 
 copy:
 	scp bl.out ptt@192.168.0.10:~
+
+host-gcov: host
 
 target: $(OBJDIR_TARG) build-target
 host: 	$(OBJDIR_HOST) build-host

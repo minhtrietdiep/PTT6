@@ -3,6 +3,7 @@ CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
 lib-host-gcov:	CFLAGS += --coverage
+host-gcov:		CFLAGS += --coverage
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
 target: 	CC = $(CC_TARG)
@@ -39,6 +40,8 @@ build-lib-target: $(OBJECTS_TARG)
 build-lib-host: $(OBJECTS_HOST)
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	ar rvs ../lib/lib${OUTPUT}host.a $^ -c
+
+host-gcov: host
 
 target:
 

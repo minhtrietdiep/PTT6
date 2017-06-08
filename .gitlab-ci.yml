@@ -16,7 +16,7 @@ compile:
   stage: compile
   script:
     - make lib-host-gcov
-    - make host
+    - make host-gcov
 cross-compile:
     stage: cross-compile
     script:

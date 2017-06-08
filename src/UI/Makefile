@@ -11,9 +11,9 @@ lib-host-gcov: lib-host
 
 lib-target:
 
-
 lib-host:
 
+host-gcov: host
 
 target:
 

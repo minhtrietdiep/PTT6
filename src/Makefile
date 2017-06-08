@@ -33,6 +33,13 @@ host:
 	cd API; make host
 	cd UI; make host
 
+host-gcov:
+	make lib-host-gcov
+	cd HAL; make host-gcov
+	cd BusinessLayer; make host-gcov
+	cd API; make host-gcov
+	cd UI; make host-gcov
+
 test:
 	make lib-host-gcov
 	cd HAL; make test
