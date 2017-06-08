@@ -14,7 +14,8 @@ class Order
     private:
         std::vector<Move> m_MoveList;
         HAL m_Hal;
-        Logger *m_Logger;
+
+        Logger m_Logger;
 
     public:
         Order();

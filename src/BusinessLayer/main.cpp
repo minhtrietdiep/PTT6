@@ -337,9 +337,12 @@ int kbhit(void)
 
 int main(int argc, char **argv) 
 {
+    MessageQueue mq;
+    mq.Create(MQ_NAME_RECEIVED_MESSAGES);
+    mq.Create(MQ_NAME_SEND_MESSAGES);
+
     srand (time(NULL));
     logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Program started");
-    MessageQueue mq;
     std::vector<std::future<ClientMessage>> futures;
     std::vector<std::thread> threads;
     std::cout << "Press ESC or q to quit\n";

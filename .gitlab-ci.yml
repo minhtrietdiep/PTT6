@@ -1,7 +1,6 @@
 cache:
-  key: "$CI_COMMIT_REF_NAME"
+  key: "$CI_COMMIT_REF_NAME/$CI_PIPELINE_ID"
   untracked: true
-#  key: "$CI_COMMIT_REF_NAME/$CI_PIPELINE_ID"
 before_script:
     - cd ./src
 after_script:
@@ -15,8 +14,8 @@ stages:
 compile:
   stage: compile
   script:
-    - make lib-host
-    - make host
+    - make lib-host-gcov
+    - make host-gcov
 cross-compile:
     stage: cross-compile
     script:
@@ -32,8 +31,7 @@ unit-test:
 code-coverage:
     stage: code-coverage
     script:
-    - make lib-host
-    - make host
+    - make test-run
     - bash  ./scripts/codecoverage.sh
     #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
     #- q

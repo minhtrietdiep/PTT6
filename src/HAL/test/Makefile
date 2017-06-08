@@ -16,7 +16,7 @@ GTEST_DIR = ../../sharedlibs/googletest
 CPPFLAGS += -isystem $(GTEST_DIR)/include 
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11 --coverage
 LIBPATH = -L../../lib -I../../lib/include 
 LIBS = -lhalhost -lloggerhost -lpthread
 
@@ -42,7 +42,7 @@ test-run: all
 	./HALTest
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.test
 	
 # Builds gtest.a and gtest_main.a.
 

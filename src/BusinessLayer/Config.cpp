@@ -52,6 +52,25 @@ std::vector<Plate> Config::GetCollimatorlist()
     return ErrorCode::ERR_NO_ITEM;
     
 }
+/*
+ErrorCode Config::SetFilename(PlateList plate, std::string filename)
+{
+    if(file.empty())
+    {
+        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "filename can't be empty");
+        return ErrorCode::ERR_INVALID_ARG
+    }
+    if(plate == PlateList::DRIVELIST)
+    {
+        m_DriveFileNam
+    }
+    else if(plate == PlateList::COLLIMATORLIST)
+    {
+
+    }
+    return ErrorCode::ERR_OK;
+}
+*/
 
  ErrorCode Config::LoadConfig(enum PlateList plate)
 {

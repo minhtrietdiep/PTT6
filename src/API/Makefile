@@ -10,6 +10,12 @@ target:
 host:
 	cd CommunicationServer; make host
 
+lib-host-gcov:
+	cd CommunicationServer; make lib-host-gcov
+
+host-gcov:
+	cd CommunicationServer; make host-gcov
+
 test: 
 	cd CommunicationServer; make test
 
