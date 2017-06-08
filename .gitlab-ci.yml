@@ -27,15 +27,11 @@ unit-test:
     - make test
     - make test-run
     #- make test-clean
-    #todo: ./ into api en de rest
 code-coverage:
     stage: code-coverage
     script:
- #- make test-run
+    - make test-run
     - bash  ./scripts/codecoverage.sh
-    #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
-    #- q
-    #- gcovr -r .
 lint:
   stage: lint
   script:
