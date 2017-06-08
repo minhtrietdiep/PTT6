@@ -11,7 +11,7 @@ OBJDIR_TARG=obj-target
 OBJDIR_HOST=obj-host
 
 SOURCES=main.cpp Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp
-LIBSRCS=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp
+LIBSRCS=Config.cpp Control.cpp Move.cpp Order.cpp Plate.cpp Preset.cpp JSONUtils.cpp
 
 OBJECTS_TARG=$(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(SOURCES)))
 OBJECTS_HOST=$(addprefix $(OBJDIR_HOST)/, $(patsubst %.cpp, %.o, $(SOURCES)))
