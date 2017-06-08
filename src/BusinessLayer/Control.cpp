@@ -2,14 +2,15 @@
 #include <fstream>
 #include <vector>
 
-#include "Control.h"
-#include "Config.h"
-#include "document.h"
-#include "istreamwrapper.h"
-#include "writer.h"
-#include "stringbuffer.h"
-#include "filereadstream.h"
-#include "JSONUtils.h"
+#include <Control.h>
+#include <Config.h>
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/filereadstream.h>
+#include <Const.h>
+#include <JSONUtils.h>
 
 
 #define COLLIMATORPOS 99

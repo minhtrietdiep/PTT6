@@ -4,8 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <Error.h>
-#include "Move.h"
-#include "../HAL/HAL.h"
+#include <Move.h>
+#include <HAL.h>
 #include <Logger.h>
 #include <Const.h>
 

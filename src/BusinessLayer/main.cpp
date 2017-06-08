@@ -21,11 +21,11 @@
 #include <JSONParser.h>
 #include <ClientMessage.h>
 #include <Error.h>
+#include <Control.h>
+#include <Config.h>
+#include <JSONUtils.h>
 
 #include "../API/Interfaces/IUIControl.h"
-#include "Control.h"
-#include "Config.h"
-#include "JSONUtils.h"
 
 #define ESCAPE_KEY 0x1B
 
