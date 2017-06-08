@@ -42,7 +42,7 @@ test-run: all
 	./HALTest
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.test
 	
 # Builds gtest.a and gtest_main.a.
 
