@@ -12,20 +12,15 @@
 #include <Logger.h>
 #include <JSONUtils.h>
 
-Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
+Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist) :
+    m_DriveList(drivelist),
+    m_CollimatorList(collimatorlist),
+    m_Logger(VERSION, Logger::Severity::ERROR, LOG_PATH)
 {
-    m_Logger = new Logger(VERSION, Logger::Severity::ERROR, LOG_PATH);
-    m_DriveList = drivelist;
-    m_CollimatorList = collimatorlist;
- 
     LoadConfig(PlateList::COLLIMATORLIST);
     LoadConfig(PlateList::DRIVELIST);
-
 }
-Config::~Config()
-{
-    delete m_Logger;
-}
+Config::~Config() { }
 
 std::vector<Plate> Config::GetDrivelist()
 {
@@ -47,7 +42,7 @@ std::vector<Plate> Config::GetCollimatorlist()
             return ErrorCode::ERR_OK;
         }
     }
-     m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid drive");
+     m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid drive");
     return ErrorCode::ERR_NO_ITEM;
     
 }
@@ -56,7 +51,7 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
 {
     if(file.empty())
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "filename can't be empty");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "filename can't be empty");
         return ErrorCode::ERR_INVALID_ARG
     }
     if(plate == PlateList::DRIVELIST)
@@ -86,7 +81,7 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
     FILE* fp = fopen(filename, "r"); // non-Windows use "r"
     if(!fp)
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open Config");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open Config");
         return ErrorCode::ERR_FILE_OPEN;    
     }
     char readBuffer[65536];
@@ -96,7 +91,7 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
     document.ParseStream(is);
     if(document.HasParseError()) 
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
         return ErrorCode::ERR_PARSE;    
     }
     
@@ -147,7 +142,7 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
     
     if(!ofs.is_open())   
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open config");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open config");
         return ErrorCode::ERR_FILE_OPEN;       
     }
 

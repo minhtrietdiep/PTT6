@@ -17,12 +17,12 @@
 
 class Control : public IUIControl, public IRemoteLog
 {
-        private:
+    private:
         std::vector<Preset> m_Presets;
         Order m_Order;
         Config m_Config;
         const char* m_FileName = "Config/Presets.json";
-        Logger *m_Logger;
+        Logger m_Logger;
 
 	public:
 

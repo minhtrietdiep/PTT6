@@ -16,7 +16,7 @@ class Config
         std::vector<Plate> m_CollimatorList;
         const char* m_DriveFileName = "Config/DriveList.json";
         const char* m_CollimatorFileName = "Config/CollimatorList.json";
-        Logger *m_Logger;
+        Logger m_Logger;
     
     public:
         Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist);

@@ -18,28 +18,26 @@
 #define MAX_PLATE_ID 4
 #define MIN_PLATE_ID 0
 
-Control::Control(std::vector<Preset> presets) : m_Presets(presets),
-m_Config(std::vector<Plate>(), std::vector<Plate>())
+Control::Control(std::vector<Preset> presets) : 
+    m_Presets(presets),
+    m_Config(std::vector<Plate>(), std::vector<Plate>()),
+    m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
-    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     LoadPresets();
 }
 
-Control::~Control()
-{
-    delete m_Logger;
-}
+Control::~Control() { }
 
 std::vector<Preset> Control::GetPresets()
 {
     return m_Presets;
 }
 
- ErrorCode Control::PlateToDrive(int plateid)
+ErrorCode Control::PlateToDrive(int plateid)
 {
     if (plateid < MIN_PLATE_ID && plateid > MAX_PLATE_ID)
     {
-         m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
+         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
          return ErrorCode::ERR_INVALID_ARG;
     }
     int driveID = -1;
@@ -75,7 +73,7 @@ std::vector<Preset> Control::GetPresets()
     } 
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid driveID");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid driveID");
         return ErrorCode::ERR_INVALID_ARG;
     }
 
@@ -87,7 +85,7 @@ std::vector<Preset> Control::GetPresets()
 {
     if (plateid < MIN_PLATE_ID && plateid > MAX_PLATE_ID)
     {
-         m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
+         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
          return ErrorCode::ERR_INVALID_ARG;
     }
     Move move(plateid,COLLIMATORPOS);
@@ -125,7 +123,7 @@ std::vector<Preset> Control::GetPresets()
 
     if (status < 0)
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "no preset found");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "no preset found");
         return ErrorCode::ERR_UNKNOWN;
 
     }
@@ -207,7 +205,7 @@ std::vector<Preset> Control::GetPresets()
             return ErrorCode::ERR_UNKNOWN;
         return ErrorCode::ERR_OK;
     } 
-    m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "cannot start order");
+    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "cannot start order");
     m_Order.Stop();
     m_Order.Reset();
     return ErrorCode::ERR_UNKNOWN;
@@ -235,7 +233,7 @@ ErrorCode Control::LoadPresets()
     FILE* fp = fopen(m_FileName, "r"); // non-Windows use "r"
     if(!fp)
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open logfile");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open logfile");
         return ErrorCode::ERR_FILE_OPEN;    
     }
     char readBuffer[65536];
@@ -245,7 +243,7 @@ ErrorCode Control::LoadPresets()
     document.ParseStream(is);
     if(document.HasParseError()) 
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Document has parse error");
         return ErrorCode::ERR_PARSE;    
     }
     
@@ -257,14 +255,14 @@ ErrorCode Control::LoadPresets()
         const rapidjson::Value& object = document["PresetList"][i].GetObject();
         if(!object.IsObject()) 
         {
-            m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get PresetList object");
+            m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get PresetList object");
             return ErrorCode::ERR_PARSE;    
         }
         int id = object["m_PresetID"].GetInt();
 
         if (!object["m_PlateIDs"].IsArray()) 
         {
-            m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
+            m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't get m_PlateIDs object");
             return ErrorCode::ERR_PARSE;
         }
         presetName = object["m_PresetName"].GetString();

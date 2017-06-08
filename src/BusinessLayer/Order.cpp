@@ -3,12 +3,16 @@
 #define COLLIMATORPOS 99
 
 
-Order::Order() : m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
+Order::Order() : 
+    m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH) 
 {
-    m_MoveList = std::vector<Move>();
+
 }
 
-Order::~Order() { }
+Order::~Order() 
+{ 
+
+}
 
 std::vector<Move> Order::GetMoves()
 {

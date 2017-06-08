@@ -16,7 +16,7 @@ class Plate
 		int m_CollimatorPosition;
 		std::string m_Properties;
 		double m_Thickness;
-		Logger *m_Logger;
+		Logger m_Logger;
 
 	public:
 		Plate(int id, int drivePos, int collimatorPosition, std::string properties, double tickness);
