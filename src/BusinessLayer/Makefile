@@ -1,4 +1,4 @@
-CFLAGS=-O2 -Wall -std=c++11
+CFLAGS=-O0 -Wall -std=c++11 -g
 CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 

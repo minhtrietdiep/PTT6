@@ -6,7 +6,8 @@
 #include <fstream>
 
 Arm::Arm(Coordinates homeposition) : 
-    m_HomePosition(homeposition)
+    m_HomePosition(homeposition),
+    m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
     m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
     m_ArmFilePath = ARMPATH;
@@ -37,7 +38,7 @@ ErrorCode Arm::MoveToCoord(Coordinates coordinates)
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm MoveToCoord: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm MoveToCoord: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
 
@@ -56,7 +57,7 @@ ErrorCode Arm::MoveHome()
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm MoveHome: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm MoveHome: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
 

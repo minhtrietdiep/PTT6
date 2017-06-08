@@ -8,7 +8,8 @@
 #define MOVESOURCE 0
 #define MOVEDESTINATION 2
 
-Order m_Order = Order();
+Order m_Order;
+
 
 TEST(OrderMove, NewMove) 
 {
