@@ -21,11 +21,14 @@ class Config
     public:
         Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist);
         ~Config();
+        ErrorCode SetCollimatorposition(int drive, int collimatorPosition);
+        ErrorCode SetFilename(PlateList plate, std::string filename);
         std::vector<Plate> GetDrivelist();
         std::vector<Plate> GetCollimatorlist();
-         ErrorCode LoadConfig(enum PlateList plate);
-         ErrorCode SaveConfig(enum PlateList plate);
-         ErrorCode SetCollimatorposition(int drive, int collimatorPosition);
+        ErrorCode LoadConfig(PlateList plate);
+        ErrorCode SaveConfig(PlateList plate);
+
+
         
 };
 
