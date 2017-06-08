@@ -1,6 +1,6 @@
 CXX = g++
 CPPFILES = BLTest.cpp PresetTest.cpp ConfigTest.cpp ControlTest.cpp \
-PlateTest.cpp MoveTest.cpp OrderTest.cpp
+PlateTest.cpp MoveTest.cpp OrderTest.cpp JSONUtilsTest.cpp
 OBJECTS = $(CPPFILES:.cpp=.o)
 
 # Please tweak the following variable definitions as needed by your
