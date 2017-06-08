@@ -1,12 +1,12 @@
-#ifndef PLATE_H_
-#define PLATE_H_
+#pragma once
 
 #include <iostream>
 #include <vector>
 #include <string>
-#include <Logger.h>
+
 #include <Const.h>
 #include <Error.h>
+#include <Logger.h>
 
 class Plate
 {
@@ -28,5 +28,3 @@ class Plate
 		 ErrorCode SetCollimatorPosition(int value);
 
 };
-
-#endif  //  PLATE_H_

@@ -1,10 +1,12 @@
 #include "JSONUtils.h"
 
-#include <Logger.h>
 #include <string>
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
+
+#include <Logger.h>
+#include <Config.h>
 
 std::string PresetToJSONString(std::vector<Preset> presets)
 {

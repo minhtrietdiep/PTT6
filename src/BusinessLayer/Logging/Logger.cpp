@@ -1,5 +1,9 @@
 #include "Logger.h"
-#include <Const.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <iostream>
 #include <fstream>
 #include <ctime>
@@ -7,9 +11,7 @@
 #include <iomanip>
 #include <mutex>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <Const.h>
 
 std::mutex Logger::loggerMutex;
 

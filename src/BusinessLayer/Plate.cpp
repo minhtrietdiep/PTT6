@@ -1,6 +1,4 @@
 #include "Plate.h"
-#include <Logger.h>
-#include <Const.h>
 
 #define MAX_COLLIMATORPOS_VALUE 4
 #define MIN_COLLIMATORPOS_VALUE 0

@@ -1,17 +1,19 @@
 #pragma once
 
-#include <iostream>
 #include <vector>
-#include <Error.h>
+
 #include <Const.h>
+#include <Logger.h>
+#include <Error.h>
+
+#include <Preset.h>
+#include <Order.h>
+#include <Move.h>
+#include <Config.h>
+#include <PlateList.h>
+
 #include "../../API/Interfaces/IUIControl.h"
 #include "../../API/Interfaces/IRemoteLog.h"
-#include "Preset.h"
-#include "Order.h"
-#include "Move.h"
-#include "Config.h"
-#include <Logger.h>
-#include <PlateList.h>
 
 class Control : public IUIControl, public IRemoteLog
 {

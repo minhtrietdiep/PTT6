@@ -1,17 +1,17 @@
-#include <Const.h>
+#include "Control.h"
+
 #include <fstream>
 #include <vector>
 
-#include <Control.h>
-#include <Config.h>
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/filereadstream.h>
-#include <Const.h>
+
 #include <JSONUtils.h>
 
+#include <Config.h>
 
 #define COLLIMATORPOS 99
 

@@ -1,13 +1,14 @@
-#ifndef ORDER_H_
-#define ORDER_H_
+#pragma once
 
 #include <iostream>
 #include <vector>
+
+#include <Const.h>
 #include <Error.h>
+#include <Logger.h>
+
 #include <Move.h>
 #include <HAL.h>
-#include <Logger.h>
-#include <Const.h>
 
 class Order 
 {
@@ -29,5 +30,3 @@ class Order
         ErrorCode PlateToDrive(int driveID);
         ErrorCode PlateToCol(int driveID);
 };
-
-#endif  //  ORDER_H_

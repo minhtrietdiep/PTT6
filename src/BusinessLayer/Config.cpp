@@ -1,17 +1,16 @@
-#include <Logger.h>
+#include "Config.h"
 
+#include <fstream>
+#include <vector>
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/filereadstream.h>
+
 #include <Const.h>
-#include <Config.h>
+#include <Logger.h>
 #include <JSONUtils.h>
-#include <fstream>
-#include <vector>
-
-
 
 Config::Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist)
 {

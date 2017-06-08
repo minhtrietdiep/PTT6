@@ -1,12 +1,12 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
+
+#include <vector>
+#include <Const.h>
+#include <Logger.h>
 
 #include <Error.h>
-#include "Plate.h"
-#include <vector>
+#include <Plate.h>
 #include <PlateList.h>
-#include <Logger.h>
-#include <Const.h>
 
 class Config
 {
@@ -31,5 +31,3 @@ class Config
 
         
 };
-
-#endif
