@@ -1,12 +1,13 @@
-#include "document.h"
-#include "istreamwrapper.h"
-#include "writer.h"
-#include "stringbuffer.h"
-#include "filereadstream.h"
-#include "Const.h"
 #include <Logger.h>
-#include "Config.h"
-#include "JSONUtils.h"
+
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/filereadstream.h>
+#include <Const.h>
+#include <Config.h>
+#include <JSONUtils.h>
 #include <fstream>
 #include <vector>
 
@@ -39,7 +40,7 @@ std::vector<Plate> Config::GetCollimatorlist()
 
  ErrorCode Config::SetCollimatorposition(int drive, int collimatorPosition)
 {
-    for (int i = 0; i < m_CollimatorList.size(); i++)
+    for (unsigned int i = 0; i < m_CollimatorList.size(); i++)
     {
         if (m_CollimatorList[i].GetID() == drive)
         {
