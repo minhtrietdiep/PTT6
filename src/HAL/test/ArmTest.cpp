@@ -38,8 +38,8 @@ TEST(HAL, ArmMoveToCoordTestFile)
 	std::string expected = "4 3 2 1";
 
 	std::ifstream ifs("arm.test");
-	std::string content( (std::istreambuf_iterator<char>(ifs) ),
-                       (std::istreambuf_iterator<char>()    ) );
+	std::string content(	(std::istreambuf_iterator<char>(ifs)),
+                       		(std::istreambuf_iterator<char>()));
 
     EXPECT_EQ(content, expected);
     EXPECT_EQ(ErrorCode::ERR_OK, returnVal);
@@ -56,8 +56,8 @@ TEST(HAL, ArmMoveHomeTestFile)
 	std::string expected = "1 2 3 4";
 
 	std::ifstream ifs("arm.test");
-	std::string content( (std::istreambuf_iterator<char>(ifs) ),
-                       (std::istreambuf_iterator<char>()    ) );
+	std::string content(	(std::istreambuf_iterator<char>(ifs)),
+							(std::istreambuf_iterator<char>()));
 
     EXPECT_EQ(content, expected);
     EXPECT_EQ(ErrorCode::ERR_OK, returnVal);

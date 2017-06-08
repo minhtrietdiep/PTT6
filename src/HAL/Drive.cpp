@@ -11,6 +11,17 @@ Drive::Drive(int driveid, Coordinates positions) :
     m_Positions (positions)
 {
     //m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
+    SetFilePathDrive0Value(DRIVE0VALUEPATH);
+    SetFilePathDrive1Value(DRIVE1VALUEPATH);
+    SetFilePathDrive2Value(DRIVE2VALUEPATH);
+    SetFilePathDrive3Value(DRIVE3VALUEPATH);
+    SetFilePathDrive4Value(DRIVE4VALUEPATH);
+    SetFilePathDrive0Dir(DRIVE0DIRPATH);
+    SetFilePathDrive1Dir(DRIVE1DIRPATH);
+    SetFilePathDrive2Dir(DRIVE2DIRPATH);
+    SetFilePathDrive3Dir(DRIVE3DIRPATH);
+    SetFilePathDrive4Dir(DRIVE4DIRPATH);
+
 }
 
 Drive::~Drive()
@@ -24,23 +35,23 @@ ErrorCode Drive::SetupHardware()
     switch(m_DriveID)
     {
         case 0:
-            f.open(DRIVE0DIRPATH);
+            f.open(m_Drive0DirPath);
             break;
 
         case 1:
-            f.open(DRIVE1DIRPATH);
+            f.open(m_Drive1DirPath);
             break;
 
         case 2:
-            f.open(DRIVE2DIRPATH);
+            f.open(m_Drive2DirPath);
             break;
 
         case 3:
-            f.open(DRIVE3DIRPATH);
+            f.open(m_Drive3DirPath);
             break;
 
         case 4:
-            f.open(DRIVE4DIRPATH);
+            f.open(m_Drive4DirPath);
             break; 
 
         default:
@@ -110,19 +121,19 @@ ErrorCode Drive::ToggleDrive()
     switch(m_DriveID)
     {
         case 0:
-            filepath = DRIVE0VALUEPATH;
+            filepath = m_Drive0ValuePath;
             break;
         case 1:
-            filepath = DRIVE1VALUEPATH;
+            filepath = m_Drive1ValuePath;
             break;
         case 2:
-            filepath = DRIVE2VALUEPATH;
+            filepath = m_Drive2ValuePath;
             break;
         case 3:
-            filepath = DRIVE3VALUEPATH;
+            filepath = m_Drive3ValuePath;
             break;
         case 4:
-            filepath = DRIVE4VALUEPATH;
+            filepath = m_Drive4ValuePath;
             break;
         default:
             return ErrorCode::ERR_UNKNOWN;
@@ -157,4 +168,52 @@ ErrorCode Drive::ToggleDrive()
     return ErrorCode::ERR_OK;
 }
 
+void Drive::SetFilePathDrive0Value(std::string path)
+{
+    m_Drive0ValuePath = path;
+}
 
+void Drive::SetFilePathDrive1Value(std::string path)
+{
+    m_Drive1ValuePath = path;
+}
+
+void Drive::SetFilePathDrive2Value(std::string path)
+{
+    m_Drive2ValuePath = path;
+}
+
+void Drive::SetFilePathDrive3Value(std::string path)
+{
+    m_Drive3ValuePath = path;
+}
+
+void Drive::SetFilePathDrive4Value(std::string path)
+{
+    m_Drive4ValuePath = path;
+}
+
+void Drive::SetFilePathDrive0Dir(std::string path)
+{
+    m_Drive0DirPath = path;
+}
+
+void Drive::SetFilePathDrive1Dir(std::string path)
+{
+    m_Drive1DirPath = path;
+}
+
+void Drive::SetFilePathDrive2Dir(std::string path)
+{
+    m_Drive2DirPath = path;
+}
+
+void Drive::SetFilePathDrive3Dir(std::string path)
+{
+    m_Drive3DirPath = path;
+}
+
+void Drive::SetFilePathDrive4Dir(std::string path)
+{
+    m_Drive4DirPath = path;
+}

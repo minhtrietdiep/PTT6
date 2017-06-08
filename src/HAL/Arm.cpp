@@ -17,11 +17,6 @@ Arm::~Arm()
     delete m_Logger;
 }
 
-void Arm::SetFilePath(std::string path)
-{
-    m_ArmFilePath = path;
-}
-
 ErrorCode Arm::MoveToCoord(Coordinates coordinates)
 {
     std::ostringstream msg;
@@ -61,4 +56,9 @@ ErrorCode Arm::MoveHome()
     }
 
     return ErrorCode::ERR_OK;
+}
+
+void Arm::SetFilePath(std::string path)
+{
+    m_ArmFilePath = path;
 }
