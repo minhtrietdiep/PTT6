@@ -1,6 +1,12 @@
 PTT6 Proftaak
 -------------------------------------------------------------------------------
 
+Project to design and implement a plate changer device for a Philips medical
+device, while working using AGILE.
+
+[Sprint Trello board](https://trello.com/b/5ZWiUzMG/ptt6-2)  
+[Backlog Trello board](https://trello.com/b/j1JP8Bcz/ptt6-2-backlog)
+
 ## Building
 
 There are different build configs for different purposes. Generally this should
@@ -62,18 +68,28 @@ Steps:
     * Depend on host build
     * Save test build and test-run artifacts
 * Run coverage check
+    * Depend on host build
+    * Depend on unit test build and run
 * Run linter
 
 Some steps have been taken to make the build process faster, by taking
 advantage of GitLab's CI rules. Near the end phase this saved some 6-7 minutes
 build time.
 
+Build and run results are __not__ cached between subsequent pipeline triggers.
+
 ## Running
 
 Simply run the following in any order:
 
+Target:
 * `bl.out`
 * `communication.out`
+
+Host:
+* `bl-host.out`
+* `communication-host.out`
+
 
 This starts the server-side. 
 
