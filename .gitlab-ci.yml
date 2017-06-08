@@ -1,39 +1,56 @@
 cache:
-  key: "$CI_COMMIT_REF_NAME/$CI_PIPELINE_ID"
-  untracked: true
+    key: "$CI_COMMIT_REF_NAME/$CI_PIPELINE_ID"
+    untracked: true
 before_script:
     - cd ./src
 after_script:
     - cd ./src
 stages:
-  - compile
-  - cross-compile
-  - unit-test
-  - code-coverage
-  - lint
+    - compile
+    - cross-compile
+    - unit-test
+    - code-coverage
+    - lint
 compile:
-  stage: compile
-  script:
-    - make lib-host-gcov
-    - make host-gcov
+    stage: compile
+    script:
+        - make lib-host-gcov
+        - make host-gcov
+    artifacts:
+        paths:
+            - "*/obj-*/*.o"
+            - "*/*/obj-*/*.o"
+            - "*/*.gcno"
+            - "*/*/*.gcno"
+            - "lib/*.a"
 cross-compile:
     stage: cross-compile
     script:
-    - make lib-target
-    - make target
+        - make lib-target
+        - make target
 unit-test:
     stage: unit-test
+    dependencies:
+        - compile
     script:
-    - make test
-    - make test-run
-    #- make test-clean
+        - make test
+        - make test-run
+    artifacts:
+        paths:
+            - "*/obj-*/*.o"
+            - "*/*/obj-*/*.o"
+            - "*/*.gcda"
+            - "*/*/*.gcda"
 code-coverage:
     stage: code-coverage
+    dependencies:
+        - compile
+        - unit-test
     script:
-    - make test-run
-    - bash  ./scripts/codecoverage.sh
+        - make test-run
+        - bash  ./scripts/codecoverage.sh
 lint:
-  stage: lint
-  script:
-    - cd scripts/
-    - bash lint.sh
+    stage: lint
+    script:
+        - cd scripts/
+        - bash lint.sh
