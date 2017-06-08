@@ -1,7 +1,7 @@
 #ifndef DRIVE_H_
 #define DRIVE_H_
 
-#include "Coordinates.h"
+//#include "Coordinates.h"
 
 #include "Error.h"
 #include "Const.h"
@@ -11,13 +11,15 @@
 class Drive
 {
     public:
-        Drive(int driveid, Coordinates positions);
+        Drive(int driveid, std::string movecommand);
         ~Drive();
         ErrorCode SetupHardware();
         ErrorCode OpenDrive();
         ErrorCode CloseDrive();
         int GetDriveID();
-        Coordinates GetDriveCoordinates();
+        std::string GetDriveMoveCommand();
+
+        //Coordinates GetDriveCoordinates();
         void SetFilePathDrive0Value(std::string path);
         void SetFilePathDrive1Value(std::string path);
         void SetFilePathDrive2Value(std::string path);
@@ -32,7 +34,8 @@ class Drive
         ErrorCode ToggleDrive();
         int m_DriveID;
         Logger * m_Logger;
-        Coordinates m_Positions;
+        std::string m_MoveCommand;
+        //Coordinates m_Positions;
         std::string m_Drive0ValuePath;
         std::string m_Drive1ValuePath;
         std::string m_Drive2ValuePath;

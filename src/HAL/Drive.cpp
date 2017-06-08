@@ -6,11 +6,11 @@
 #include <unistd.h>
 #include <iostream>
 
-Drive::Drive(int driveid, Coordinates positions) : 
+Drive::Drive(int driveid, std::string movecommand) : 
     m_DriveID(driveid),
-    m_Positions (positions)
+    m_MoveCommand(movecommand)
 {
-    //m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
+
     SetFilePathDrive0Value(DRIVE0VALUEPATH);
     SetFilePathDrive1Value(DRIVE1VALUEPATH);
     SetFilePathDrive2Value(DRIVE2VALUEPATH);
@@ -107,10 +107,10 @@ int Drive::GetDriveID()
     return m_DriveID;
 }
 
-Coordinates Drive::GetDriveCoordinates()
+/*Coordinates Drive::GetDriveCoordinates()
 {
     return m_Positions;
-}
+}*/
 
 
 ErrorCode Drive::ToggleDrive()
@@ -166,6 +166,11 @@ ErrorCode Drive::ToggleDrive()
     } 
 
     return ErrorCode::ERR_OK;
+}
+
+std::string Drive::GetDriveMoveCommand()
+{
+    return m_MoveCommand;
 }
 
 void Drive::SetFilePathDrive0Value(std::string path)

@@ -28,7 +28,6 @@ ErrorCode Order::NewMove(Move newMove)
 ErrorCode Order::Start() 
 {
 	
-    m_States state = m_States::OPEN_DRIVE;
     if ((int)m_MoveList.size() <= 0)
     {
         return ErrorCode::ERR_NO_ITEM;
@@ -36,83 +35,37 @@ ErrorCode Order::Start()
     int ID = m_MoveList[0].GetPlateID();
     int Destination = m_MoveList[0].GetDestination();
 
-    while (state != m_States::COMPLETED )
+    if(m_Hal.OpenDrive(ID) != ErrorCode::ERR_OK)
     {
-        switch(state) 
-        { 
-          case m_States::OPEN_DRIVE :
-                if(m_Hal.OpenDrive(ID) == ErrorCode::ERR_OK)
-                state = m_States::MOVE_ARM_SOURCE;
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Cannot open drive");
+        return ErrorCode::ERR_UNKNOWN;
+    }
 
-                else
-                {
-                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Cannot open drive");
-                    return ErrorCode::ERR_UNKNOWN;
-                }
-                break;
-            case m_States::MOVE_ARM_SOURCE :
-                if(m_Hal.MoveArm(ID) == ErrorCode::ERR_OK)
-                state = m_States::ENABLE_VACUUM;
-                else
-                {
-                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to ID");
-                    return ErrorCode::ERR_UNKNOWN;
-                }
-                break;
-            case m_States::ENABLE_VACUUM :
-                if(m_Hal.Pickup(true) == ErrorCode::ERR_OK)
-                state = m_States::MOVE_ARM_DESTINATION;
-                else
-                {
-                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
-                    return ErrorCode::ERR_UNKNOWN;
-                }
-                break;
-            case m_States::MOVE_ARM_DESTINATION :
-                if(m_Hal.MoveArm(Destination) == ErrorCode::ERR_OK)
-                state = m_States::DISABLE_VACUUM;
-                else
-                {
-                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Destination");
-                    return ErrorCode::ERR_UNKNOWN;
-                    
-                }
-                break;
-            case m_States::DISABLE_VACUUM :
-                if(m_Hal.Pickup(false) == ErrorCode::ERR_OK)
-                state = m_States::MOVE_ARM_HOME;
-                else
-                    {
-                        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
-                        return ErrorCode::ERR_UNKNOWN;
-                    }
-                break;
-            case m_States::MOVE_ARM_HOME :
-                if(m_Hal.MoveArmToHome() == ErrorCode::ERR_OK)
-                state = m_States::CLOSE_DRIVE;
-                else
-                {
-                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to home");
-                    return ErrorCode::ERR_UNKNOWN;
-
-                }
-                break;
-            case m_States::CLOSE_DRIVE :
-                if(m_Hal.CloseDrive(ID) == ErrorCode::ERR_OK)
-                state = m_States::COMPLETED;
-                else
-                {
-                    m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to close drive");
-                    return ErrorCode::ERR_UNKNOWN;
-                }
-
-
-                break;
-            default:
-                m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unknown switch state");
-                return ErrorCode::ERR_UNKNOWN;
-                break;
+    if (Destination == COLLIMATORPOS)
+    {
+        if(PlateToCol(ID) != ErrorCode::ERR_OK)
+        {
+            m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COLLIMATORPOS");
+            return ErrorCode::ERR_UNKNOWN;
         }
+    } else
+    {
+            if(PlateToDrive(ID) != ErrorCode::ERR_OK)
+        {
+            m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COLLIMATORPOS");
+            return ErrorCode::ERR_UNKNOWN;
+        }
+    }
+
+    if(m_Hal.MoveArmToHome() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to home");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.CloseDrive(ID) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to close drive");
+        return ErrorCode::ERR_UNKNOWN;
     }
 
     m_MoveList.erase(m_MoveList.begin());
@@ -135,4 +88,92 @@ ErrorCode Order::Reset()
 ErrorCode Order::SetupHardware()
 {
     return m_Hal.SetupHardware();
+}
+ErrorCode Order::PlateToDrive(int driveID)
+{
+    if(m_Hal.MoveToColPrep() != ErrorCode::ERR_OK) 
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to col prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToCol() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COL");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.Pickup(true) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToColPrep() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to col prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToDrivePrep() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive Prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToDrive(driveID) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.Pickup(false) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToDrivePrep() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive Prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    return ErrorCode::ERR_OK;
+}
+ErrorCode Order::PlateToCol(int driveID)
+{
+    if(m_Hal.MoveToDrivePrep() != ErrorCode::ERR_OK) 
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to col prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToDrive(driveID) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COL");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.Pickup(true) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToDrivePrep() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to col prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToColPrep() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive Prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToCol() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.Pickup(false) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToColPrep() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive Prep");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    return ErrorCode::ERR_OK;
 }
