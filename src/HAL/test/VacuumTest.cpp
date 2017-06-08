@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
-#include "../Drive.h"
+#include "../Vacuum.h"
  
-TEST(HAL, DriveTest1) 
+TEST(HAL, VacuumTest1) 
 {
     EXPECT_EQ(1, 1);
 }
