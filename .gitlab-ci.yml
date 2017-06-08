@@ -39,9 +39,9 @@ unit-test:
         paths:
             - "src/*/obj-*/*.o"
             - "src/*/*/obj-*/*.o"
+            - "src/*/*/*.gcno"
             - "src/*/*/*.gcda"
-            - "src/*/*/*/*.gcda"
-            - "src/*/*/*/*Test"
+            - "src/*/*/*Test"
 code-coverage:
     stage: code-coverage
     dependencies:
