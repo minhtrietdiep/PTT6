@@ -1,5 +1,5 @@
 CXX = g++
-CPPFILES = HALTest.cpp DriveTest.cpp
+CPPFILES = HALTest.cpp ArmTest.cpp CoordinatesTest.cpp DriveTest.cpp VacuumTest.cpp
 OBJECTS = $(CPPFILES:.cpp=.o)
 
 # Please tweak the following variable definitions as needed by your
