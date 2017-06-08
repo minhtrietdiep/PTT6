@@ -17,8 +17,12 @@ class HAL
         HAL();
         ~HAL();
         ErrorCode Pickup(bool on);
-        ErrorCode MoveArm(int driveid);
-        ErrorCode MoveArmToHome();
+        ErrorCode MoveToCol();
+        ErrorCode MoveToColPrep();
+        ErrorCode MoveToDrive(int driveid);
+        ErrorCode MoveToDrivePrep();
+        //ErrorCode MoveArm(int driveid);
+        //ErrorCode MoveArmToHome();
         ErrorCode OpenDrive(int driveid);
         ErrorCode CloseDrive(int driveid);
         ErrorCode SetupHardware();
