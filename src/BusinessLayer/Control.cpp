@@ -47,7 +47,7 @@ std::vector<Preset> Control::GetPresets()
     std::vector<Plate> drivelist = m_Config.GetDrivelist();
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
 
-    for(int i = 0; i < collimatorList.size(); i++)
+    for(int i = 0; i < (int)collimatorList.size(); i++)
     {
         if (collimatorList[i].GetID() == plateid)
         {
@@ -57,7 +57,7 @@ std::vector<Preset> Control::GetPresets()
     }
     if (driveID < 0)
     {
-        for(int i = 0; i < drivelist.size(); i++)
+        for(int i = 0; i < (int)drivelist.size(); i++)
         {
             if (drivelist[i].GetID() == plateid)
             {
@@ -116,7 +116,7 @@ std::vector<Preset> Control::GetPresets()
             status = 1;
 
             presetlist = preset.GetPlatelist();
-            for(int j = 0; j < presetlist.size(); j++)
+            for(int j = 0; j < (int)presetlist.size(); j++)
             {
                 PlateToCollimator(presetlist[j]);
             }
@@ -156,7 +156,7 @@ std::vector<Preset> Control::GetPresets()
 
 
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
-    for(int i = 0; i < collimatorList.size(); i++)
+    for(int i = 0; i < (int)collimatorList.size(); i++)
     {
             for (int j = collimatorList.size(); j <= 0; j--)
             {
@@ -187,7 +187,7 @@ std::vector<Preset> Control::GetPresets()
         {
             int position = 0;
             std::vector<Plate> platelist = m_Config.GetCollimatorlist();
-            for (int i = 0; i < platelist.size(); i ++)
+            for (int i = 0; i < (int)platelist.size(); i ++)
             {
                 if (platelist[i].GetCollimatorPosition() > position)
                     position = platelist[i].GetCollimatorPosition();
@@ -271,7 +271,7 @@ ErrorCode Control::LoadPresets()
         presetName = object["m_PresetName"].GetString();
 
         std::vector<int> plateList;
-        for (int j = 0; j < object["m_PlateIDs"].Size(); j++) 
+        for (int j = 0; j < (int)object["m_PlateIDs"].Size(); j++) 
         {
             plateList.push_back(object["m_PlateIDs"][j]["ID"].GetInt());
 
@@ -287,6 +287,7 @@ ErrorCode Control::LoadPresets()
 ErrorCode Control::DownloadLog(int logfilenumber)
 {
     std::cout << "Control:Downloading log " << logfilenumber << "..." << std::endl;
+    return ErrorCode::ERR_OK;
 }
 
 ErrorCode Control::SetupHardware()
