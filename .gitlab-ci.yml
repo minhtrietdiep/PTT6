@@ -1,6 +1,7 @@
 cache:
-  key: "$CI_COMMIT_REF_NAME/$CI_PIPELINE_ID"
+  key: "$CI_COMMIT_REF_NAME"
   untracked: true
+#  key: "$CI_COMMIT_REF_NAME/$CI_PIPELINE_ID"
 before_script:
     - cd ./src
 after_script:
