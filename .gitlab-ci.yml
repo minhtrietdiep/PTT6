@@ -20,8 +20,8 @@ compile:
         paths:
             - "src/*/obj-*/*.o"
             - "src/*/*/obj-*/*.o"
-            - "src/*/*.gcno"
             - "src/*/*/*.gcno"
+            - "src/*/*/*/*.gcno"
             - "src/lib/*.a"
 cross-compile:
     stage: cross-compile
@@ -39,8 +39,9 @@ unit-test:
         paths:
             - "src/*/obj-*/*.o"
             - "src/*/*/obj-*/*.o"
-            - "src/*/*.gcda"
             - "src/*/*/*.gcda"
+            - "src/*/*/*/*.gcda"
+            - "src/*/*/*/*Test"
 code-coverage:
     stage: code-coverage
     dependencies:
