@@ -45,7 +45,8 @@ test-run: all
 	./BLTest
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.gcda *.gcno
+	rm -rf logs
 	
 # Builds gtest.a and gtest_main.a.
 

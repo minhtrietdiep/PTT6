@@ -3,10 +3,11 @@ CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
 lib-host-gcov:	CFLAGS += --coverage
+host-gcov:		CFLAGS += --coverage
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
-target: CC = $(CC_TARG)
-host: 	CC = $(CC_HOST)
+target: 	CC = $(CC_TARG)
+host: 		CC = $(CC_HOST)
 
 OBJDIR_TARG=obj-target
 OBJDIR_HOST=obj-host
@@ -42,6 +43,8 @@ build-lib-host: $(OBJECTS_HOST)
 	cp $(SOURCES:.cpp=.h) ../lib/include
 	ar rvs ../lib/lib${OUTPUT}host.a $^ -c
 
+host-gcov: host
+
 target:
 
 host:
@@ -67,12 +70,10 @@ all:
 	make host
 
 clean:
-	rm -f *.out
-	rm -f *.o
-	rm -f ../lib/lib${OUTPUT}.a
-	rm -f ../lib/lib${OUTPUT}host.a
-	rm -f obj-host/*.o
-	rm -f obj-target/*.o
+	rm -f ../../lib/lib${OUTPUT}.a
+	rm -f ../../lib/lib${OUTPUT}host.a
+	rm -f *.out *.o *.gcno *.gcda
+	rm -rf obj-host obj-target logs
 	
 test:	
 	cd test && make test

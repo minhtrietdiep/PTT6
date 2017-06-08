@@ -49,7 +49,7 @@ test : $(TESTS)
 test-run: $(TESTS) testJSONParser testClientMessage
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.gcda *.gcno
 	
 
 
