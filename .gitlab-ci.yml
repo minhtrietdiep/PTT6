@@ -5,6 +5,7 @@ before_script:
     - cd ./src
 after_script:
     - cd ./src
+    - make test-clean
 stages:
   - compile
   - cross-compile
@@ -26,12 +27,12 @@ unit-test:
     script:
     - make test
     - make test-run
-    - make test-clean
+    #- make test-clean
     #todo: ./ into api en de rest
 code-coverage:
     stage: code-coverage
     script:
-    - make test-run
+ #- make test-run
     - bash  ./scripts/codecoverage.sh
     #- ./API/CommunicationServer/communication-host.out;./BusinessLayer/bl-host.out
     #- q
