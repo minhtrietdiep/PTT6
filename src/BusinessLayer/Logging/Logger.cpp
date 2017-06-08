@@ -5,13 +5,13 @@
 #include <ctime>
 #include <sstream>
 #include <iomanip>
-//#include <mutex>
+#include <mutex>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-//std::mutex Logger::loggerMutex;
+std::mutex Logger::loggerMutex;
 
 Logger::Logger(const std::string &systemVersion,
                Severity printLevel,
@@ -31,7 +31,7 @@ void Logger::Write(Severity severity,
                    const std::string &functionName, 
                    const std::string &message) 
 {
-//    std::lock_guard<std::mutex> lock(loggerMutex);
+    std::lock_guard<std::mutex> lock(loggerMutex);
 
     std::stringstream logLine;
     logLine << getTime()                << m_separator
