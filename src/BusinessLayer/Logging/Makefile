@@ -1,7 +1,8 @@
-CFLAGS=-O2 -Wall -std=c++11 --coverage 
+CFLAGS=-O2 -Wall -std=c++11 
 CC_TARG=arm-linux-gnueabihf-g++
 CC_HOST=g++
 
+lib-host-gcov:	CFLAGS += --coverage
 lib-target: CC = $(CC_TARG)
 lib-host: 	CC = $(CC_HOST)
 target: 	CC = $(CC_TARG)
