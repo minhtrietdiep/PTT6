@@ -7,10 +7,10 @@
 #include "Logger.h"
 
 #include <termios.h>
-
 #include <Const.h>
-
-#include <string>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 class Arm
 {
@@ -31,7 +31,8 @@ class Arm
         std::string m_ArmFilePath;
         std::string m_ColPrepCommand;
         std::string m_DrivePrepCommand;
-        std::string m_ArmHomeCOmmand;
+        std::string m_ArmHomeCommand;
+        struct termios m_SerialConfig;
 };
 
 #endif  //  ARM_H_

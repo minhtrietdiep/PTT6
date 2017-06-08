@@ -22,7 +22,7 @@ class HAL
         ErrorCode MoveToDrive(int driveid);
         ErrorCode MoveToDrivePrep();
         //ErrorCode MoveArm(int driveid);
-        //ErrorCode MoveArmToHome();
+        ErrorCode MoveArmToHome();
         ErrorCode OpenDrive(int driveid);
         ErrorCode CloseDrive(int driveid);
         ErrorCode SetupHardware();

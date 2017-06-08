@@ -91,10 +91,10 @@ ErrorCode HAL::MoveToDrivePrep()
     return ErrorCode::ERR_UNKNOWN;
 }*/
 
-/*ErrorCode HAL::MoveArmToHome()
+ErrorCode HAL::MoveArmToHome()
 {
     return m_Arm.MoveHome();
-}*/
+}
 
 ErrorCode HAL::OpenDrive(int driveid)
 {

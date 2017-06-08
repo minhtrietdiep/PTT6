@@ -12,11 +12,9 @@ Arm::Arm(Coordinates homeposition) :
     m_ColPrepCommand = COL_PREP_POS;
     m_DrivePrepCommand = DRIVE_PREP_POS;
     m_ArmHomeCommand = HOME_POS;
-    cfsetospeed(&m_SerialConfig, baudrate);
-    cfsetispeed(&m_SerialConfig, baudrate);
+    cfsetospeed(&m_SerialConfig, BAUDRATE);
+    cfsetispeed(&m_SerialConfig, BAUDRATE);
     cfmakeraw(&m_SerialConfig);
-    tcflush(fd, TCIFLUSH);
-    tcflush(fd, TCOFLUSH);
     m_SerialConfig.c_cflag = 6322;
     m_SerialConfig.c_iflag = 1030;
     m_SerialConfig.c_oflag = 0;
@@ -48,7 +46,7 @@ Arm::~Arm() {
 
 ErrorCode Arm::MoveHome()
 {
-    return WriteCommand(m_ArmHomeCOmmand);
+    return WriteCommand(m_ArmHomeCommand);
 }
 
 ErrorCode Arm::MoveToCol(std::string command)
@@ -73,7 +71,7 @@ ErrorCode Arm::MoveToDrivePrep()
 
 ErrorCode Arm::WriteCommand(std::string command)
 {
-    std::ofstream f(ARMPATH);
+    char const* commandchar = command.c_str();
     int fd = open(ARMPATH, O_RDWR | O_NOCTTY | O_NDELAY);
     if(fd < 0)
     {   
@@ -86,6 +84,6 @@ ErrorCode Arm::WriteCommand(std::string command)
         return ErrorCode::ERR_UNKNOWN;
     }
 
-    write(fd, command, strlen(command));
+    write(fd, commandchar, strlen(commandchar));
     return ErrorCode::ERR_OK;
 }
