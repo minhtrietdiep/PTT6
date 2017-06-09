@@ -1,6 +1,10 @@
 PTT6 Proftaak
 -------------------------------------------------------------------------------
 
+[![build status](https://git.fhict.nl/I300518/PTT6/badges/development/build.svg)](https://git.fhict.nl/I300518/PTT6/commits/development)
+[![coverage report](https://git.fhict.nl/I300518/PTT6/badges/development/coverage.svg)](https://git.fhict.nl/I300518/PTT6/commits/development)
+
+
 Project to design and implement a plate changer device for a Philips medical
 device, while working using AGILE.
 
