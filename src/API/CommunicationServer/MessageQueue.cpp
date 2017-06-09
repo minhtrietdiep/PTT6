@@ -75,7 +75,7 @@ void MessageQueue::Write(std::string mqName, std::string data)
 
     m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "writing to messagequeue");
     
-    if (mq_send(mq, data.c_str(), MAX_MESSAGE_SIZE, MQ_MESSAGE_PRIORITY) < 0)
+    if (mq_send(mq, data.c_str(), data.size(), MQ_MESSAGE_PRIORITY) < 0)
     {
         Error("mq_send() failed");
     }
