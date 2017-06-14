@@ -119,6 +119,7 @@ void * Thread::ListenerThread(void *args)
 
 void * Thread::SenderThread(void *args)
 {
+    
     SenderThreadArguments * senderThreadArgs = (SenderThreadArguments *) args;
 
     std::ostringstream logOutput;

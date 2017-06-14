@@ -4,8 +4,7 @@
 #include <pthread.h>
 #include <vector>
 #include <Logger.h>
-
-class Thread;
+#include "Thread.h"
 
 class CommunicationServer
 {
@@ -19,6 +18,7 @@ class CommunicationServer
         void Error(std::string message);
         int CreateServerSocket(int port);
         pthread_t m_Thread;
-        Thread *m_MainThread;
-        Logger *m_Logger;
+        Thread m_MainThread;
+        Logger m_Logger;
+        std::vector<int*> socketPointers;
 };

@@ -13,14 +13,14 @@
 int main(int argc, char **argv)
 {
     MessageQueue mq;
-    Logger *logger = new Logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
+    Logger m_Logger(VERSION, LOG_PRINTLEVEL, LOG_PATH);
     
     mq.Create(MQ_NAME_RECEIVED_MESSAGES);
     mq.Create(MQ_NAME_SEND_MESSAGES);
 
     CommunicationServer *com = new CommunicationServer(4244);
 
-    logger->Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, "press any key to exit");
+    m_Logger.Write(Logger::Severity::INFO, __PRETTY_FUNCTION__, "press any key to exit");
     
     getchar();
 
@@ -28,7 +28,6 @@ int main(int argc, char **argv)
     mq.Close(MQ_NAME_SEND_MESSAGES);
     
     delete com;
-    delete logger;
 
     pthread_exit(NULL);
     return 0;

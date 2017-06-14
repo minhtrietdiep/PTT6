@@ -65,6 +65,7 @@ std::string Logger::GetFileName()
 // "TIMESTAMP;SYSTEMVERSION;MODULENAME;FUNCTIONCALL;RETURNVALUE;\n"    
 void Logger::WriteHeader() 
 {
+    std::lock_guard<std::mutex> lock(loggerMutex);
 
     struct stat st = {0};
     if (stat(LOG_FOLDER, &st) == -1) 
