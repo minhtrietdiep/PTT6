@@ -64,4 +64,4 @@ echo -e "${NC}${BOLD}GCov results:${NORMAL}"
 
 #cd BusinessLayer/
 
-gcovr -r . --exclude=".*\.h" --exclude=".*/test/.*"
+gcovr -r . --exclude=".*\.h" --exclude=".*/test/.*" --exclude=".*\main.cpp" --exclude=".*/CommunicationServer/.*" --exclude=".*/sharedlibs/.*" 

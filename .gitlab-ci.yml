@@ -48,6 +48,7 @@ code-coverage:
         - compile
         - unit-test
     script:
+        - make lib-host-gcov
         - make test-run
         - bash  ./scripts/codecoverage.sh
 lint:
