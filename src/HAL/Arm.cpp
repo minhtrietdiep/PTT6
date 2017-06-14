@@ -60,12 +60,12 @@ ErrorCode Arm::WriteCommand(std::string command)
     int fd = open(ARMPATH, O_RDWR | O_NOCTTY | O_NDELAY);
     if(fd < 0)
     {   
-        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open tty file");
         return ErrorCode::ERR_UNKNOWN;
     }
     if(tcsetattr(fd, TCSANOW, &m_SerialConfig) != 0)
     {
-        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Arm WriteCommand: failed to open tty file");
         return ErrorCode::ERR_UNKNOWN;
     }
 

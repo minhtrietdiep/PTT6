@@ -155,12 +155,14 @@ ErrorCode Control::PlateToDrive(int plateid)
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
     for(int i = 0; i < (int)collimatorList.size(); i++)
     {
-            for (int j = collimatorList.size(); j <= 0; j--)
+        std::cout << "hey jij bent zovaak aangeroepen" << i << std::endl; 
+            for (int j = collimatorList.size(); j >= 0; j--)
             {
+                std::cout << "hey ik ben zovaak aangeroepen" << j << std::endl; 
                 if(collimatorList[i].GetCollimatorPosition() == j)
                 {
                    PlateToDrive(collimatorList[i].GetID());
-                   std::cout << "hey ik ben zovaak aangeroepen" << j << std::endl; 
+                   std::cout << "hey ik ben plaat naar drijf" << j << std::endl; 
                 }
             }
      
