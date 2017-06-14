@@ -7,11 +7,12 @@
  
 #define MOVESOURCE 0
 #define MOVEDESTINATION 2
+#define ID 2
 
-Order m_Order;
 
 TEST(OrderMove, NewMove) 
 {
+        Order m_Order;
         Move move = Move(MOVESOURCE,MOVEDESTINATION);
         m_Order.NewMove(move);
         std::vector<Move> m_MoveList = std::vector<Move>();
@@ -21,7 +22,9 @@ TEST(OrderMove, NewMove)
 }
 TEST(OrderMove, GetMoves) 
 {
+        Order m_Order;
         Move move = Move(MOVESOURCE,MOVEDESTINATION);
+        m_Order.NewMove(move);
         m_Order.NewMove(move);
         m_Order.NewMove(move);
         std::vector<Move> m_MoveList = std::vector<Move>();
@@ -31,6 +34,7 @@ TEST(OrderMove, GetMoves)
 }
 TEST(OrderMove, ResetOrder) 
 {
+        Order m_Order;
         std::vector<Move> m_MoveList = std::vector<Move>();
         m_Order.Reset();
         m_MoveList = m_Order.GetMoves();
@@ -39,9 +43,42 @@ TEST(OrderMove, ResetOrder)
 
 TEST(OrderMove, StartEmptyOrder) 
 {
+        Order m_Order;
         std::vector<Move> m_MoveList = std::vector<Move>();
         m_Order.Reset();
         ErrorCode error = m_Order.Start();
         EXPECT_EQ(error, ErrorCode::ERR_NO_ITEM);
 }
 
+TEST(OrderMove, SetupHardware) 
+{
+        Order m_Order;
+        std::vector<Move> m_MoveList = std::vector<Move>();
+        Move move = Move(MOVESOURCE,MOVEDESTINATION);
+        m_Order.NewMove(move);
+        m_Order.NewMove(move);
+        ErrorCode error = m_Order.SetupHardware();
+        EXPECT_EQ(error, ErrorCode::ERR_UNKNOWN);
+}
+
+TEST(OrderMove, PlateToDrive) 
+{
+        Order m_Order;
+        std::vector<Move> m_MoveList = std::vector<Move>();
+        Move move = Move(MOVESOURCE,MOVEDESTINATION);
+        m_Order.NewMove(move);
+        m_Order.NewMove(move);
+        ErrorCode error = m_Order.PlateToDrive(ID);
+        EXPECT_EQ(error, ErrorCode::ERR_UNKNOWN);
+}
+
+TEST(OrderMove, PlateToCol) 
+{
+        Order m_Order;
+        std::vector<Move> m_MoveList = std::vector<Move>();
+        Move move = Move(MOVESOURCE,MOVEDESTINATION);
+        m_Order.NewMove(move);
+        m_Order.NewMove(move);
+        ErrorCode error = m_Order.PlateToCol(ID);
+        EXPECT_EQ(error, ErrorCode::ERR_UNKNOWN);
+}
