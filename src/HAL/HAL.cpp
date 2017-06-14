@@ -9,7 +9,7 @@ HAL::HAL() :
     m_DriveList.push_back(Drive(2, DRIVE2_POS));
     m_DriveList.push_back(Drive(3, DRIVE3_POS));
     m_DriveList.push_back(Drive(4, DRIVE4_POS));
-    m_DriveList.push_back(Drive(99, COL_POS)  );
+    //m_DriveList.push_back(Drive(99, COL_POS)  );
 
 }
 
