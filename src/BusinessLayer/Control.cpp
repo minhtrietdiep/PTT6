@@ -159,7 +159,8 @@ ErrorCode Control::PlateToDrive(int plateid)
             {
                 if(collimatorList[i].GetCollimatorPosition() == j)
                 {
-                   PlateToDrive(collimatorList[i].GetID()); 
+                   PlateToDrive(collimatorList[i].GetID());
+                   std::cout << "hey ik ben zovaak aangeroepen" << j << std::endl; 
                 }
             }
      
