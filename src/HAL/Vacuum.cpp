@@ -33,7 +33,7 @@ ErrorCode Vacuum::EnableVacuum()
     {
         return ErrorCode::ERR_UNKNOWN;
     }
-    f << 1;
+    f << 0;
     f.close();
     return ErrorCode::ERR_OK;
 }
@@ -53,7 +53,7 @@ ErrorCode Vacuum::DisableVacuum()
     {
         return ErrorCode::ERR_UNKNOWN;
     }
-    f << 0;
+    f << 1;
     f.close();
     return ErrorCode::ERR_OK;
 }

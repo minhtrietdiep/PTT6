@@ -71,6 +71,7 @@ ErrorCode Arm::WriteCommand(std::string command)
     }
 
     write(fd, commandchar, strlen(commandchar));
+    sleep(5);
     return ErrorCode::ERR_OK;
 }
 
