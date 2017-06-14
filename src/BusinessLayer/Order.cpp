@@ -7,6 +7,7 @@ Order::Order() :
     m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH) 
 {
 
+
 }
 
 Order::~Order() 
@@ -36,6 +37,12 @@ ErrorCode Order::Start()
     }
     int ID = m_MoveList[0].GetPlateID();
     int Destination = m_MoveList[0].GetDestination();
+
+    if(SetupHardware() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Cannot SetupHardware");
+        return ErrorCode::ERR_UNKNOWN;
+    }
 
     if(m_Hal.OpenDrive(ID) != ErrorCode::ERR_OK)
     {
