@@ -12,12 +12,12 @@ class Arm
         Arm();
         ~Arm();
         ErrorCode MoveHome();
-        void SetFilePath(std::string path);
         ErrorCode MoveToCol(std::string command);
         ErrorCode MoveToColPrep();
         ErrorCode MoveToDrive(std::string command);
         ErrorCode MoveToDrivePrep();
         ErrorCode WriteCommand(std::string command);
+        void SetFilePath(std::string path);
     private:
         std::string m_ArmFilePath;
         std::string m_ColPrepCommand;
