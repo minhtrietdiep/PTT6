@@ -72,9 +72,11 @@ $(OBJDIR_HOST)/%.o: %.cpp
 	$(CC) $(CFLAGS) $(LIBPATH) -c $< -o $@
 
 $(OBJDIR_TARG):
+	cp $(LIBSRCS:.cpp=.h) ../lib/include
 	mkdir $(OBJDIR_TARG)
 
 $(OBJDIR_HOST):
+	cp $(LIBSRCS:.cpp=.h) ../lib/include
 	mkdir $(OBJDIR_HOST)
 
 test:

@@ -74,6 +74,12 @@ ErrorCode Order::Start()
     return ErrorCode::ERR_OK;
 }
 
+ErrorCode Order::Stop() 
+{
+    m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Stopping order");
+    return ErrorCode::ERR_OK;
+}
+
 ErrorCode Order::Reset()
 {
     m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Resetting order");
