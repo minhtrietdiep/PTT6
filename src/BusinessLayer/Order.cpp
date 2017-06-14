@@ -1,5 +1,7 @@
 #include "Order.h"
 
+#include <unistd.h>
+
 #define COLLIMATORPOS 99
 
 
@@ -105,14 +107,14 @@ ErrorCode Order::PlateToDrive(int driveID)
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to col prep");
         return ErrorCode::ERR_UNKNOWN;
     }
-    if(m_Hal.MoveToCol() != ErrorCode::ERR_OK)
-    {
-        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COL");
-        return ErrorCode::ERR_UNKNOWN;
-    }
     if(m_Hal.Pickup(true) != ErrorCode::ERR_OK)
     {
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
+        return ErrorCode::ERR_UNKNOWN;
+    }
+    if(m_Hal.MoveToCol() != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COL");
         return ErrorCode::ERR_UNKNOWN;
     }
     if(m_Hal.MoveToColPrep() != ErrorCode::ERR_OK)
@@ -135,6 +137,7 @@ ErrorCode Order::PlateToDrive(int driveID)
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
         return ErrorCode::ERR_UNKNOWN;
     }
+    sleep(1);
     if(m_Hal.MoveToDrivePrep() != ErrorCode::ERR_OK)
     {
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive Prep");
@@ -149,16 +152,16 @@ ErrorCode Order::PlateToCol(int driveID)
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to col prep");
         return ErrorCode::ERR_UNKNOWN;
     }
-    if(m_Hal.MoveToDrive(driveID) != ErrorCode::ERR_OK)
-    {
-        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COL");
-        return ErrorCode::ERR_UNKNOWN;
-    }
     if(m_Hal.Pickup(true) != ErrorCode::ERR_OK)
     {
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to pickup drive");
         return ErrorCode::ERR_UNKNOWN;
     }
+    if(m_Hal.MoveToDrive(driveID) != ErrorCode::ERR_OK)
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to COL");
+        return ErrorCode::ERR_UNKNOWN;
+    }   
     if(m_Hal.MoveToDrivePrep() != ErrorCode::ERR_OK)
     {
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to col prep");
@@ -179,6 +182,7 @@ ErrorCode Order::PlateToCol(int driveID)
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to disable vacuum");
         return ErrorCode::ERR_UNKNOWN;
     }
+    sleep(1);
     if(m_Hal.MoveToColPrep() != ErrorCode::ERR_OK)
     {
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Unable to move arm to Drive Prep");
