@@ -15,12 +15,12 @@ class Arm
         ~Arm();
         //ErrorCode MoveToCoord(Coordinates coordinates);
         ErrorCode MoveHome();
-        void SetFilePath(std::string path);
         ErrorCode MoveToCol(std::string command);
         ErrorCode MoveToColPrep();
         ErrorCode MoveToDrive(std::string command);
         ErrorCode MoveToDrivePrep();
         ErrorCode WriteCommand(std::string command);
+        void SetFilePath(std::string path);
     private:
         Coordinates m_HomePosition;
         std::string m_ArmFilePath;

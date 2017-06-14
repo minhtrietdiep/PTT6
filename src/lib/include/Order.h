@@ -24,7 +24,6 @@ class Order
         std::vector<Move> GetMoves();
         ErrorCode NewMove(Move newMove);
         ErrorCode Start();
-        ErrorCode Stop();
         ErrorCode Reset();
         ErrorCode SetupHardware();
         ErrorCode PlateToDrive(int driveID);

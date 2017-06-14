@@ -37,3 +37,11 @@ TEST(OrderMove, ResetOrder)
         EXPECT_EQ(m_MoveList.size(),0);
 }
 
+TEST(OrderMove, StartEmptyOrder) 
+{
+        std::vector<Move> m_MoveList = std::vector<Move>();
+        m_Order.Reset();
+        ErrorCode error = m_Order.Start();
+        EXPECT_EQ(error, ErrorCode::ERR_NO_ITEM);
+}
+
