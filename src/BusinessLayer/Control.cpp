@@ -83,7 +83,7 @@ ErrorCode Control::PlateToDrive(int plateid)
 
  ErrorCode Control::PlateToCollimator(int plateid)
 {
-    if (plateid < MIN_PLATE_ID && plateid > MAX_PLATE_ID)
+    if (plateid < MIN_PLATE_ID || plateid > MAX_PLATE_ID)
     {
          m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
          return ErrorCode::ERR_INVALID_ARG;
