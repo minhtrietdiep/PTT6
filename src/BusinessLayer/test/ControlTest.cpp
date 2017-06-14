@@ -38,6 +38,15 @@ TEST(Controltest, ConstructorValidGetPresetsTest)
     }
 }
 
+TEST(Controltest, StopWithoutOrderTest) 
+{
+    Control control({});
+    ErrorCode result = control.CancelCurrentOperation();
+    ErrorCode expected = ErrorCode::ERR_OK;
+    EXPECT_EQ( result, expected );
+}
+
+
 TEST(Controltest, InvalidPlateMoveTest) 
 {
     std::string PRESETNAME0 = "preset0";
@@ -87,4 +96,3 @@ TEST(Controltest, InvalidPlateToCollimatorTest)
 
     EXPECT_EQ(result, expected);
 }
-
