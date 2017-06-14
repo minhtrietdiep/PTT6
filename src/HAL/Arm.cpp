@@ -9,8 +9,7 @@
 #include <vector>
 #include <fstream>
 
-Arm::Arm(Coordinates homeposition) : 
-    m_HomePosition(homeposition),
+Arm::Arm() : 
     m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
     m_ColPrepCommand = COL_PREP_POS;

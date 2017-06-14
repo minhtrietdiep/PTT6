@@ -6,14 +6,11 @@
 #include <Error.h>
 #include <Logger.h>
 
-#include "Coordinates.h"
-
 class Arm
 {
 	public:
-        Arm(Coordinates homeposition);
+        Arm();
         ~Arm();
-        //ErrorCode MoveToCoord(Coordinates coordinates);
         ErrorCode MoveHome();
         void SetFilePath(std::string path);
         ErrorCode MoveToCol(std::string command);
@@ -22,7 +19,6 @@ class Arm
         ErrorCode MoveToDrivePrep();
         ErrorCode WriteCommand(std::string command);
     private:
-        Coordinates m_HomePosition;
         std::string m_ArmFilePath;
         std::string m_ColPrepCommand;
         std::string m_DrivePrepCommand;

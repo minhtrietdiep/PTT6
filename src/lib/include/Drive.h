@@ -14,8 +14,6 @@ class Drive
         ErrorCode CloseDrive();
         int GetDriveID();
         std::string GetDriveMoveCommand();
-
-        //Coordinates GetDriveCoordinates();
         void SetFilePathDrive0Value(std::string path);
         void SetFilePathDrive1Value(std::string path);
         void SetFilePathDrive2Value(std::string path);
@@ -30,7 +28,6 @@ class Drive
         ErrorCode ToggleDrive();
         int m_DriveID;
         std::string m_MoveCommand;
-        //Coordinates m_Positions;
         std::string m_Drive0ValuePath;
         std::string m_Drive1ValuePath;
         std::string m_Drive2ValuePath;
