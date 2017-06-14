@@ -139,7 +139,7 @@ ErrorCode Drive::ToggleDrive()
     {
         f1 << 1;
         f1.close();
-        usleep(20000);
+        usleep(100000);
     }
     else
     {
