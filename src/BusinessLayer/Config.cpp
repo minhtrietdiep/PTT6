@@ -68,7 +68,7 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
 
  ErrorCode Config::LoadConfig(enum PlateList plate)
 {
-    const char* filename;
+    std::string filename;
     if(plate == PlateList::DRIVELIST)
     {
         filename = m_DriveFileName;
@@ -78,7 +78,7 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
         filename = m_CollimatorFileName;
     }
 
-    FILE* fp = fopen(filename, "r"); // non-Windows use "r"
+    FILE* fp = fopen(filename.c_str(), "r"); // non-Windows use "r"
     if(!fp)
     {
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open Config");
