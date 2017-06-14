@@ -1,9 +1,9 @@
 #include "HAL.h"
 
-HAL::HAL() : m_Arm(Arm())
+HAL::HAL() :
+    m_Arm(Arm()),
+    m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
-
-
     m_DriveList.push_back(Drive(0, DRIVE0_POS));
     m_DriveList.push_back(Drive(1, DRIVE1_POS));
     m_DriveList.push_back(Drive(2, DRIVE2_POS));
@@ -92,6 +92,7 @@ ErrorCode HAL::SetupHardware()
     {
         if(m_DriveList[i].SetupHardware() != ErrorCode::ERR_OK)
         {
+            m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Drive setup failed");
             return ErrorCode::ERR_UNKNOWN;
         }
         

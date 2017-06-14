@@ -29,4 +29,5 @@ class HAL
         std::vector<Drive> m_DriveList;
         Vacuum m_Vacuum;
         Arm m_Arm;
+        Logger m_Logger;
 };

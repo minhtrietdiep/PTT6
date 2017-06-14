@@ -60,6 +60,7 @@ ErrorCode Vacuum::DisableVacuum()
 
 ErrorCode Vacuum::SetupHardware()
 {
+    m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Setting up vacuum");
     std::ofstream f(m_VacuumDirPath);
     if(FileCheck(f, "Vacuum Setup") == ErrorCode::ERR_UNKNOWN)
     {
@@ -67,8 +68,9 @@ ErrorCode Vacuum::SetupHardware()
     }
     f << "out";
     f.close();
+    m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Setting up valve");
     f.open(m_ValveDirPath);
-    if(FileCheck(f, "Vacuum Setup") == ErrorCode::ERR_UNKNOWN)
+    if(FileCheck(f, "Valve Setup") == ErrorCode::ERR_UNKNOWN)
     {
         return ErrorCode::ERR_UNKNOWN;
     }
