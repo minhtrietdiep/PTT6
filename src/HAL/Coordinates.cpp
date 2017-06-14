@@ -1,7 +1,7 @@
 #include "Coordinates.h"
 
+#include <vector>
 #include <Logger.h>
-#include <iostream>
 
 Coordinates::Coordinates(int pos1, int pos2, int pos3, int pos4) : 
 	m_Pos1(pos1),

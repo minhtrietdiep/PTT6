@@ -1,7 +1,5 @@
-#ifndef MOVE_H_
-#define MOVE_H_
+#pragma once
 
-#include <iostream>
 #include <vector>
 
 class Move {
@@ -16,5 +14,3 @@ public:
     int GetDestination();
     ~Move();
 };
-
-#endif  //  MOVE_H_

@@ -42,7 +42,8 @@ test-run: all
 	./HALTest
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o *.test
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.gcda *.gcno *.test
+	rm -rf logs
 	
 # Builds gtest.a and gtest_main.a.
 

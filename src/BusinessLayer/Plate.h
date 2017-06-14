@@ -1,12 +1,12 @@
-#ifndef PLATE_H_
-#define PLATE_H_
+#pragma once
 
 #include <iostream>
 #include <vector>
 #include <string>
-#include <Logger.h>
+
 #include <Const.h>
 #include <Error.h>
+#include <Logger.h>
 
 class Plate
 {
@@ -16,7 +16,7 @@ class Plate
 		int m_CollimatorPosition;
 		std::string m_Properties;
 		double m_Thickness;
-		Logger *m_Logger;
+		Logger m_Logger;
 
 	public:
 		Plate(int id, int drivePos, int collimatorPosition, std::string properties, double tickness);
@@ -28,5 +28,3 @@ class Plate
 		 ErrorCode SetCollimatorPosition(int value);
 
 };
-
-#endif  //  PLATE_H_

@@ -1,15 +1,14 @@
-#ifndef HAL_H_
-#define HAL_H_
+#pragma once
+
+#include <vector>
+
+#include <Const.h>
+#include <Error.h>
+#include <Logger.h>
 
 #include "Arm.h"
 #include "Drive.h"
 #include "Vacuum.h"
-
-#include "Error.h"
-
-#include <Logger.h>
-
-#include <vector>
 
 class HAL
 {
@@ -17,7 +16,11 @@ class HAL
         HAL();
         ~HAL();
         ErrorCode Pickup(bool on);
-        ErrorCode MoveArm(int driveid);
+        ErrorCode MoveToCol();
+        ErrorCode MoveToColPrep();
+        ErrorCode MoveToDrive(int driveid);
+        ErrorCode MoveToDrivePrep();
+        //ErrorCode MoveArm(int driveid);
         ErrorCode MoveArmToHome();
         ErrorCode OpenDrive(int driveid);
         ErrorCode CloseDrive(int driveid);
@@ -27,5 +30,3 @@ class HAL
         Vacuum m_Vacuum;
         Arm m_Arm;
 };
-
-#endif  //  HAL_H_

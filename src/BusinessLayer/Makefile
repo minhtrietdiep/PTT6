@@ -96,9 +96,7 @@ all:
 clean:
 	cd Logging; make clean
 	cd test; make clean
-	rm -f *.out
-	rm -f *.o
-	rm -f *.gcno
-	rm -f *.gcda
-	rm -f obj-host/*.o
-	rm -f obj-target/*.o
+	rm -f ../lib/lib${OUTPUT}.a
+	rm -f ../lib/lib${OUTPUT}host.a
+	rm -f *.out *.o *.gcno *.gcda
+	rm -rf obj-host obj-target logs

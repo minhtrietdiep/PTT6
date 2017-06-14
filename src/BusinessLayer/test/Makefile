@@ -1,6 +1,6 @@
 CXX = g++
 CPPFILES = BLTest.cpp PresetTest.cpp ConfigTest.cpp ControlTest.cpp \
-PlateTest.cpp MoveTest.cpp OrderTest.cpp
+PlateTest.cpp MoveTest.cpp OrderTest.cpp JSONUtilsTest.cpp
 OBJECTS = $(CPPFILES:.cpp=.o)
 
 # Please tweak the following variable definitions as needed by your
@@ -45,7 +45,8 @@ test-run: all
 	./BLTest
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.gcda *.gcno
+	rm -rf logs
 	
 # Builds gtest.a and gtest_main.a.
 

@@ -1,12 +1,10 @@
-#ifndef VACUUM_H_
-#define VACUUM_H_
-
-#include "Error.h"
-
-#include <Logger.h>
-#include <Const.h>
+#pragma once 
 
 #include <string>
+
+#include <Const.h>
+#include <Error.h>
+#include <Logger.h>
 
 class Vacuum
 {
@@ -23,11 +21,9 @@ class Vacuum
     private:
         ErrorCode FileCheck(std::ofstream &f, std::string functionname);
         int m_VacuumStatus;
-        Logger *m_Logger;
+        Logger m_Logger;
         std::string m_VacuumValuePath;
         std::string m_VacuumDirPath;
         std::string m_ValveValuePath;
         std::string m_ValveDirPath;
 };
-
-#endif  //  VACUUM_H_

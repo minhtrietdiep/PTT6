@@ -14,7 +14,3 @@ class Preset {
         std::string GetPresetName();
         std::vector<int> GetPlatelist();
 };
-
-
-
-

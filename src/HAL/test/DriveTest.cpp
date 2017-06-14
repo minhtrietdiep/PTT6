@@ -3,7 +3,7 @@
  
 #include <fstream>
 #include <iostream>
-
+/*
 TEST(HAL, DriveSetupFileNotFound) 
 {
 	Coordinates coords = Coordinates(1, 2, 3, 4);
@@ -39,4 +39,4 @@ TEST(HAL, DriveSetupOk)
 
 	EXPECT_EQ(content, "out");
     EXPECT_EQ(ErrorCode::ERR_OK, returnVal);
-}
+}*/

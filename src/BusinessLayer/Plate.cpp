@@ -1,20 +1,20 @@
 #include "Plate.h"
-#include <Logger.h>
-#include <Const.h>
 
 #define MAX_COLLIMATORPOS_VALUE 4
 #define MIN_COLLIMATORPOS_VALUE 0
 
 
-Plate::Plate(int id, int drivePos, int collimatorPosition, std::string properties, double thickness)
+Plate::Plate(int id, int drivePos, int collimatorPosition, std::string properties, double thickness) :
+	m_ID(id),
+	m_DrivePosition(drivePos),
+	m_CollimatorPosition(collimatorPosition),
+	m_Properties(properties),
+	m_Thickness(thickness),
+	m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
-	m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
-	m_ID = id;
-	m_DrivePosition = drivePos;
-	m_CollimatorPosition = collimatorPosition;
-	m_Properties = properties;
-	m_Thickness = thickness;
+
 }
+
 double Plate::GetThickness()
 {
 	return m_Thickness;
@@ -42,7 +42,7 @@ int Plate::GetID()
 		m_CollimatorPosition = value;
 		return ErrorCode::ERR_OK;
 	}
-	m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "SetCollimatorPosition no int");
+	m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "SetCollimatorPosition no int");
 	return ErrorCode::ERR_INVALID_ARG;
 
 	

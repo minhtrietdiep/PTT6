@@ -1,12 +1,12 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
+
+#include <vector>
+#include <Const.h>
+#include <Logger.h>
 
 #include <Error.h>
-#include "Plate.h"
-#include <vector>
+#include <Plate.h>
 #include <PlateList.h>
-#include <Logger.h>
-#include <Const.h>
 
 class Config
 {
@@ -16,7 +16,7 @@ class Config
         std::vector<Plate> m_CollimatorList;
         const char* m_DriveFileName = "Config/DriveList.json";
         const char* m_CollimatorFileName = "Config/CollimatorList.json";
-        Logger *m_Logger;
+        Logger m_Logger;
     
     public:
         Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist);
@@ -31,5 +31,3 @@ class Config
 
         
 };
-
-#endif

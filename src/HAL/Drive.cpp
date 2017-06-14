@@ -1,16 +1,17 @@
 #include "Drive.h"
 
+#include <unistd.h>
 #include <vector>
 #include <sstream>
 #include <fstream>
-#include <unistd.h>
 #include <iostream>
 
-Drive::Drive(int driveid, Coordinates positions) : 
+Drive::Drive(int driveid, std::string movecommand) : 
     m_DriveID(driveid),
-    m_Positions (positions)
+    m_MoveCommand(movecommand),
+    m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
-    //m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
+
     SetFilePathDrive0Value(DRIVE0VALUEPATH);
     SetFilePathDrive1Value(DRIVE1VALUEPATH);
     SetFilePathDrive2Value(DRIVE2VALUEPATH);
@@ -26,7 +27,7 @@ Drive::Drive(int driveid, Coordinates positions) :
 
 Drive::~Drive()
 {
-    // WHY CRASH? delete m_Logger;
+
 }
 
 ErrorCode Drive::SetupHardware()
@@ -66,7 +67,7 @@ ErrorCode Drive::SetupHardware()
     }
     else
     {
-        //m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive Setup: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive Setup: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
         
@@ -76,7 +77,7 @@ ErrorCode Drive::OpenDrive()
 {
     std::ostringstream msg;
     msg << "Opening drive: " << m_DriveID;
-    //m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str()); 
+    m_Logger.Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str()); 
     if(ToggleDrive() == ErrorCode::ERR_OK)  
     {
         return ErrorCode::ERR_OK;
@@ -91,7 +92,7 @@ ErrorCode Drive::CloseDrive()
 {
     std::ostringstream msg;
     msg << "Closing drive: " << m_DriveID;
-    //m_Logger->Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str());
+    m_Logger.Write(Logger::Severity::DEBUG,__PRETTY_FUNCTION__,msg.str());
     if(ToggleDrive() == ErrorCode::ERR_OK)  
     {
         return ErrorCode::ERR_OK;
@@ -107,10 +108,10 @@ int Drive::GetDriveID()
     return m_DriveID;
 }
 
-Coordinates Drive::GetDriveCoordinates()
+/*Coordinates Drive::GetDriveCoordinates()
 {
     return m_Positions;
-}
+}*/
 
 
 ErrorCode Drive::ToggleDrive()
@@ -148,7 +149,7 @@ ErrorCode Drive::ToggleDrive()
     }
     else
     {
-        //m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive ToggleDrive: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive ToggleDrive: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     }
 
@@ -161,11 +162,16 @@ ErrorCode Drive::ToggleDrive()
     }
     else
     {
-        //m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive ToggleDrive: failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In Drive ToggleDrive: failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     } 
 
     return ErrorCode::ERR_OK;
+}
+
+std::string Drive::GetDriveMoveCommand()
+{
+    return m_MoveCommand;
 }
 
 void Drive::SetFilePathDrive0Value(std::string path)

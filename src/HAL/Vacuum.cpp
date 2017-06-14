@@ -4,10 +4,9 @@
 #include <fstream>
 #include <vector>
 
-Vacuum::Vacuum()
+Vacuum::Vacuum() :
+    m_Logger(VERSION,Logger::Severity::ERROR,LOG_PATH)
 {
-    m_Logger = new Logger(VERSION,Logger::Severity::ERROR,LOG_PATH);
-
     SetFilePathVacuumValue(VACUUMVALUEPATH);
     SetFilePathVacuumDir(VACUUMDIRPATH);
     SetFilePathValveValue(VALVEVALUEPATH);
@@ -16,12 +15,12 @@ Vacuum::Vacuum()
 
 Vacuum::~Vacuum()
 {
-    delete m_Logger;
+
 }
 
 ErrorCode Vacuum::EnableVacuum()
 {
-    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Enabling vacuum");
+    m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Enabling vacuum");
     std::ofstream f(m_VacuumValuePath);
     if(FileCheck(f, "Vacuum EnableVacuum") == ErrorCode::ERR_UNKNOWN)
     {
@@ -41,7 +40,7 @@ ErrorCode Vacuum::EnableVacuum()
 
 ErrorCode Vacuum::DisableVacuum()
 {
-    m_Logger->Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Disabling vacuum");
+    m_Logger.Write(Logger::Severity::DEBUG, __PRETTY_FUNCTION__, "Disabling vacuum");
     std::ofstream f(m_VacuumValuePath);
     if(FileCheck(f, "Vacuum DisableVacuum") == ErrorCode::ERR_UNKNOWN)
     {
@@ -87,7 +86,7 @@ ErrorCode Vacuum::FileCheck(std::ofstream &f, std::string functionname)
     }
     else
     {
-        m_Logger->Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In " + functionname + ": failed to open a GPIO file");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "In " + functionname + ": failed to open a GPIO file");
         return ErrorCode::ERR_UNKNOWN;
     } 
 }

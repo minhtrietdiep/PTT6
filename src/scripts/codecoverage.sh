@@ -62,6 +62,6 @@ done
 echo ""
 echo -e "${NC}${BOLD}GCov results:${NORMAL}"
 
-cd BusinessLayer/
+#cd BusinessLayer/
 
 gcovr -r . --exclude=".*\.h" --exclude=".*/test/.*"
