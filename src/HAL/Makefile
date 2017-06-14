@@ -12,7 +12,7 @@ host: 		CC = $(CC_HOST)
 OBJDIR_TARG=obj-target
 OBJDIR_HOST=obj-host
 
-SOURCES=Arm.cpp Drive.cpp Vacuum.cpp HAL.cpp Coordinates.cpp
+SOURCES=Arm.cpp Drive.cpp Vacuum.cpp HAL.cpp
 
 OBJECTS_TARG=$(addprefix $(OBJDIR_TARG)/, $(patsubst %.cpp, %.o, $(SOURCES)))
 OBJECTS_HOST=$(addprefix $(OBJDIR_HOST)/, $(patsubst %.cpp, %.o, $(SOURCES)))
