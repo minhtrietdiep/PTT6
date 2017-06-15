@@ -96,3 +96,51 @@ TEST(Controltest, InvalidPlateToCollimatorTest)
 
     EXPECT_EQ(result, expected);
 }
+
+TEST(Controltest, EmergencyStopWithoutOrderTest) 
+{
+    Control control({});
+    ErrorCode result = control.EmergencyStop();
+    ErrorCode expected = ErrorCode::ERR_OK;
+    EXPECT_EQ( result, expected );
+}
+
+TEST(Controltest, ContinueSystemWithoutOrderTest) 
+{
+    Control control({});
+    ErrorCode result = control.ContinueSystem();
+    ErrorCode expected = ErrorCode::ERR_OK;
+    EXPECT_EQ( result, expected );
+}
+
+TEST(Controltest, ResetSystemWithoutOrderTest) 
+{
+    Control control({});
+    ErrorCode result = control.ResetSystem();
+    ErrorCode expected = ErrorCode::ERR_OK;
+    EXPECT_EQ( result, expected );
+}
+
+TEST(Controltest, StartSystemWithoutOrderTest) 
+{
+    Control control({});
+    ErrorCode result = control.ResetSystem();
+    ErrorCode expected = ErrorCode::ERR_OK;
+    EXPECT_EQ( result, expected );
+}
+
+TEST(Controltest, DownloadLogTest) 
+{
+    Control control({});
+    ErrorCode result = control.DownloadLog(0);
+    ErrorCode expected = ErrorCode::ERR_OK;
+    EXPECT_EQ( result, expected );
+}
+
+TEST(ControlTest, SetupHardwareTest)
+{
+    Control control({});
+    ErrorCode result = control.SetupHardware();
+    ErrorCode expected = ErrorCode::ERR_UNKNOWN;
+    EXPECT_EQ( result, expected );
+}

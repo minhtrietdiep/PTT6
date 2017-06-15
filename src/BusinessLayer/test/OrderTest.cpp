@@ -82,3 +82,4 @@ TEST(OrderMove, PlateToCol)
         ErrorCode error = m_Order.PlateToCol(ID);
         EXPECT_EQ(error, ErrorCode::ERR_UNKNOWN);
 }
+
