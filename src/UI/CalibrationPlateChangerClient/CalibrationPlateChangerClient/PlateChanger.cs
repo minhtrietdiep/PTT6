@@ -17,7 +17,7 @@ namespace CalibrationPlateChangerClient
 
     class PlateChanger
     {
-        private const string m_ServerIp = "192.168.0.10";
+        private const string m_ServerIp = "192.168.7.2";
         private const int m_ServerPort = 4244;
 
         private MainForm m_UserInterface;
@@ -269,12 +269,17 @@ namespace CalibrationPlateChangerClient
         private void ApplyNewColliState(string serializedColliState)
         {
             ApiPlateList colliState = m_JsonSerializer.Deserialize<ApiPlateList>(serializedColliState);
+            List<Plate> newDrivePlateList = new List<Plate>();
             List<Plate> newColliPlateList = new List<Plate>();
             foreach (ApiPlate plate in colliState.Plates)
             {
-                if (plate.m_CollimatorPosition > 0)
+                if (plate.m_DrivePosition >= 0)
+                    newDrivePlateList.Add(new Plate(plate.m_ID, plate.m_Property, plate.m_Thickness));
+
+                if (plate.m_CollimatorPosition >= 0)
                     newColliPlateList.Add(new Plate(plate.m_ID, plate.m_Property, plate.m_Thickness));
             }
+            m_DrivePlateList = newDrivePlateList;
             m_CollimatorPlateList = newColliPlateList;
         }
 
@@ -353,56 +358,11 @@ namespace CalibrationPlateChangerClient
         private void InitializeUserInterface()
         {
             ApiFunctionBuilder m_Api = new ApiFunctionBuilder();
-            ApiFunction getDriveStateRequest = m_Api.UploadDriveState();
-            SendFunctionRequest(getDriveStateRequest);
             ApiFunction getColliStateRequest = m_Api.UploadCollimatorState();
             SendFunctionRequest(getColliStateRequest);
             ApiFunction getPresetRequest = m_Api.UploadPresets();
             SendFunctionRequest(getPresetRequest);
             return;
-        }
-
-
-
-        private void TESTgenerateTestData()
-        {
-            m_CollimatorPlateList = new List<Plate>();
-            m_DrivePlateList = new List<Plate>();
-            m_DrivePlateList.Add(new Plate(1, "Lead", 2.5));
-            m_DrivePlateList.Add(new Plate(2, "Lead", 5));
-            m_DrivePlateList.Add(new Plate(3, "Alluminium", 3.1));
-            m_DrivePlateList.Add(new Plate(4, "Nothing", 2));
-            m_DrivePlateList.Add(new Plate(5, "Copper", 0.5));
-            m_DrivePlateList.Add(new Plate(6, "Copper", 1));
-            m_DrivePlateList.Add(new Plate(7, "A lot", 1.25));
-            m_DrivePlateList.Add(new Plate(8, "Random Stuff", 2));
-            m_DrivePlateList.Add(new Plate(9, "More stuff", 5.25));
-            m_DrivePlateList.Add(new Plate(10, "Plutonium", 1.5));
-            m_DrivePlateList.Add(new Plate(11, "Anti-matter", -3));
-            m_PresetList = new List<Preset>();
-            List<Plate> preset1Plates = new List<Plate>();
-            preset1Plates.Add(m_DrivePlateList[0]);
-            preset1Plates.Add(m_DrivePlateList[2]);
-            preset1Plates.Add(m_DrivePlateList[3]);
-            List<Plate> preset2Plates = new List<Plate>();
-            preset2Plates.Add(m_DrivePlateList[1]);
-            preset2Plates.Add(m_DrivePlateList[2]);
-            preset2Plates.Add(m_DrivePlateList[5]);
-            List<Plate> preset3Plates = new List<Plate>();
-            preset3Plates.Add(m_DrivePlateList[0]);
-            preset3Plates.Add(m_DrivePlateList[1]);
-            preset3Plates.Add(m_DrivePlateList[4]);
-            List<Plate> preset4Plates = new List<Plate>();
-            preset3Plates.Add(m_DrivePlateList[5]);
-            preset3Plates.Add(m_DrivePlateList[1]);
-            preset3Plates.Add(m_DrivePlateList[4]);
-            preset3Plates.Add(m_DrivePlateList[8]);
-            preset3Plates.Add(m_DrivePlateList[9]);
-            preset3Plates.Add(m_DrivePlateList[10]);
-            m_PresetList.Add(new Preset(1, "Preset 1", preset1Plates));
-            m_PresetList.Add(new Preset(2, "Preset 2", preset2Plates));
-            m_PresetList.Add(new Preset(3, "Preset 3", preset3Plates));
-            m_PresetList.Add(new Preset(4, "Preset 4", preset3Plates));
         }
     }
 }

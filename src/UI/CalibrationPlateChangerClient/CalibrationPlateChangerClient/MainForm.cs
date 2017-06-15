@@ -71,8 +71,6 @@ namespace CalibrationPlateChangerClient
             }
         }
 
-
-
         private void btnCancelOperation_Click(object sender, EventArgs e)
         {
             ApiFunction request = m_Api.CancelCurrentOperation();
@@ -118,7 +116,16 @@ namespace CalibrationPlateChangerClient
         private void btnReset_Click(object sender, EventArgs e)
         {
             ApiFunction request = m_Api.ResetSystem();
-            m_sendRequestFunction(request);
+            int result = m_sendRequestFunction(request);
+            if (result == 0)
+            {
+                LogMessage("Reset request sent to server");
+            }
+            else
+            {
+                SendMessageFailure(result);
+            }
+            return;
         }
 
         private int MovePlateToDrive(int plateId)
