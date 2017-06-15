@@ -81,15 +81,19 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
 }
 */
 
+
  ErrorCode Config::LoadConfig(enum PlateList plate)
 {
+
     std::string filename;
     if(plate == PlateList::DRIVELIST)
     {
+        m_DriveList.clear();
         filename = m_DriveFileName;
     }
     else if(plate == PlateList::COLLIMATORLIST)
     {
+        m_CollimatorList.clear();
         filename = m_CollimatorFileName;
     }
 
@@ -153,14 +157,14 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
         filename = m_CollimatorFileName;
         jsPlateList = PlateListToJSONString(m_CollimatorList, plate);
     }
-    std::ofstream ofs (filename, std::ios_base::out|std::ios_base::trunc);
+    std::ofstream ofs;
+    ofs.open(filename, std::ios_base::out|std::ios_base::trunc);
     
     if(!ofs.is_open())   
     {
         m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open config");
         return ErrorCode::ERR_FILE_OPEN;       
     }
-
     ofs << jsPlateList;
 
     ofs.close();

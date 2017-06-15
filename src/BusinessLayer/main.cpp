@@ -354,6 +354,7 @@ int main(int argc, char **argv)
     while (true) 
     {
         control.StartSystem();
+
         // User input, because we want to create fake messages to test too
         if (kbhit()) 
         {

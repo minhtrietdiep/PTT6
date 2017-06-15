@@ -77,7 +77,7 @@ ErrorCode Control::PlateToDrive(int plateid)
                     position = collimatorList[i].GetCollimatorPosition();
             }
             m_Config.SetCollimatorposition(plateid,-1);
-            m_Config.SetDriveposition(plateid,plateid); // drive position goed ophalen
+            m_Config.SetDriveposition(plateid,plateid);
             m_Config.SaveConfig(PlateList::COLLIMATORLIST);
         }
         else 
@@ -111,7 +111,8 @@ ErrorCode Control::PlateToDrive(int plateid)
             if(collimatorList[i].GetCollimatorPosition() > position)
                 position = collimatorList[i].GetCollimatorPosition();
         }
-        m_Config.SetCollimatorposition(plateid,(position++));
+        position++;
+        m_Config.SetCollimatorposition(plateid,(position));
         m_Config.SetDriveposition(plateid,-1);
         m_Config.SaveConfig(PlateList::COLLIMATORLIST);
     }
@@ -168,7 +169,7 @@ ErrorCode Control::PlateToDrive(int plateid)
  ErrorCode Control::ContinueSystem()
 {
     m_Order.Start();
-    std::cout << "Control:Continueing system..." << std::endl;
+    std::cout << "Control:Continuing system..." << std::endl;
     return ErrorCode::ERR_OK;
 }
 
@@ -179,14 +180,15 @@ ErrorCode Control::PlateToDrive(int plateid)
     if (m_Order.Reset() != ErrorCode::ERR_OK)
         return ErrorCode::ERR_UNKNOWN;
 
-
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
-    for (int j = collimatorList.size(); j >= 0; j--)
+
+    for (int j = (int)collimatorList.size(); j >= 0; j--)
     {
         for(int i = 0; i < (int)collimatorList.size(); i++)
         {   
             if(collimatorList[i].GetCollimatorPosition() == j)
             {
+                std::cout<<"drive id:"<<collimatorList[i].GetID()<<std::endl;
                PlateToDrive(collimatorList[i].GetID());
             }
         }
@@ -203,13 +205,12 @@ ErrorCode Control::PlateToDrive(int plateid)
     {
         return ErrorCode::ERR_NO_ITEM;
     }
-    int ID = moves[0].GetPlateID();
-    int Destination = moves[0].GetDestination();
+  //  int ID = moves[0].GetPlateID();
+   // int Destination = moves[0].GetDestination();
 
     if (m_Order.Start() == ErrorCode::ERR_OK)
     {
-        if (Destination == COLLIMATORPOS)
-        {
+/*        {
             int position = 0;
             std::vector<Plate> platelist = m_Config.GetCollimatorlist();
             for (int i = 0; i < (int)platelist.size(); i ++)
@@ -230,7 +231,7 @@ ErrorCode Control::PlateToDrive(int plateid)
         if (m_Config.SaveConfig(PlateList::COLLIMATORLIST) != ErrorCode::ERR_OK)
             return ErrorCode::ERR_UNKNOWN;
         if (m_Config.SaveConfig(PlateList::DRIVELIST) != ErrorCode::ERR_OK)
-            return ErrorCode::ERR_UNKNOWN;
+            return ErrorCode::ERR_UNKNOWN;*/
         return ErrorCode::ERR_OK;
     } 
     m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "cannot start order");
@@ -248,10 +249,12 @@ std::string Control::UploadPresets()
 
 std::string Control::UploadDriveState()
 {
+    m_Config.LoadConfig(PlateList::DRIVELIST);
     return PlateListToJSONString(m_Config.GetDrivelist(),PlateList::DRIVELIST);
 }
 std::string Control::UploadCollimatorState()
 {
+    m_Config.LoadConfig(PlateList::COLLIMATORLIST);
     return PlateListToJSONString(m_Config.GetCollimatorlist(), PlateList::COLLIMATORLIST);
 }
 
