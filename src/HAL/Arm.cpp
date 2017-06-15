@@ -70,6 +70,12 @@ ErrorCode Arm::WriteCommand(std::string command)
     }
 
     write(fd, commandchar, strlen(commandchar));
+    if (close(fd) < 0) 
+    {
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Can't close GPIO file");
+        return ErrorCode::ERR_FILE_OPEN;
+    }
+
     sleep(2);
     return ErrorCode::ERR_OK;
 }
