@@ -71,8 +71,6 @@ namespace CalibrationPlateChangerClient
             }
         }
 
-
-
         private void btnCancelOperation_Click(object sender, EventArgs e)
         {
             ApiFunction request = m_Api.CancelCurrentOperation();
@@ -83,7 +81,7 @@ namespace CalibrationPlateChangerClient
             }
             else
             {
-                LogMessage("Sending Cancel Operation request failed");
+                SendMessageFailure(result);
             }
             return;
         }
@@ -98,7 +96,7 @@ namespace CalibrationPlateChangerClient
             }
             else
             {
-                LogMessage("Sending Emergency Stop request failed");
+                SendMessageFailure(result);
             }
             return;
         }
@@ -118,7 +116,16 @@ namespace CalibrationPlateChangerClient
         private void btnReset_Click(object sender, EventArgs e)
         {
             ApiFunction request = m_Api.ResetSystem();
-            m_sendRequestFunction(request);
+            int result = m_sendRequestFunction(request);
+            if (result == 0)
+            {
+                LogMessage("Reset request sent to server");
+            }
+            else
+            {
+                SendMessageFailure(result);
+            }
+            return;
         }
 
         private int MovePlateToDrive(int plateId)
@@ -131,7 +138,7 @@ namespace CalibrationPlateChangerClient
             }
             else
             {
-                LogMessage("Sending Move (" + plateId + ") to Drive request failed");
+                SendMessageFailure(result);
             }
             return result;
         }
@@ -146,7 +153,7 @@ namespace CalibrationPlateChangerClient
             }
             else
             {
-                LogMessage("Sending Move (" + plateId + ") to Collimator request failed");
+                SendMessageFailure(result);
             }
             return result;
         }
@@ -161,7 +168,7 @@ namespace CalibrationPlateChangerClient
             }
             else
             {
-                LogMessage("Sending Continue System request failed");
+                SendMessageFailure(result);
             }
             return;
         }
@@ -204,12 +211,37 @@ namespace CalibrationPlateChangerClient
                     }
                     else
                     {
-                        LogMessage("Sending Set (" + preset.GetName() + ") request failed");
+                        SendMessageFailure(result);
                     }
                     return;
                 }
             }
             MessageBox.Show("Preset not available");
+        }
+
+        private void SendMessageFailure(int returnCode)
+        {
+            switch (returnCode)
+            {
+                case -1:
+                    LogMessage("Failed to connect to server.");
+                    break;
+                case -2:
+                    LogMessage("Not connected to server.");
+                    break;
+                case -3:
+                    LogMessage("Connection closed");
+                    break;
+                case -4:
+                    LogMessage("No connection to remote host.");
+                    break;
+                case -9:
+                    LogMessage("Failed to write to the network.");
+                    break;
+                default:
+                    LogMessage("Communication error occured!");
+                    break;
+            }
         }
     }
 }

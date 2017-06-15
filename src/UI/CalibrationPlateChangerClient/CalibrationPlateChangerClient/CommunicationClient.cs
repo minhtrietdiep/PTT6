@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
 using System.Security;
@@ -23,16 +24,42 @@ namespace CalibrationPlateChangerClient
             m_IsConnected = false;
         }
 
+        private bool TryConnect(string ip, int port)
+        {
+            try
+            {
+                var connect = Task.Factory.FromAsync(
+                    m_TcpClient.BeginConnect, m_TcpClient.EndConnect, ip, port, null);
+
+                var isConnected = connect.Wait(TimeSpan.FromSeconds(0.5));
+
+                if (!isConnected)
+                {
+                    m_TcpClient.Close();
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (m_TcpClient != null)
+                { 
+                    Console.WriteLine(ex);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
         public int Connect()
         {
-            if (m_TcpClient.Connected)
+            if (m_TcpClient.Client != null && m_TcpClient.Connected)
             {
                 return -1;
             }
             try
             {
-                IAsyncResult result = m_TcpClient.BeginConnect(m_ServerIp, m_ServerPort, null, null);
-                bool success = result.AsyncWaitHandle.WaitOne(1000);
+                bool success = TryConnect(m_ServerIp, m_ServerPort);
                 if (!success)
                 {
                     throw new TimeoutException();
@@ -97,11 +124,12 @@ namespace CalibrationPlateChangerClient
 
         public int Send(string dataToSend)
         {
-            if (!m_TcpClient.Connected)
+            if (m_TcpClient.Client == null)
             {
                 if (Connect() != 0)
                     return -1;
             }
+            
             if (ConnectionState() != 0)
             {
                 Disconnect();
@@ -166,7 +194,7 @@ namespace CalibrationPlateChangerClient
 
         public int StartReceiving(Func<string, int> receiveMessageHandler)
         {
-            if (!m_TcpClient.Connected)
+            if (m_TcpClient.Client == null || !m_TcpClient.Connected)
             {
                 if (Connect() != 0)
                     return -1;
@@ -200,7 +228,7 @@ namespace CalibrationPlateChangerClient
 
         private void ReceiveListener(Func<string, int> receiveMessageHandler)
         {
-            while (m_TcpClient.Connected)
+            while (m_TcpClient.Client != null && m_TcpClient.Connected)
             {
                 if (ConnectionState() != 0)
                     return;
@@ -257,6 +285,10 @@ namespace CalibrationPlateChangerClient
 
         private int ConnectionState()
         {
+            if (m_TcpClient.Client == null)
+            {
+                return -1;
+            }
             if (m_TcpClient.Client.Poll(0, SelectMode.SelectRead))
             {
                 byte[] buffer = new byte[1];
