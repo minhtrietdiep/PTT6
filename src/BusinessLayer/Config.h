@@ -22,6 +22,8 @@ class Config
         Config(std::vector<Plate> drivelist, std::vector<Plate> collimatorlist);
         ~Config();
         ErrorCode SetCollimatorposition(int drive, int collimatorPosition);
+        ErrorCode SetDriveposition(int drive, int DrivePosition);
+
         //ErrorCode SetFilename(PlateList plate, std::string filename);
         std::vector<Plate> GetDrivelist();
         std::vector<Plate> GetCollimatorlist();

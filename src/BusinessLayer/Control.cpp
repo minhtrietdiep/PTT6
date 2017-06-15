@@ -66,31 +66,58 @@ ErrorCode Control::PlateToDrive(int plateid)
 
     if(driveID >= 0)
     {
+        std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
+        int position = 0;
         Move move(plateid,driveID);
-        if (m_Order.NewMove(move) != ErrorCode::ERR_OK)
+        if (m_Order.NewMove(move) == ErrorCode::ERR_OK)
+        {
+            for (int i = 0; i < (int)collimatorList.size(); i++)
+            {
+                if(collimatorList[i].GetCollimatorPosition() > position)
+                    position = collimatorList[i].GetCollimatorPosition();
+            }
+            m_Config.SetCollimatorposition(plateid,-1);
+            m_Config.SetDriveposition(plateid,plateid); // drive position goed ophalen
+            m_Config.SaveConfig(PlateList::COLLIMATORLIST);
+        }
+        else 
             return ErrorCode::ERR_UNKNOWN;
-  
-    } 
-    else
-    {
-        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid driveID");
-        return ErrorCode::ERR_INVALID_ARG;
-    }
-
-    return ErrorCode::ERR_OK;
+      
+        } 
+        else
+        {
+            m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid driveID");
+            return ErrorCode::ERR_INVALID_ARG;
+        }
+        return ErrorCode::ERR_OK;
 
 }
 
  ErrorCode Control::PlateToCollimator(int plateid)
 {
+    std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
+    int position = 0;
     if (plateid < MIN_PLATE_ID || plateid > MAX_PLATE_ID)
     {
          m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Plate to drive : Invalid PlateID ");
          return ErrorCode::ERR_INVALID_ARG;
     }
     Move move(plateid,COLLIMATORPOS);
-    if (m_Order.NewMove(move) != ErrorCode::ERR_OK)
-        return ErrorCode::ERR_UNKNOWN;  
+
+    if (m_Order.NewMove(move) == ErrorCode::ERR_OK)
+    {
+        for (int i = 0; i < (int)collimatorList.size(); i++)
+        {
+            if(collimatorList[i].GetCollimatorPosition() > position)
+                position = collimatorList[i].GetCollimatorPosition();
+        }
+        m_Config.SetCollimatorposition(plateid,(position++));
+        m_Config.SetDriveposition(plateid,-1);
+        m_Config.SaveConfig(PlateList::COLLIMATORLIST);
+    }
+    else 
+        return ErrorCode::ERR_UNKNOWN;
+ 
     return ErrorCode::ERR_OK;
 }
 
@@ -116,6 +143,7 @@ ErrorCode Control::PlateToDrive(int plateid)
             for(int j = 0; j < (int)presetlist.size(); j++)
             {
                 PlateToCollimator(presetlist[j]);
+
             }
             break;
         }
@@ -153,18 +181,15 @@ ErrorCode Control::PlateToDrive(int plateid)
 
 
     std::vector<Plate> collimatorList = m_Config.GetCollimatorlist();
-    for(int i = 0; i < (int)collimatorList.size(); i++)
+    for (int j = collimatorList.size(); j >= 0; j--)
     {
-        std::cout << "hey jij bent zovaak aangeroepen" << i << std::endl; 
-            for (int j = collimatorList.size(); j >= 0; j--)
+        for(int i = 0; i < (int)collimatorList.size(); i++)
+        {   
+            if(collimatorList[i].GetCollimatorPosition() == j)
             {
-                std::cout << "hey ik ben zovaak aangeroepen" << j << std::endl; 
-                if(collimatorList[i].GetCollimatorPosition() == j)
-                {
-                   PlateToDrive(collimatorList[i].GetID());
-                   std::cout << "hey ik ben plaat naar drijf" << j << std::endl; 
-                }
+               PlateToDrive(collimatorList[i].GetID());
             }
+        }
      
     }
     return ErrorCode::ERR_OK;

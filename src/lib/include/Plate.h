@@ -25,6 +25,7 @@ class Plate
 		int GetCollimatorPosition();
 		int GetDrivePosition();
 		int GetID();
-		 ErrorCode SetCollimatorPosition(int value);
+		ErrorCode SetCollimatorPosition(int value);
+		ErrorCode SetDrivePos(int value);
 
 };

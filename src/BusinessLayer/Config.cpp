@@ -46,6 +46,21 @@ std::vector<Plate> Config::GetCollimatorlist()
     return ErrorCode::ERR_NO_ITEM;
     
 }
+
+ ErrorCode Config::SetDriveposition(int drive, int DrivePosition)
+{
+    for (unsigned int i = 0; i < m_CollimatorList.size(); i++)
+    {
+        if (m_CollimatorList[i].GetID() == drive)
+        {
+            m_CollimatorList[i].SetDrivePos(DrivePosition);
+            return ErrorCode::ERR_OK;
+        }
+    }
+     m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Invalid drive");
+    return ErrorCode::ERR_NO_ITEM;
+    
+}
 /*
 ErrorCode Config::SetFilename(PlateList plate, std::string filename)
 {
