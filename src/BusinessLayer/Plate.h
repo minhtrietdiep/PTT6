@@ -19,7 +19,7 @@ class Plate
 		Logger m_Logger;
 
 	public:
-		Plate(int id, int drivePos, int collimatorPosition, std::string properties, double tickness);
+		Plate(int id, int drivePos, int collimatorPosition, std::string properties, double thickness);
 		double GetThickness();
 		std::string GetProperties();
 		int GetCollimatorPosition();

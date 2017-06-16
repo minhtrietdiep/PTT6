@@ -100,7 +100,7 @@ ErrorCode Config::SetFilename(PlateList plate, std::string filename)
     FILE* fp = fopen(filename.c_str(), "r"); // non-Windows use "r"
     if(!fp)
     {
-        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Coudn't open Config");
+        m_Logger.Write(Logger::Severity::ERROR, __PRETTY_FUNCTION__, "Could not open Config");
         return ErrorCode::ERR_FILE_OPEN;    
     }
     char readBuffer[65536];
